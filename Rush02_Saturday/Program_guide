@@ -1,0 +1,66 @@
+
+
+#if argc == 2:
+	argv[1] = number
+	dict_path is hardcoded
+if argc == 3
+	argv[1] = dict path
+	argv[2] number
+else
+	error.
+
+#atoi of the number
+if:
+	float
+	negative
+	overflow (>4294967295)
+store length
+
+# Printing the number
+We need the length of the number and the value of the number
+x % 3
+->if it's 2, we are in the -ty & -teen area
+-> if it's 0, add hundred
+to reference the dictionary, use read (?)
+
+
+nbr = 5 003 700 813
+
+length = 10
+i = 0
+while (i > length)
+if (i % 3 == 0)
+	if nbr[i] == 0 -> don't print 
+	else print nbr[i]
+	if nbr[i-2] != 0 || nbr[i-1] != 0 || nbr[i] != 0 
+		if ((length - i) == 10)
+			print billion
+		else if (... == 7)
+			print million
+		else if (... == 4)
+			print thousand 
+		
+else if (i % 3 == 1)
+	if nbr[i] == 0 -> don't print
+	else print nbr[i]
+		print hundred
+
+else if (i % 3) == 2)
+	if nbr[i] == 0 -> don't print
+	else if value == 1
+		{
+			print valueof nbr[i]*10 + nbr[i+1]
+			if ((length - (i + 1) == 10)
+				print billion
+			else if (... == 7)
+				print million
+			else if (... == 4)
+				print thousand 
+			i++;
+		}
+	else
+		print (value * 10)
+i++;
+
+five billion three million seven hundred thousand eight hundred thirteen
+
