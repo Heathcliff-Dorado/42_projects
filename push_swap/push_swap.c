@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:45:55 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/06/18 15:31:30 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/04 00:48:54 by hdorado          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,32 +16,36 @@ int	add_position(t_stack **stack, int element)
 {
 	t_stack	*new_position;
 
-	new_position = malloc(sizeof(t_stack));
+	if ((*stack))
+		ft_printf("Stack element element %d\n", (*stack)->value);
+	new_position = (t_stack *) malloc(sizeof(t_stack));
 	if (!new_position)
 		return (0);
 	ft_printf("Creates position \n");
 	new_position->value = element;
 	ft_printf("Adds element %d\n", new_position->value);
-	if (!(*stack))
+	if ((*stack))
 	{
-		ft_printf("No previous stack \n");
-		new_position->next = new_position;
-		new_position->previous = new_position;
-		ft_printf("Adds addresses to itself \n");
-		(*stack) = new_position;
-		ft_printf("Saved in stack \n");
-	}
-	else
-	{
-		ft_printf("Array exists\n");
+		ft_printf("Array exists with value %d\n", (*stack)->value);
 		new_position->previous = (*stack)->previous;
-		ft_printf("Current value is %d and previous value is %d\n", new_position->value, new_position->previous->value);
+		ft_printf("Current value is %d and previous value is %d\n", new_position->value, (*stack)->previous->value);
 		new_position->next = (*stack);
-		ft_printf("Current value is %d and next value is %d\n", new_position->value, new_position->next->value);
+		ft_printf("Current value is %d and next value is %d\n", new_position->value, (new_position->next)->value);
 		(*stack)->previous = new_position;
 		(*stack) = new_position->previous;
 		(*stack)->next = new_position;
-		(*stack) = new_position->next;
+		(*stack) = (*stack)->previous;
+	}
+	else
+	{
+		ft_printf("No previous stack \n");
+		new_position->next = new_position;
+		ft_printf("Current value is %d and next value is %d\n", new_position->value, new_position->next->value);
+		new_position->previous = new_position;
+		ft_printf("Current value is %d and previous value is %d\n", new_position->value, new_position->previous->value);
+		ft_printf("Adds addresses to itself \n");
+		(*stack) = new_position;
+		ft_printf("Saved in stack \n");
 	}
 	ft_printf("Ready to leave with value %d\n", (*stack)->value);
 	return (1);
@@ -141,6 +145,8 @@ int	ft_clean(t_stack **stack)
 {
 	t_stack	*tmp;
 	
+	if (!(*stack))
+		return (0);
 	(*stack)->next = NULL;
 	(*stack) = (*stack)->previous;
 	while ((*stack)->next)
@@ -180,6 +186,75 @@ int	populate_stack(t_stack **stack, int n_elements, char **elements)
 
 }
 
+void	ft_swap(t_stack **donor, t_stack **receiver)
+{
+	if (!(*receiver))
+	{
+		(*receiver) = (*donor);
+		(*donor)->previous->next = (*donor)->next;
+		(*donor)->next->previous = (*donor)->previous;
+		(*donor) = (*donor)->next;
+		(*receiver)->previous = (*receiver);
+		(*receiver)->next = (*receiver);
+	}
+	else
+	{
+		(*donor)->previous->next = (*donor)->next;
+		(*donor)->next->previous = (*donor)->previous;
+		(*receiver)->previous->next = (*donor);
+		(*donor)->previous = (*receiver)->previous;
+		(*receiver)->previous = (*donor);
+		(*donor) = (*donor)->next;
+		(*receiver)->previous->next->next = (*receiver);
+		(*receiver)->previous = (*receiver)->previous->next;
+		(*receiver) = (*receiver)->previous;
+	}
+
+}
+
+void	ft_push_swap(t_stack **stack_1, t_stack **stack_2, int elements)
+{
+	int	i;
+	int j;
+
+	i = 0;
+	while (((elements - 1) >> i) | 0)
+	{
+		ft_printf("elements is %d and i is %d\n", elements, i);
+		j = 0;
+		while (j < elements)
+		{
+			if (((*stack_1)->value << i) & 1)
+			{
+				ft_printf("rra\n");
+				(*stack_1) = (*stack_1)->next;
+			}
+			else
+			{
+				ft_printf("sa\n");
+				ft_swap(stack_1, stack_2);
+			}
+			j++;
+		}
+		while ((*stack_2) && ((*stack_2)->value != (*stack_2)->next->value))
+		{
+		//	ft_printf("sb and more elements\n");
+			ft_swap(stack_2, stack_1);
+		}
+		if ((*stack_2))
+		{
+			ft_printf("sb\n");
+			(*stack_1)->previous->next = (*stack_2);
+			(*stack_2)->previous = (*stack_1)->previous;
+			(*stack_1)->previous = (*stack_2);
+			(*stack_2)->next = (*stack_1);
+			(*stack_1) = (*stack_2);
+			(*stack_2) = NULL;
+		}
+		i++;
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	t_stack	*stack_a;
@@ -203,12 +278,15 @@ int	main(int argc, char **argv)
 		return (0);
 	}
 	modify_stack(&stack_a, &stack_b, argc);
+	ft_clean(&stack_a);
+	stack_a = NULL;
+	ft_push_swap(&stack_b, &stack_a, argc - 1);
 	while (counter < argc)
 	{
-		ft_printf("The next value is %d and ranking %d\n", stack_a->value, stack_b->value);
-		stack_a = stack_a->next;
+		ft_printf("The next value ranking %d followed by %d\n", stack_b->value, stack_b->next->value);
 		stack_b = stack_b->next;
 		counter++;
 	}
 	ft_clean(&stack_a);
+	ft_clean(&stack_b);
 }
