@@ -6,48 +6,34 @@
 /*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:45:55 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/04 00:48:54 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/05 00:03:23 by hdorado          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+#include <stdio.h>
 
 int	add_position(t_stack **stack, int element)
 {
 	t_stack	*new_position;
 
-	if ((*stack))
-		ft_printf("Stack element element %d\n", (*stack)->value);
 	new_position = (t_stack *) malloc(sizeof(t_stack));
 	if (!new_position)
 		return (0);
-	ft_printf("Creates position \n");
 	new_position->value = element;
-	ft_printf("Adds element %d\n", new_position->value);
 	if ((*stack))
 	{
-		ft_printf("Array exists with value %d\n", (*stack)->value);
 		new_position->previous = (*stack)->previous;
-		ft_printf("Current value is %d and previous value is %d\n", new_position->value, (*stack)->previous->value);
 		new_position->next = (*stack);
-		ft_printf("Current value is %d and next value is %d\n", new_position->value, (new_position->next)->value);
+		(*stack)->previous->next = new_position;
 		(*stack)->previous = new_position;
-		(*stack) = new_position->previous;
-		(*stack)->next = new_position;
-		(*stack) = (*stack)->previous;
 	}
 	else
 	{
-		ft_printf("No previous stack \n");
 		new_position->next = new_position;
-		ft_printf("Current value is %d and next value is %d\n", new_position->value, new_position->next->value);
 		new_position->previous = new_position;
-		ft_printf("Current value is %d and previous value is %d\n", new_position->value, new_position->previous->value);
-		ft_printf("Adds addresses to itself \n");
 		(*stack) = new_position;
-		ft_printf("Saved in stack \n");
 	}
-	ft_printf("Ready to leave with value %d\n", (*stack)->value);
 	return (1);
 }
 
@@ -65,25 +51,21 @@ int	modify_stack(t_stack **source, t_stack **dest, int n_elements)
 	{
 		new_value = 0;
 		counter_b = 2;
-		ft_printf("Enters loop in modify stack with tmp %d\n", tmp);
 		while (counter_b < n_elements)
 		{
-			ft_printf("Compares tmp %d and value %d\n", tmp, (*source)->value);
 			if (tmp == (*source)->value)
 			{
-				ft_printf("This should not happen\n");
+				ft_printf("Error\n");
 				return (0);
 			}
 			else if (tmp > (*source)->value)
 				new_value++;
-			ft_printf("With position %d, new_value is %d\n", counter_b-1, new_value);
 			(*source) = (*source)->next;
 			counter_b++;
 		}
-		ft_printf("Ready to add value %d\n", new_value);
 		if (add_position(dest, new_value) == 0)
 		{
-			ft_printf("Add position error");
+			ft_printf("Error\n");
 			return (0);
 		}
 		counter++;
@@ -92,7 +74,6 @@ int	modify_stack(t_stack **source, t_stack **dest, int n_elements)
 		(*source) = (*source)->next;
 	}
 	(*source) = (*source)->previous;
-	ft_printf("Leave with value is %d and ranking %d\n", (*source)->value, (*dest)->value);
 	return (1);
 }
 
@@ -166,22 +147,18 @@ int	populate_stack(t_stack **stack, int n_elements, char **elements)
 	i = 1;
 	while (i < n_elements)
 	{
-		ft_printf("Ready to add value %d\n", i);
 		if (atoi_check(elements[i]) == 0)
 		{
-			ft_printf("Atoi check error");
+			ft_printf("Error\n");
 			return (0);
 		}
-		ft_printf("Pass atoi check \n");
 		if (add_position(stack, ft_atoi(elements[i])) == 0)
 		{
-			ft_printf("Add position error");
+			ft_printf("Error\n");
 			return (0);
 		}
-		ft_printf("Pass add_position \n");
 		i++;
 	}
-	ft_printf("Finish populate stack \n");
 	return (1);
 
 }
@@ -205,11 +182,9 @@ void	ft_swap(t_stack **donor, t_stack **receiver)
 		(*donor)->previous = (*receiver)->previous;
 		(*receiver)->previous = (*donor);
 		(*donor) = (*donor)->next;
-		(*receiver)->previous->next->next = (*receiver);
-		(*receiver)->previous = (*receiver)->previous->next;
+		(*receiver)->previous->next = (*receiver);
 		(*receiver) = (*receiver)->previous;
 	}
-
 }
 
 void	ft_push_swap(t_stack **stack_1, t_stack **stack_2, int elements)
@@ -220,30 +195,29 @@ void	ft_push_swap(t_stack **stack_1, t_stack **stack_2, int elements)
 	i = 0;
 	while (((elements - 1) >> i) | 0)
 	{
-		ft_printf("elements is %d and i is %d\n", elements, i);
 		j = 0;
 		while (j < elements)
 		{
-			if (((*stack_1)->value << i) & 1)
+			if (((*stack_1)->value >> i) & 1)
 			{
-				ft_printf("rra\n");
+				ft_printf("ra\n");
 				(*stack_1) = (*stack_1)->next;
 			}
 			else
 			{
-				ft_printf("sa\n");
+				ft_printf("pa\n");
 				ft_swap(stack_1, stack_2);
 			}
 			j++;
 		}
 		while ((*stack_2) && ((*stack_2)->value != (*stack_2)->next->value))
 		{
-		//	ft_printf("sb and more elements\n");
+			ft_printf("pb\n");
 			ft_swap(stack_2, stack_1);
 		}
 		if ((*stack_2))
 		{
-			ft_printf("sb\n");
+			ft_printf("pb\n");
 			(*stack_1)->previous->next = (*stack_2);
 			(*stack_2)->previous = (*stack_1)->previous;
 			(*stack_1)->previous = (*stack_2);
@@ -262,25 +236,40 @@ int	main(int argc, char **argv)
 	int	counter;
 
 	counter = 1;
-	//ft_printf("argc is %d and counter is %d\n", argc, counter);
 	stack_a = NULL;
 	stack_b = NULL;
 	if (argc == 1)
-	{
-		ft_printf("Arg error");
 		return (0);
-	}
-	ft_printf("Enter populate stack Ok \n");
+	if (argc == 2)
+		{
+			//function for elements as part of a list with " "
+		}
 	if (populate_stack(&stack_a, argc, argv) == 0)
 	{
 		ft_clean(&stack_a);
-		ft_printf("Population error");
+		ft_printf("Error\n");
 		return (0);
 	}
-	modify_stack(&stack_a, &stack_b, argc);
+	while (counter < argc)
+	{
+		ft_printf("The next value ranking %d followed by %d\n", stack_a->value, stack_a->next->value);
+		stack_a = stack_a->next;
+		counter++;
+	}
+	if (modify_stack(&stack_a, &stack_b, argc) == 0)
+	{
+		ft_clean(&stack_a);
+		ft_clean(&stack_b);
+		return (0);
+	}
 	ft_clean(&stack_a);
 	stack_a = NULL;
+	if (argc - 1 < 6)
+	{
+		//function for small list of elements
+	}
 	ft_push_swap(&stack_b, &stack_a, argc - 1);
+	counter = 1;
 	while (counter < argc)
 	{
 		ft_printf("The next value ranking %d followed by %d\n", stack_b->value, stack_b->next->value);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/20 18:49:15 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/06/18 13:51:59 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/04 14:24:13 by hdorado          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,6 @@ int		ft_putstr(char *str);
 int		ft_putptr(unsigned long ptr);
 int		ft_puthexa(unsigned int num, char c);
 int		ft_putnbr(int num);
-int		ft_eval_format(va_list args, char c);
+int		ft_eval_format(va_list *args, char c);
 
 #endif

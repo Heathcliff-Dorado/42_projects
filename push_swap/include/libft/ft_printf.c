@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:55:50 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/01/17 19:23:55 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/04 14:23:10 by hdorado          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,20 +65,20 @@ int	ft_putnbr(int num)
 	return (ret);
 }
 
-int	ft_eval_format(va_list args, char c)
+int	ft_eval_format(va_list *args, char c)
 {
 	if (c == 's')
-		return (ft_putstr(va_arg(args, char *)));
+		return (ft_putstr(va_arg((*args), char *)));
 	if (c == 'd' || c == 'i')
-		return (ft_putnbr(va_arg(args, int)));
+		return (ft_putnbr(va_arg((*args), int)));
 	if (c == 'x' || c == 'X')
-		return (ft_puthexa(va_arg(args, unsigned int), c));
+		return (ft_puthexa(va_arg((*args), unsigned int), c));
 	if (c == 'p')
-		return (ft_putptr(va_arg(args, unsigned long)));
+		return (ft_putptr(va_arg((*args), unsigned long)));
 	if (c == 'c')
-		return (ft_putchar(va_arg(args, int)));
+		return (ft_putchar(va_arg((*args), int)));
 	if (c == 'u')
-		return (ft_putunint(va_arg(args, unsigned int)));
+		return (ft_putunint(va_arg((*args), unsigned int)));
 	if (c == '%')
 		return (write(1, "%", 1));
 	return (0);
@@ -102,7 +102,7 @@ int	ft_printf(const char *str, ...)
 		else
 		{
 			i++;
-			ret += ft_eval_format(args, str[i]);
+			ret += ft_eval_format(&args, str[i]);
 		}
 		i++;
 	}
