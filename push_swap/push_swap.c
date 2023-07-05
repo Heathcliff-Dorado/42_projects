@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:45:55 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/05 00:03:23 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/06 00:39:49 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,79 @@ int	populate_stack(t_stack **stack, int n_elements, char **elements)
 
 }
 
-void	ft_swap(t_stack **donor, t_stack **receiver)
+/*void	ft_push_swap(t_stack **stack_1, t_stack **stack_2, int elements)
+{
+	int	i;
+	int j;
+
+	i = 0;
+	while (((elements - 1) >> i) | 0)
+	{
+		j = 0;
+		while (j < elements)
+		{
+			if (((*stack_1)->value >> i) & 1)
+			{
+				ft_printf("ra\n");
+				(*stack_1) = (*stack_1)->next;
+			}
+			else
+				ft_push(stack_1, stack_2, 'a');
+			j++;
+		}
+		while ((*stack_2) && ((*stack_2)->value != (*stack_2)->next->value))
+			ft_push(stack_2, stack_1, 'b');
+		if ((*stack_2))
+		{
+			ft_printf("pb\n");
+			(*stack_1)->previous->next = (*stack_2);
+			(*stack_2)->previous = (*stack_1)->previous;
+			(*stack_1)->previous = (*stack_2);
+			(*stack_2)->next = (*stack_1);
+			(*stack_1) = (*stack_2);
+			(*stack_2) = NULL;
+		}
+		i++;
+	}
+}*/
+
+void	ft_rr(t_stack **stack, int n, char c)
+{
+	int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		ft_printf("rr%c\n", c);
+		(*stack) = (*stack)->previous;
+		i++;
+	}
+}
+
+void	ft_r(t_stack **stack, int n, char c)
+{
+	int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		ft_printf("r%c\n", c);
+		(*stack) = (*stack)->next;
+		i++;
+	}
+}
+
+void	ft_swap(t_stack **stack, char c)
+{
+	int tmp;
+
+	tmp = (*stack)->value;
+	(*stack)->value = (*stack)->next->value;
+	(*stack)->next->value = tmp;
+	ft_printf("s%c\n", c);
+}
+
+void	ft_push(t_stack **donor, t_stack **receiver, char c)
 {
 	if (!(*receiver))
 	{
@@ -185,46 +257,93 @@ void	ft_swap(t_stack **donor, t_stack **receiver)
 		(*receiver)->previous->next = (*receiver);
 		(*receiver) = (*receiver)->previous;
 	}
+
+	ft_printf("p%c\n", c);
+}
+
+void	ft_organize_3(t_stack **stack)
+{
+	if ((*stack)->value < (*stack)->next->value)
+	{
+		if ((*stack)->next->value < (*stack)->previous->value)
+			ft_rr(stack, 'a');
+		else if ((*stack)->value < (*stack)->previous->value)
+			ft_swap(stack, 'a');
+		else
+			ft_r(stack, 'a');
+	}
+	else
+	{
+		if ((*stack)->value < (*stack)->previous->value)
+		{
+			ft_swap(stack, 'a');
+			ft_rr(stack, 'a');
+		}
+		else if ((*stack)->next->value > (*stack)->previous->value)
+		{
+			ft_swap(stack, 'a');
+			ft_r(stack, 'a');
+		}
+	}
+}
+
+void	ft_movenumber(t_stack **stack_1, t_stack **stack_2)
+{
+	int	min;
+	int	max;
+	t_stack	*tmp;
+	int	count_r;
+	int count_rr;
+
+	tmp = (*stack_2);
+	count_r = 0;
+	count_rr = 0;
+	while ((*stack_2)->value > (*stack_2)->next->value)
+		(*stack_2) = (*stack_2)->next;
+	min = (*stack_2)->value;
+	max = (*stack_2)->next->value;
+	(*stack_2) = tmp;
+	while ((*stack_1)->value > (*stack_2)->value)
+	{
+		count_rr++;
+		(*stack_2) = (*stack_2)->previous;
+	}
+	(*stack_2) = tmp;
+	while ((*stack_1)->value < (*stack_2)->value)
+	{
+		count_r++;
+		(*stack_2) = (*stack_2)->next;
+	}
+	(*stack_2) = tmp;
+	if (count_r < count_rr)
+		ft_r(stack_2, count_r, 'b');
+	else
+		ft_rr(stack_2, count_rr, 'b');
+	ft_push(stack_1, stack_2. 'a');
 }
 
 void	ft_push_swap(t_stack **stack_1, t_stack **stack_2, int elements)
 {
 	int	i;
-	int j;
 
 	i = 0;
-	while (((elements - 1) >> i) | 0)
+	if ((*stack_1)->value > (*stack_1)->next->value)
+		ft_swap(stack_1, 'a');
+	ft_push(stack_1, stack_2, 'a');
+	ft_push(stack_1, stack_2, 'a');
+	while (i < elements - 5)
 	{
-		j = 0;
-		while (j < elements)
-		{
-			if (((*stack_1)->value >> i) & 1)
-			{
-				ft_printf("ra\n");
-				(*stack_1) = (*stack_1)->next;
-			}
-			else
-			{
-				ft_printf("pa\n");
-				ft_swap(stack_1, stack_2);
-			}
-			j++;
-		}
-		while ((*stack_2) && ((*stack_2)->value != (*stack_2)->next->value))
-		{
-			ft_printf("pb\n");
-			ft_swap(stack_2, stack_1);
-		}
-		if ((*stack_2))
-		{
-			ft_printf("pb\n");
-			(*stack_1)->previous->next = (*stack_2);
-			(*stack_2)->previous = (*stack_1)->previous;
-			(*stack_1)->previous = (*stack_2);
-			(*stack_2)->next = (*stack_1);
-			(*stack_1) = (*stack_2);
-			(*stack_2) = NULL;
-		}
+		ft_movenumber(stack_1, stack_2);
+		i++;
+	}
+	ft_organize_3(stack_1);
+	i = 0;
+	while (i < elements - 5)
+	{
+		if ((*stack_1)->value == (*stack_2)->value + 1)
+			ft_push(stack_2, stack_1, 'b');
+		if ((*stack_1)->value == (*stack_1)->previous->value + 1)
+			ft_rr
 		i++;
 	}
 }
