@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:45:55 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/07 21:59:00 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/08 01:16:25 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,7 +307,7 @@ void	ft_push(t_stack **donor, t_stack **receiver, char c)
 // 	}
 // }
 
-void	ft_organize_3(t_stack **stack)
+void	ft_organize_3(t_stack **stack, int elements)
 {
 	if ((*stack)->value < (*stack)->next->value)
 	{
@@ -331,6 +331,15 @@ void	ft_organize_3(t_stack **stack)
 			ft_r(stack, 1, 'a');
 		}
 	}
+	if (!(((*stack)->value == elements - 1) || ((*stack)->next->value == elements - 1)|| ((*stack)->previous->value == elements - 1)))
+		ft_r(stack, 1, 'a');
+}
+
+int	ft_max(moves, counter)
+{
+	if (moves > counter)
+		return (moves);
+	return (counter);
 }
 
 int ft_count_moves_down(t_stack **stack_2, t_stack **stack_1, t_stack **max, int counter, int elem_in_b)
@@ -361,17 +370,17 @@ int ft_count_moves_down(t_stack **stack_2, t_stack **stack_1, t_stack **max, int
 	}
 	else
 	{
-		while (value > (*stack_2)->value || value < (*stack_2)->previous->value)
+		while (value < (*stack_2)->value || value > (*stack_2)->previous->value)
 		{
 			(*stack_2) = (*stack_2)->previous;
 			moves++;
 		}
 	}
 	(*stack_2) = tmp;
-	if ((elem_in_b - moves + counter) < moves + counter - abs(moves - counter))
+	if ((elem_in_b - moves + counter) < ft_max(moves, counter))
 		return(elem_in_b - moves + counter);
 	else
-		return (moves + counter - abs(moves - counter));
+		return (ft_max(moves, counter));
 }
 
 int ft_count_moves(t_stack **stack_2, t_stack **stack_1, t_stack **max, int counter, int elem_in_b)
@@ -392,6 +401,7 @@ int ft_count_moves(t_stack **stack_2, t_stack **stack_1, t_stack **max, int coun
 	value = (*stack_1)->value;
 	(*stack_1) = tmp;
 	tmp = (*stack_2);
+	//ft_printf("Max is %d and min is %d, value is %d\n", (*max)->value, (*max)->previous->value, value);
 	if (value > (*max)->value || value < (*max)->previous->value)
 	{
 		while ((*stack_2)->value != (*max)->value)
@@ -402,17 +412,18 @@ int ft_count_moves(t_stack **stack_2, t_stack **stack_1, t_stack **max, int coun
 	}
 	else
 	{
-		while (value > (*stack_2)->value || value < (*stack_2)->previous->value)
+		while (value < (*stack_2)->value || value > (*stack_2)->previous->value)
 		{
 			(*stack_2) = (*stack_2)->next;
 			moves++;
 		}
 	}
 	(*stack_2) = tmp;
-	if ((elem_in_b - moves + counter) < moves + counter - abs(moves - counter))
+	//ft_printf("Moves is %d\n",moves);
+	if ((elem_in_b - moves + counter) < ft_max(moves, counter))
 		return(elem_in_b - moves + counter);
 	else
-		return (moves + counter - abs(moves - counter));
+		return (ft_max(moves, counter));
 }
 
 int	ft_check_stack_value(t_stack **stack, int index)
@@ -565,8 +576,22 @@ void	ft_prepare_push(t_stack **stack_1, t_stack **stack_2, int index, int min_mo
 			ft_rr(stack_2, min_moves + index, 'b');
 		}
 	}
-	ft_printf("Arrives here\n");
+	//ft_printf("Arrives here\n");
 	ft_push(stack_1, stack_2, 'a');
+}
+
+void	ft_new_max(t_stack **stack, t_stack **max, int elem_in_b)
+{
+	int	i;
+
+	i = 0;
+	while (i < elem_in_b)
+	{
+		if ((*stack)->value > (*max)->value)
+			(*max) = (*stack);
+		(*stack) = (*stack)->next;
+		i++;
+	}
 }
 
 void	ft_movenumber(t_stack **stack_1, t_stack **stack_2, t_stack **max, int elem_in_b)
@@ -578,6 +603,7 @@ void	ft_movenumber(t_stack **stack_1, t_stack **stack_2, t_stack **max, int elem
 	counter = 0;
 	min_moves = 2147483647;
 	index = 0;
+	ft_new_max(stack_2, max, elem_in_b);
 	//This function counts how many moves it takes to move an element and finds the cheapest option
 	while (counter < elem_in_b)
 	{
@@ -586,6 +612,7 @@ void	ft_movenumber(t_stack **stack_1, t_stack **stack_2, t_stack **max, int elem
 			min_moves = ft_count_moves(stack_2, stack_1, max, counter, elem_in_b);
 			index = counter;
 		}
+		//ft_printf("Iteration %d min_moves is %d\n", counter, min_moves);
 		counter++;
 	}
 	counter = 0;
@@ -596,8 +623,10 @@ void	ft_movenumber(t_stack **stack_1, t_stack **stack_2, t_stack **max, int elem
 			min_moves = ft_count_moves_down(stack_2, stack_1, max, counter, elem_in_b);
 			index = counter * -1;
 		}
+		//ft_printf("Iteration %d min_moves is %d\n", counter, min_moves);
 		counter++;
 	}
+	//ft_printf("Index is %d with min_moves %d\n", index, min_moves);
 	ft_prepare_push(stack_1, stack_2, index, min_moves);
 }
 
@@ -607,17 +636,32 @@ void	ft_final_sort(t_stack **stack_2)
 	int	i;
 	t_stack	*tmp;
 
+	i = 0;
+	min = 0;
 	tmp = (*stack_2);
-	//tbc
-	while ((*stack_2)->value != (*stack_2)->next->value + 1)
+	while ((*stack_2)->value == (*stack_2)->next->value + 1)
 	{
-		
+		//ft_printf("Stack 2 is %d and next is %d\n", (*stack_2)->value, (*stack_2)->next->value);
+		(*stack_2) = (*stack_2)->next;
+		i++;
 	}
+	(*stack_2) = tmp;
+	while ((*stack_2)->value == ((*stack_2)->next->value + 1))
+	{
+		(*stack_2) = (*stack_2)->previous;
+		min++;
+	}
+	//ft_printf("i is %d and min is %d\n", i, min);
+	if (i > min)
+		ft_rr(stack_2, min, 'b');
+	else
+		ft_r(stack_2, i, 'b');
 }
 
 void	ft_push_swap(t_stack **stack_1, t_stack **stack_2, int elements)
 {
 	int	i;
+	int	j;
 	t_stack	*max;
 
 	i = 0;
@@ -633,25 +677,44 @@ void	ft_push_swap(t_stack **stack_1, t_stack **stack_2, int elements)
 		ft_swap(stack_1, 'a');
 	while (i < elements - 5)
 	{
-		ft_printf("Moving #%d\n", i);
+		//ft_printf("Moving #%d\n", i);
 		ft_movenumber(stack_1, stack_2, &max, 2 + i);
 		i++;
+		j = 0;
+		//while (j++ < 2 + i)
+		//{
+		//	ft_printf("%d\n", (*stack_2)->value);
+		//	(*stack_2) = (*stack_2)->next;
+		//}
+		//ft_printf("####\n");
 	}
 	if (elements > 3)
 	{
-		ft_organize_3(stack_1);
-		ft_printf("leaves organize 3\n");
+		//ft_printf("pre organize 3 %d and %d\n", (*stack_1)->value, (*stack_2)->previous->value);
+		ft_organize_3(stack_1, elements);
 		i = 0;
+		//ft_printf("Finish pre last sort %d and %d\n", (*stack_1)->value, (*stack_2)->value);
 		ft_final_sort(stack_2);
+		//ft_printf("Finish last sort %d and %d previous %d and next %d\n", elements, (*stack_1)->value, (*stack_2)->previous->value, (*stack_2)->next->value);
+		//while (i < elements - 3)
+		//{
+		//	ft_printf("%d\n", (*stack_2)->value);
+		//	(*stack_2) = (*stack_2)->next;
+		//	i++;
+		//}
+		//ft_printf("%d->%d->%d\n", (*stack_1)->value, (*stack_1)->next->value, (*stack_1)->previous->value);
+		//i = 0;
 		while (i < elements - 3)
 		{
 			if ((*stack_1)->value == (*stack_1)->previous->value + 1)
 				ft_rr(stack_1, 1, 'a');
-			if ((*stack_1)->value == (*stack_2)->value + 1)
+			if (((*stack_1)->value == (*stack_2)->value + 1) || ((*stack_1)->value == 0 && (*stack_2)->value == elements - 1))
 			{
 				ft_push(stack_2, stack_1, 'b');
 				i++;
 			}
+			else
+				ft_rr(stack_1, 1, 'a');
 		}
 	}
 	while ((*stack_1)->value != 0)
@@ -682,7 +745,7 @@ int	main(int argc, char **argv)
 	}
 	while (counter < argc)
 	{
-		ft_printf("The next value ranking %d followed by %d\n", stack_a->value, stack_a->next->value);
+		//ft_printf("The next value ranking %d followed by %d\n", stack_a->value, stack_a->next->value);
 		stack_a = stack_a->next;
 		counter++;
 	}
@@ -695,7 +758,7 @@ int	main(int argc, char **argv)
 	counter = 1;
 	while (counter < argc)
 	{
-		ft_printf("The next value ranking %d followed by %d\n", stack_b->value, stack_b->next->value);
+		//ft_printf("The next value ranking %d followed by %d\n", stack_b->value, stack_b->next->value);
 		stack_b = stack_b->next;
 		counter++;
 	}
@@ -710,7 +773,7 @@ int	main(int argc, char **argv)
 	counter = 1;
 	while (counter < argc)
 	{
-		ft_printf("The next value ranking %d followed by %d\n", stack_b->value, stack_b->next->value);
+		//ft_printf("The next value ranking %d followed by %d\n", stack_b->value, stack_b->next->value);
 		stack_b = stack_b->next;
 		counter++;
 	}
