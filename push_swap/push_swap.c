@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:45:55 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/07 12:25:15 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/07 21:59:00 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,35 @@ int	populate_stack(t_stack **stack, int n_elements, char **elements)
 	}
 }*/
 
+void	ft_rrx(t_stack **stack_a, t_stack **stack_b, int n)
+{
+	int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		ft_printf("rrr\n");
+		(*stack_a) = (*stack_a)->previous;
+		(*stack_b) = (*stack_b)->previous;
+		i++;
+	}
+}
+
+void	ft_rx(t_stack **stack_a, t_stack **stack_b, int n)
+{
+	int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		ft_printf("rr\n");
+		(*stack_a) = (*stack_a)->next;
+		(*stack_b) = (*stack_b)->next;
+		i++;
+	}
+}
+
+
 void	ft_rr(t_stack **stack, int n, char c)
 {
 	int	i;
@@ -261,24 +290,22 @@ void	ft_push(t_stack **donor, t_stack **receiver, char c)
 	ft_printf("p%c\n", c);
 }
 
-int	ft_find_min (int value, t_stack **stack_b, int *max, int *min)
-{
-	int	min_count;
-	t_stack	*tmp;
+// int	ft_find_min (int value, t_stack **stack_b, int *max, int *min)
+// {
+// 	int	min_count;
+// 	t_stack	*tmp;
 
-	tmp = (*stack_b);
-	min_count = 0;
-	if (value != *max || value != *min)
-	{
-		while (value < (*stack_2)->previous || value > (*stack_2)->next)
-		{
-			min_count++;
-			(*stack_b)->next;
-		}
-	}
-}
-
-
+// 	tmp = (*stack_b);
+// 	min_count = 0;
+// 	if (value != *max || value != *min)
+// 	{
+// 		while (value < (*stack_b)->previous || value > (*stack_b)->next)
+// 		{
+// 			min_count++;
+// 			(*stack_b)->next;
+// 		}
+// 	}
+// }
 
 void	ft_organize_3(t_stack **stack)
 {
@@ -323,7 +350,7 @@ int ft_count_moves_down(t_stack **stack_2, t_stack **stack_1, t_stack **max, int
 	}
 	value = (*stack_1)->value;
 	(*stack_1) = tmp;
-	tmp = (*stack_2)
+	tmp = (*stack_2);
 	if (value > (*max)->value || value < (*max)->previous->value)
 	{
 		while ((*stack_2)->value != (*max)->value)
@@ -364,7 +391,7 @@ int ft_count_moves(t_stack **stack_2, t_stack **stack_1, t_stack **max, int coun
 	}
 	value = (*stack_1)->value;
 	(*stack_1) = tmp;
-	tmp = (*stack_2)
+	tmp = (*stack_2);
 	if (value > (*max)->value || value < (*max)->previous->value)
 	{
 		while ((*stack_2)->value != (*max)->value)
@@ -388,6 +415,160 @@ int ft_count_moves(t_stack **stack_2, t_stack **stack_1, t_stack **max, int coun
 		return (moves + counter - abs(moves - counter));
 }
 
+int	ft_check_stack_value(t_stack **stack, int index)
+{
+	int	i;
+	t_stack	*tmp;
+	int	value;
+
+	i = 0;
+	tmp = (*stack);
+	if (index > 0)
+	{
+		while (i++ < index)
+			(*stack) = (*stack)->next;
+	}
+	else
+	{
+		while (i-- > index)
+			(*stack) = (*stack)->previous;
+	}
+	value = (*stack)->value;
+	(*stack) = tmp;
+	return (value);
+}
+
+int	ft_check_down(t_stack **stack, int value, int index)
+{
+	int	i;
+	t_stack *tmp;
+
+	i = 0;
+	tmp = (*stack);
+	while (i++ < index)
+		(*stack) = (*stack)->next;
+	if (((*stack)->value > (*stack)->next->value) && ((*stack)->value > (*stack)->previous->value))
+	{
+		if ((value > (*stack)->value) || (value < (*stack)->previous->value))
+			{
+				(*stack) = tmp;
+				return (1);
+			}
+	}
+	else if ((value > (*stack)->value) && (value < (*stack)->previous->value))
+		{
+			(*stack) = tmp;
+			return (1);
+		}
+	(*stack) = tmp;
+	return (0);
+}
+
+int	ft_check_up(t_stack **stack, int value, int index)
+{
+	int	i;
+	t_stack *tmp;
+
+	i = 0;
+	tmp = (*stack);
+	while (i++ < index)
+		(*stack) = (*stack)->previous;
+	if (((*stack)->value > (*stack)->next->value) && ((*stack)->value > (*stack)->previous->value))
+	{
+		if ((value > (*stack)->value) || (value < (*stack)->previous->value))
+			{
+				(*stack) = tmp;
+				return (1);
+			}
+	}
+	else if ((value > (*stack)->value) && (value < (*stack)->previous->value))
+		{
+			(*stack) = tmp;
+			return (1);
+		}
+	(*stack) = tmp;
+	return (0);
+}
+
+int	ft_find_overlap(t_stack **stack_2, int value, int index, int min_moves)
+{
+	int	i;
+
+	i = 0;
+	if (abs(index) == min_moves)
+	{
+		if (index > 0)
+		{
+			while (i++ < index)
+			{
+				if (ft_check_down(stack_2, value, i))
+					return (i);
+			}
+		}
+		else
+		{
+			while (i-- > index)
+			{
+				if (ft_check_up(stack_2, value, abs(i)))
+					return (abs(i));
+			}
+		}
+	}
+	else
+	{
+		if ((index > 0) && (ft_check_down(stack_2, value, index) == 1))
+			return (index);
+		else if ((index < 0) && (ft_check_up(stack_2, value, abs(index)) == 1))
+			return (abs(index));
+	}
+	return (0);
+}
+
+void	ft_prepare_push(t_stack **stack_1, t_stack **stack_2, int index, int min_moves)
+{
+	int	value;
+	t_stack	*tmp;
+	int	overlap;
+
+	tmp = (*stack_2);
+	value = ft_check_stack_value(stack_1, index);
+	if (index == 0)
+	{
+		if (ft_check_down(stack_2, value, min_moves))
+			ft_r(stack_2, min_moves, 'b');
+		else
+			ft_rr(stack_2, min_moves, 'b');
+	}
+	else
+	{
+		overlap = ft_find_overlap(stack_2, value, index, min_moves);
+		if (overlap &&(index > 0))
+		{
+			ft_rrx(stack_1, stack_2, overlap);
+			ft_rr(stack_1, index - overlap, 'a');
+			ft_rr(stack_2, min_moves - overlap, 'b');
+		}
+		else if (overlap && (index < 0))
+		{
+			ft_rx(stack_1, stack_2, overlap);
+			ft_r(stack_1, -index - overlap, 'a');
+			ft_r(stack_2, min_moves - overlap, 'b');
+		}
+		else if ((index > 0 ) && overlap == 0)
+		{
+			ft_rr(stack_1, index, 'a');
+			ft_r(stack_2, min_moves - index, 'b');
+		}
+		else if ((index < 0 ) && overlap == 0)
+		{
+			ft_r(stack_1, -index, 'a');
+			ft_rr(stack_2, min_moves + index, 'b');
+		}
+	}
+	ft_printf("Arrives here\n");
+	ft_push(stack_1, stack_2, 'a');
+}
+
 void	ft_movenumber(t_stack **stack_1, t_stack **stack_2, t_stack **max, int elem_in_b)
 {
 	int	counter;
@@ -402,7 +583,7 @@ void	ft_movenumber(t_stack **stack_1, t_stack **stack_2, t_stack **max, int elem
 	{
 		if (min_moves > ft_count_moves(stack_2, stack_1, max, counter, elem_in_b))
 		{
-			min moves = ft_count_moves(stack_2, stack_1, max, counter, elem_in_b)
+			min_moves = ft_count_moves(stack_2, stack_1, max, counter, elem_in_b);
 			index = counter;
 		}
 		counter++;
@@ -412,33 +593,26 @@ void	ft_movenumber(t_stack **stack_1, t_stack **stack_2, t_stack **max, int elem
 	{
 		if (min_moves > ft_count_moves_down(stack_2, stack_1, max, counter, elem_in_b))
 		{
-			min moves = ft_count_moves_down(stack_2, stack_1, max, counter, elem_in_b)
+			min_moves = ft_count_moves_down(stack_2, stack_1, max, counter, elem_in_b);
 			index = counter * -1;
 		}
 		counter++;
 	}
-	
-	(*stack_2) = tmp;
-	//Need to consider that the new number might be a minimum/maximum, therefore it should be stored where min was
-	while ((*stack_2)->value > (*stack_2)->previous->value)
+	ft_prepare_push(stack_1, stack_2, index, min_moves);
+}
+
+void	ft_final_sort(t_stack **stack_2)
+{
+	int	min;
+	int	i;
+	t_stack	*tmp;
+
+	tmp = (*stack_2);
+	//tbc
+	while ((*stack_2)->value != (*stack_2)->next->value + 1)
 	{
-		count_rr++;
-		(*stack_2) = (*stack_2)->previous;
+		
 	}
-	ft_printf("Loop Ok\n");
-	(*stack_2) = tmp;
-	while ((*stack_1)->value < (*stack_2)->value)
-	{
-		count_r++;
-		(*stack_2) = (*stack_2)->next;
-	}
-	ft_printf("Loop Ok\n");
-	(*stack_2) = tmp;
-	if (count_r < count_rr)
-		ft_r(stack_2, count_r, 'b');
-	else
-		ft_rr(stack_2, count_rr, 'b');
-	ft_push(stack_1, stack_2, 'a');
 }
 
 void	ft_push_swap(t_stack **stack_1, t_stack **stack_2, int elements)
@@ -447,29 +621,40 @@ void	ft_push_swap(t_stack **stack_1, t_stack **stack_2, int elements)
 	t_stack	*max;
 
 	i = 0;
-	if ((*stack_1)->value > (*stack_1)->next->value)
+	if (elements > 4)
+	{
+		if ((*stack_1)->value > (*stack_1)->next->value)
+			ft_swap(stack_1, 'a');
+		ft_push(stack_1, stack_2, 'a');
+		max = (*stack_1);
+		ft_push(stack_1, stack_2, 'a');
+	}
+	if (elements == 4)
 		ft_swap(stack_1, 'a');
-	ft_push(stack_1, stack_2, 'a');
-	max = (*stack_1);
-	ft_push(stack_1, stack_2, 'a');
 	while (i < elements - 5)
 	{
+		ft_printf("Moving #%d\n", i);
 		ft_movenumber(stack_1, stack_2, &max, 2 + i);
 		i++;
 	}
-	ft_organize_3(stack_1);
-	i = 0;
-	while (i < elements - 3)
+	if (elements > 3)
 	{
-		if ((*stack_1)->value == (*stack_1)->previous->value + 1)
-			ft_rr(stack_1, 1, 'a');
-		else if ((*stack_1)->value == (*stack_2)->value + 1)
+		ft_organize_3(stack_1);
+		ft_printf("leaves organize 3\n");
+		i = 0;
+		ft_final_sort(stack_2);
+		while (i < elements - 3)
 		{
-			ft_push(stack_2, stack_1, 'b');
-			i++;
+			if ((*stack_1)->value == (*stack_1)->previous->value + 1)
+				ft_rr(stack_1, 1, 'a');
+			if ((*stack_1)->value == (*stack_2)->value + 1)
+			{
+				ft_push(stack_2, stack_1, 'b');
+				i++;
+			}
 		}
 	}
-	if ((*stack_1)->value != 0)
+	while ((*stack_1)->value != 0)
 		ft_rr(stack_1, 1, 'a');
 	(*stack_2) = NULL;
 }
