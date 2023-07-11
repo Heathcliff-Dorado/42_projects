@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   common_functions.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/11 21:51:50 by hdorado-          #+#    #+#             */
+/*   Updated: 2023/07/11 22:24:25 by hdorado-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "common_functions.h"
 
-//Creates the position in stack if it doesn't exist, and changes the corresponding links
 int	add_position(t_stack **stack, int element)
 {
 	t_stack	*new_position;
@@ -23,6 +34,15 @@ int	add_position(t_stack **stack, int element)
 		(*stack) = new_position;
 	}
 	return (1);
+}
+
+void	ft_error_push_swap(t_stack **stack_a, t_stack **stack_b)
+{
+	if ((*stack_a))
+		ft_clean(stack_a);
+	if ((*stack_b))
+		ft_clean(stack_b);
+	ft_printf("Error\n");
 }
 
 int	ft_atoli(const char *nptr)
@@ -56,7 +76,7 @@ int	atoi_check(const char *nptr)
 	int	i;
 
 	i = 0;
-	while(nptr[i])
+	while (nptr[i])
 	{
 		if (nptr[i] < 9 || nptr[i] > '9')
 			return (0);
@@ -67,12 +87,13 @@ int	atoi_check(const char *nptr)
 		}
 		i++;
 	}
-    if (ft_atoli(nptr) > 2147483647 || ft_atoli(nptr) < -2147483648)
-        return (0);
+	if (ft_atoli(nptr) > 2147483647 || ft_atoli(nptr) < -2147483648)
+	{
+		return (0);
+	}
 	return (1);
 }
 
-//Function that populattes stack, checking if there are elements that are non-integers or MAXINT
 int	populate_stack(t_stack **stack, int n_elements, char **elements)
 {
 	int	i;
@@ -81,17 +102,30 @@ int	populate_stack(t_stack **stack, int n_elements, char **elements)
 	while (i < n_elements)
 	{
 		if (atoi_check(elements[i]) == 0)
-		{
-			ft_printf("Error\n");
 			return (0);
-		}
 		if (add_position(stack, ft_atoi(elements[i])) == 0)
-		{
-            ft_printf("Error\n");
 			return (0);
-		}
 		i++;
 	}
+	return (1);
+}
+
+//Same but if args are passed as a string
+int	populate_stack_str(t_stack **stack, int n_elements, char **elements)
+{
+	int	i;
+
+	i = 0;
+	while (i < n_elements)
+	{
+		if (atoi_check(elements[i]) == 0)
+			return (0);
+		if (add_position(stack, ft_atoi(elements[i])) == 0)
+			return (0);
+		free(elements[i]);
+		i++;
+	}
+	free(elements);
 	return (1);
 }
 
@@ -99,7 +133,7 @@ int	populate_stack(t_stack **stack, int n_elements, char **elements)
 int	ft_clean(t_stack **stack)
 {
 	t_stack	*tmp;
-	
+
 	if (!(*stack))
 		return (0);
 	(*stack)->next = NULL;
@@ -111,17 +145,16 @@ int	ft_clean(t_stack **stack)
 		(*stack) = tmp;
 	}
 	free((*stack));
-	return(0);
+	return (0);
 }
 
-//Creates a stack with ranked values instead of the original ones. The way it does it is by comparing a number with all the others. Every time a number is smaller, increase the value +1. If they are equal, return error
 int	modify_stack(t_stack **source, t_stack **dest, int n_elements)
 {
 	int	new_value;
 	int	counter;
 	int	counter_b;
 	int	tmp;
-	
+
 	counter = 1;
 	tmp = (*source)->value;
 	(*source) = (*source)->next;

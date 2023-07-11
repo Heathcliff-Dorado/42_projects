@@ -3,19 +3,27 @@ CFLAGS = -Wall -Wextra -Werror
 LIBFT_DIR = include/libft
 
 # List of source files
-CLIENT_SRCS = push_swap.c
+PS_SRCS = push_swap.c
+CHECKER_SRCS = checker.c checker_utils.c
+COMMON_SRCS = common_functions.c
 
 # List of object files to build
-CLIENT_OBJS = $(CLIENT_SRCS:.c=.o)
+PS_OBJS = $(PS_SRCS:.c=.o)
+CHECKER_OBJS = $(CHECKER_SRCS:.c=.o)
+COMMON_OBJS = $(COMMON_SRCS:.c=.o)
 
 NAME = $(LIBFT_DIR)/libft.a
 
-# Build both the client and server executables
-all: $(NAME) client 
+# Build both push_swap and checker executables
+all: $(NAME) push_swap checker
 
-# Build the client executable
-client: $(CLIENT_OBJS) $(NAME)
-	$(CC) $(CFLAGS) $(CLIENT_OBJS) -L$(LIBFT_DIR) -lft -o $@
+# Build the push_swap executable
+push_swap: $(PS_OBJS) $(COMMON_OBJS) $(NAME)
+	$(CC) $(CFLAGS) $(PS_OBJS) $(COMMON_OBJS) -L$(LIBFT_DIR) -lft -o $@
+
+# Builds the checker
+checker: $(CHECKER_OBJS) $(COMMON_OBJS) $(NAME) 
+	$(CC) $(CFLAGS) $(CHECKER_OBJS) $(COMMON_OBJS) -L$(LIBFT_DIR) -lft -o $@
 
 # Build the libft library
 $(NAME): $(LIBFT_DIR)/*.c
@@ -28,11 +36,11 @@ $(NAME): $(LIBFT_DIR)/*.c
 # Remove object files and executables
 clean:
 	$(MAKE) -C $(LIBFT_DIR) clean
-	$(RM) $(CLIENT_OBJS)
+	$(RM) $(PS_OBJS) $(COMMON_OBJS) $(CHECKER_OBJS)
 
 # Remove object files, executables, and the libft library
 fclean: clean
-	$(RM) client
+	$(RM) push_swap checker common
 	$(MAKE) -C $(LIBFT_DIR) fclean
 
 # Rebuild the project from scratch
