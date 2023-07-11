@@ -1,164 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap_2.c                                      :+:      :+:    :+:   */
+/*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:45:55 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/10 01:04:44 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/11 12:51:44 by hdorado          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-//Creates the position in stack if it doesn't exist, and changes the corresponding links
-int	add_position(t_stack **stack, int element)
-{
-	t_stack	*new_position;
-
-	new_position = (t_stack *) malloc(sizeof(t_stack));
-	if (!new_position)
-		return (0);
-	new_position->value = element;
-	if ((*stack))
-	{
-		new_position->previous = (*stack)->previous;
-		new_position->next = (*stack);
-		(*stack)->previous->next = new_position;
-		(*stack)->previous = new_position;
-	}
-	else
-	{
-		new_position->next = new_position;
-		new_position->previous = new_position;
-		(*stack) = new_position;
-	}
-	return (1);
-}
-
-int	ft_atoli(const char *nptr)
-{
-	long int	i;
-	long int	num;
-	long int	sign;
-
-	sign = 1;
-	num = 0;
-	i = 0;
-	while ((nptr[i] >= 9 && nptr[i] <= 13) || nptr[i] == 32)
-		i++;
-	if (nptr[i] == '+')
-		i++;
-	else if (nptr[i] == '-')
-	{
-		sign = -1;
-		i++;
-	}
-	while (nptr[i] >= '0' && nptr[i] <= '9')
-	{
-		num = 10 * num + (nptr[i] - 48);
-		i++;
-	}
-	return (sign * num);
-}
-
-int	atoi_check(const char *nptr)
-{
-	int	i;
-
-	i = 0;
-	while(nptr[i])
-	{
-		if (nptr[i] < 9 || nptr[i] > '9')
-			return (0);
-		if (nptr[i] > 13 && nptr[i] < '0')
-		{
-			if (nptr[i] != 32 && nptr[i] != '-' && nptr[i] != '+')
-				return (0);
-		}
-		i++;
-	}
-    if (ft_atoli(nptr) > 2147483647 || ft_atoli(nptr) < -2147483648)
-        return (0);
-	return (1);
-}
-
-//Function that populattes stack, checking if there are elements that are non-integers or MAXINT
-int	populate_stack(t_stack **stack, int n_elements, char **elements)
-{
-	int	i;
-
-	i = 1;
-	while (i < n_elements)
-	{
-		if (atoi_check(elements[i]) == 0)
-		{
-			ft_printf("Error\n");
-			return (0);
-		}
-		if (add_position(stack, ft_atoi(elements[i])) == 0)
-		{
-            ft_printf("Error\n");
-			return (0);
-		}
-		i++;
-	}
-	return (1);
-
-}
-
-//Makes sure that the stack is freed, if there is any
-int	ft_clean(t_stack **stack)
-{
-	t_stack	*tmp;
-	
-	if (!(*stack))
-		return (0);
-	(*stack)->next = NULL;
-	(*stack) = (*stack)->previous;
-	while ((*stack)->next)
-	{
-		tmp = (*stack)->previous;
-		free((*stack));
-		(*stack) = tmp;
-	}
-	free((*stack));
-	return(0);
-}
-
-//Creates a stack with ranked values instead of the original ones. The way it does it is by comparing a number with all the others. Every time a number is smaller, increase the value +1. If they are equal, return error
-int	modify_stack(t_stack **source, t_stack **dest, int n_elements)
-{
-	int	new_value;
-	int	counter;
-	int	counter_b;
-	int	tmp;
-	
-	counter = 1;
-	tmp = (*source)->value;
-	(*source) = (*source)->next;
-	while (counter++ < n_elements)
-	{
-		new_value = 0;
-		counter_b = 2;
-		while (counter_b++ < n_elements)
-		{
-			if (tmp == (*source)->value)
-				return (0);
-			else if (tmp > (*source)->value)
-				new_value++;
-			(*source) = (*source)->next;
-		}
-		if (add_position(dest, new_value) == 0)
-			return (0);
-		(*source) = (*source)->next;
-		tmp = (*source)->value;
-		(*source) = (*source)->next;
-	}
-	(*source) = (*source)->previous;
-	return (1);
-}
+#include "common_functions.h"
 
 void	ft_swap(t_stack **stack, char c)
 {
@@ -172,27 +25,28 @@ void	ft_swap(t_stack **stack, char c)
 
 void	ft_push(t_stack **donor, t_stack **receiver, char c)
 {
-	if (!(*receiver))
-	{
-		(*receiver) = (*donor);
-		(*donor)->previous->next = (*donor)->next;
-		(*donor)->next->previous = (*donor)->previous;
-		(*donor) = (*donor)->next;
-		(*receiver)->previous = (*receiver);
-		(*receiver)->next = (*receiver);
-	}
-	else
+	if ((*donor))
 	{
 		(*donor)->previous->next = (*donor)->next;
 		(*donor)->next->previous = (*donor)->previous;
-		(*receiver)->previous->next = (*donor);
-		(*donor)->previous = (*receiver)->previous;
-		(*receiver)->previous = (*donor);
-		(*donor) = (*donor)->next;
-		(*receiver)->previous->next = (*receiver);
-		(*receiver) = (*receiver)->previous;
+		if (!(*receiver))
+		{
+			(*receiver) = (*donor);
+			(*donor) = (*donor)->next;
+			(*receiver)->previous = (*receiver);
+			(*receiver)->next = (*receiver);
+		}
+		else
+		{
+			(*receiver)->previous->next = (*donor);
+			(*donor)->previous = (*receiver)->previous;
+			(*receiver)->previous = (*donor);
+			(*donor) = (*donor)->next;
+			(*receiver)->previous->next = (*receiver);
+			(*receiver) = (*receiver)->previous;
+		}
+		ft_printf("p%c\n", c);
 	}
-    ft_printf("p%c\n", c);
 }
 
 void	ft_rrx(t_stack **stack_a, t_stack **stack_b, int n)
@@ -525,7 +379,7 @@ void	ft_prepare_push(t_stack **stack_1, t_stack **stack_2, int index, int min_mo
 			ft_r(stack_2, min_moves + index, 'b');
 		}
 	}
-	ft_push(stack_1, stack_2, 'a');
+	ft_push(stack_1, stack_2, 'b');
 }
 
 //This function will decide which number to push from a to b
@@ -665,13 +519,13 @@ void	ft_push_swap(t_stack **stack_1, t_stack **stack_2, int elements)
 	{
 		if ((*stack_1)->value > (*stack_1)->next->value)
 			ft_swap(stack_1, 'a');
-		ft_push(stack_1, stack_2, 'a');
+		ft_push(stack_1, stack_2, 'b');
 		max = (*stack_1);
-		ft_push(stack_1, stack_2, 'a');
+		ft_push(stack_1, stack_2, 'b');
 	}
     //If there are 4 elements, push just one
 	if (elements == 4)
-		ft_push(stack_1, stack_2, 'a');
+		ft_push(stack_1, stack_2, 'b');
     //Move all elements to b in the right order until there are only 3 left in a
 	while (i < elements - 5)
 	{
@@ -690,7 +544,7 @@ void	ft_push_swap(t_stack **stack_1, t_stack **stack_2, int elements)
 				ft_rr(stack_1, 1, 'a');
 			else if (((*stack_1)->value == (*stack_2)->value + 1) || (*stack_2)->value == elements - 1)
 			{
-				ft_push(stack_2, stack_1, 'b');
+				ft_push(stack_2, stack_1, 'a');
 				i++;
 			}
             else

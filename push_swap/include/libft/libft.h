@@ -6,17 +6,24 @@
 /*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/20 18:49:15 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/04 14:24:13 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/10 22:18:39 by hdorado          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE  1
+# endif
+
 # include <stddef.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <fcntl.h>
 
 typedef struct s_list
 {
@@ -59,6 +66,7 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
+//Libft bonus
 t_list	*ft_lstnew(void *content);
 void	ft_lstadd_front(t_list **lst, t_list *new);
 int		ft_lstsize(t_list *lst);
@@ -68,6 +76,7 @@ void	ft_lstdelone(t_list *lst, void (*del)(void *));
 void	ft_lstclear(t_list **lst, void (*del)(void *));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+//printf
 int		ft_printf(const char *str, ...);
 int		ft_putchar(char c);
 int		ft_putnbr_recursive(unsigned int num);
@@ -78,5 +87,15 @@ int		ft_putptr(unsigned long ptr);
 int		ft_puthexa(unsigned int num, char c);
 int		ft_putnbr(int num);
 int		ft_eval_format(va_list *args, char c);
+//get_next_line
+char	*get_next_line(int fd);
+char	*ft_append(char *str, char *buffer);
+char	*ft_return_line(char *buffer, char *str, char **tmp);
+char	*read_next_line(char **buffer, char **str, char **tmp, int fd);
+char	*ft_error(char **str, char **tmp);
+void	ft_bzero(void *s, size_t n);
+int		ft_search_nl(char *str);
+//get_next_line_bonus
+char	*get_next_line_bonus(int fd);
 
 #endif
