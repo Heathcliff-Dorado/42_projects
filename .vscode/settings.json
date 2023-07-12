@@ -2,6 +2,7 @@
     "files.associations": {
         "type_traits": "c",
         "limits": "c",
-        "libft.h": "c"
+        "libft.h": "c",
+        "checker.h": "c"
     }
 }

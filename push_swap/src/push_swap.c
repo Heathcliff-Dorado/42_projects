@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:45:55 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/11 22:44:53 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/12 14:09:14 by hdorado          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../inc/push_swap.h"
 
 void	ft_swap(t_stack **stack, char c)
 {
@@ -398,7 +398,7 @@ void	ft_movenumber(t_stack **stack_1, t_stack **stack_2, t_stack **max, int elem
 
 void	ft_special_condition(t_stack **stack)
 {
-	if ((*stack)->value > (*stack)->next->value 
+	if ((*stack)->value > (*stack)->next->value
 		&& (*stack)->value > (*stack)->previous->value)
 	{
 		if ((*stack)->next->value > (*stack)->previous->value)
@@ -409,7 +409,7 @@ void	ft_special_condition(t_stack **stack)
 		else
 			ft_r(stack, 1, 'a');
 	}
-	else if ((*stack)->value < (*stack)->next->value 
+	else if ((*stack)->value < (*stack)->next->value
 		&& (*stack)->value < (*stack)->previous->value)
 	{
 		if ((*stack)->next->value > (*stack)->previous->value)
@@ -429,8 +429,8 @@ void	ft_special_condition(t_stack **stack)
 
 void	ft_organize_3(t_stack **stack, int elm)
 {
-	if (elm == 3 || !(((*stack)->value == elm - 1) 
-			|| ((*stack)->next->value == elm - 1) 
+	if (elm == 3 || !(((*stack)->value == elm - 1)
+			|| ((*stack)->next->value == elm - 1)
 			|| ((*stack)->previous->value == elm - 1)))
 		ft_special_condition(stack);
 	else
@@ -524,7 +524,7 @@ void	ft_push_swap(t_stack **s_1, t_stack **s_2, int el)
 		{
 			if ((*s_1)->value == (*s_1)->previous->value + 1)
 				ft_rr(s_1, 1, 'a');
-			else if (((*s_1)->value == (*s_2)->value + 1) 
+			else if (((*s_1)->value == (*s_2)->value + 1)
 				|| (*s_2)->value == el - 1)
 			{
 				ft_push(s_2, s_1, 'a');

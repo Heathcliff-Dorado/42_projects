@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   checker.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 21:42:33 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/11 22:20:20 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/12 13:08:17 by hdorado          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHECKER_H
 # define CHECKER_H
 
-# include "include/libft/libft.h"
 # include "common_functions.h"
 
 int		ft_command(t_stack **stack_a, t_stack **stack_b, char *str);

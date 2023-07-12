@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   common_functions.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 21:22:51 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/11 22:09:18 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/12 13:08:07 by hdorado          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COMMON_FUNCTIONS_H
 # define COMMON_FUNCTIONS_H
 
-# include "include/libft/libft.h"
+# include "../lib/libft/libft.h"
 
 typedef struct s_stack
 {

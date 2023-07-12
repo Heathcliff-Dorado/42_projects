@@ -1,11 +1,17 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-LIBFT_DIR = include/libft
+LIBFT_DIR = lib/libft
+SRC_DIR = src/
 
 # List of source files
-PS_SRCS = push_swap.c
-CHECKER_SRCS = checker.c checker_utils.c
-COMMON_SRCS = common_functions.c
+PS_SRC = push_swap.c
+CHECKER_SRC = checker.c checker_utils.c
+COMMON_SRC = common_functions.c
+
+# List of source files with prefix
+PS_SRCS = $(addprefix $(SRC_DIR), $(PS_SRC))
+CHECKER_SRCS = $(addprefix $(SRC_DIR), $(CHECKER_SRC))
+COMMON_SRCS = $(addprefix $(SRC_DIR), $(COMMON_SRC))
 
 # List of object files to build
 PS_OBJS = $(PS_SRCS:.c=.o)
@@ -22,7 +28,7 @@ push_swap: $(PS_OBJS) $(COMMON_OBJS) $(NAME)
 	$(CC) $(CFLAGS) $(PS_OBJS) $(COMMON_OBJS) -L$(LIBFT_DIR) -lft -o $@
 
 # Builds the checker
-checker: $(CHECKER_OBJS) $(COMMON_OBJS) $(NAME) 
+checker: $(CHECKER_OBJS) $(COMMON_OBJS) $(NAME)
 	$(CC) $(CFLAGS) $(CHECKER_OBJS) $(COMMON_OBJS) -L$(LIBFT_DIR) -lft -o $@
 
 # Build the libft library
@@ -40,7 +46,7 @@ clean:
 
 # Remove object files, executables, and the libft library
 fclean: clean
-	$(RM) push_swap checker common
+	$(RM) push_swap checker
 	$(MAKE) -C $(LIBFT_DIR) fclean
 
 # Rebuild the project from scratch

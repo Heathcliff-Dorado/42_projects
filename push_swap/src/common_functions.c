@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   common_functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 21:51:50 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/11 22:24:25 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/12 13:13:31 by hdorado          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "common_functions.h"
+#include "../inc/common_functions.h"
 
 int	add_position(t_stack **stack, int element)
 {

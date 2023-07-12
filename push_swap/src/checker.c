@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   checker.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 21:24:22 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/11 22:06:42 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/12 14:09:06 by hdorado          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "checker.h"
+#include "../inc/checker.h"
 
 void	ft_do_swap(t_stack **stack)
 {

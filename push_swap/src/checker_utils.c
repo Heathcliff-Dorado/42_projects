@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   checker_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 21:47:32 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/11 21:50:58 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/12 14:09:10 by hdorado          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "checker.h"
+#include "../inc/checker.h"
 
 int	ft_confirmation(t_stack **stack, int elements)
 {
