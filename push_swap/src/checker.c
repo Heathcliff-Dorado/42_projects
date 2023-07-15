@@ -6,7 +6,7 @@
 /*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 21:24:22 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/12 14:09:06 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/14 09:04:00 by hdorado          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,62 +97,47 @@ int	ft_command(t_stack **stack_a, t_stack **stack_b, char *str)
 	return (1);
 }
 
-int	main(int argc, char **argv)
+int	ft_read_lines(t_stack **stack_a, t_stack **stack_b)
 {
-	t_stack	*stack_a;
-	t_stack	*stack_b;
 	char	*str;
-	char	**strar;
 
-	stack_a = NULL;
-	stack_b = NULL;
-	if (argc == 1)
-		return (0);
-	if (argc == 2)
-	{
-		strar = ft_split(argv[1], ' ');
-		if (strar == 0)
-		{
-			ft_error_push_swap(&stack_a, &stack_b);
-			return (0);
-		}
-		argc = 0;
-		while (strar[argc])
-			argc++;
-		if (populate_stack_str(&stack_a, argc, strar) == 0)
-		{
-			ft_error_push_swap(&stack_a, &stack_b);
-			return (0);
-		}
-		argc++;
-	}
-	else if (populate_stack(&stack_a, argc, argv) == 0)
-	{
-		ft_error_push_swap(&stack_a, &stack_b);
-		return (0);
-	}
-	if (modify_stack(&stack_a, &stack_b, argc) == 0)
-	{
-		ft_error_push_swap(&stack_a, &stack_b);
-		return (0);
-	}
 	str = get_next_line(0);
 	while (str)
 	{
 		if (ft_strlen(str) > 4 || ft_strlen(str) < 3)
 		{
-			ft_error_push_swap(&stack_a, &stack_b);
+			ft_error_push_swap(stack_a, stack_b);
 			return (0);
 		}
-		if (ft_command(&stack_b, &stack_a, str) == 0)
+		if (ft_command(stack_b, stack_a, str) == 0)
 		{
-			ft_error_push_swap(&stack_a, &stack_b);
+			ft_error_push_swap(stack_a, stack_b);
 			return (0);
 		}
 		free(str);
 		str = get_next_line(0);
 	}
 	free(str);
+	return (1);
+}
+
+int	main(int argc, char **argv)
+{
+	t_stack	*stack_a;
+	t_stack	*stack_b;
+
+	stack_a = NULL;
+	stack_b = NULL;
+	if (argc == 1)
+		return (0);
+	argc = ft_retrieve_value(argc, argv, &stack_a);
+	if (argc == 0 || modify_stack(&stack_a, &stack_b, argc) == 0)
+	{
+		ft_error_push_swap(&stack_a, &stack_b);
+		return (0);
+	}
+	if (ft_read_lines(&stack_a, &stack_b) == 0)
+		return (0);
 	if (stack_a)
 		ft_clean(&stack_a);
 	if (ft_confirmation(&stack_b, argc - 1))
