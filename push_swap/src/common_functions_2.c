@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   common_functions_2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 14:00:49 by hdorado           #+#    #+#             */
-/*   Updated: 2023/07/15 14:27:34 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/16 21:18:44 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ void	ft_error_push_swap(t_stack **stack_a, t_stack **stack_b)
 		ft_clean(stack_a);
 	if ((*stack_b))
 		ft_clean(stack_b);
-	ft_printf("Error\n");
+	ft_putstr_fd("Error\n", 2);
 }
 
-int	ft_atoli(const char *nptr)
+long int	ft_atoli(const char *nptr)
 {
 	long int	i;
 	long int	num;
@@ -88,9 +88,7 @@ int	atoi_check(const char *nptr)
 		i++;
 	}
 	if (ft_atoli(nptr) > 2147483647 || ft_atoli(nptr) < -2147483648)
-	{
 		return (0);
-	}
 	return (1);
 }
 

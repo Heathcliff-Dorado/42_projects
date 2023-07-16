@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:45:55 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/16 15:26:14 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/16 21:28:30 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,8 @@ int	main(int argc, char **argv)
 	}
 	ft_clean(&stack_a);
 	stack_a = NULL;
-	ft_push_swap(&stack_b, &stack_a, argc - 1);
+	if (ft_confirmation(&stack_b, argc - 1) == 0)
+		ft_push_swap(&stack_b, &stack_a, argc - 1);
 	ft_clean(&stack_a);
 	ft_clean(&stack_b);
 }

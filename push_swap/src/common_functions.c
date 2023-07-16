@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   common_functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 21:51:50 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/15 14:27:10 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/16 21:23:48 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,15 @@ int	populate_stack_str(t_stack **stack, int n_elements, char **elements)
 	while (i < n_elements)
 	{
 		if (atoi_check(elements[i]) == 0)
+		{
+			ft_free_array(elements);
 			return (0);
+		}
 		if (add_position(stack, ft_atoi(elements[i])) == 0)
+		{
+			ft_free_array(elements);
 			return (0);
+		}
 		free(elements[i]);
 		i++;
 	}
