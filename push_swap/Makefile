@@ -5,7 +5,7 @@ SRC_DIR = src/
 
 # List of source files
 PS_SRC = push_swap.c push_swap_utils.c push_swap_utils_2.c push_swap_utils_3.c push_swap_utils_4.c push_swap_utils_5.c
-CHECKER_SRC = checker.c checker_utils.c
+CHECKER_SRC = checker.c checker_utils.c checker_utils_2.c
 COMMON_SRC = common_functions.c common_functions_2.c
 
 # List of source files with prefix

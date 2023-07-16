@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:47:09 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/15 13:59:01 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/16 14:42:03 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include "common_functions.h"
 
 //push_swap_utils
-void	ft_rotate_overlap (t_stack **stack_1, t_stack **stack_2, int index, int min_moves);
-void	ft_prepare_push(t_stack **stack_1, t_stack **stack_2, int index, int min_moves);
-void	ft_movenumber(t_stack **stack_1, t_stack **stack_2, t_stack **max, int elem_in_b);
+void	ft_rotate_overlap(t_stack **s_1, t_stack **s_2, int index, int min);
+void	ft_prepare_push(t_stack **s_1, t_stack **s_2, int index, int min);
+void	ft_movenumber(t_stack **s_1, t_stack **s_2, t_stack **max, int el_b);
 void	ft_s_r(t_stack **stack);
 void	ft_s_rr(t_stack **stack);
 //push_swap_utils_2
@@ -35,14 +35,14 @@ int		ft_elem_in_b(t_stack **stack);
 int		ft_get_min_moves(t_stack **stack, t_stack **max, int value);
 //push_swap_utils_4
 int		ft_get_value(t_stack **stack, int index);
-int		ft_cm_next(t_stack **stack_2, t_stack **stack_1, t_stack **max, int index);
-int		ft_cm_previous(t_stack **stack_2, t_stack **stack_1, t_stack **max, int counter);
+int		ft_cm_next(t_stack **s_2, t_stack **s_1, t_stack **max, int index);
+int		ft_cm_pr(t_stack **s_2, t_stack **s_1, t_stack **max, int counter);
 int		ft_check_down(t_stack **stack, int value, int index);
 int		ft_check_up(t_stack **stack, int value, int index);
 //push_swap_utils_5
 int		ft_overlap_equal(int index, t_stack **stack_2, int value);
-int		ft_find_overlap(t_stack **stack_2, int value, int index, int min_moves);
-void	ft_rotate_no_overlap(int index, t_stack **stack_1, t_stack **stack_2, int min_moves);
+int		ft_find_overlap(t_stack **stack_2, int value, int index, int min);
+void	ft_rotate_no_overlap(int index, t_stack **s_1, t_stack **s_2, int min);
 void	ft_special_condition(t_stack **stack);
 void	ft_organize_3(t_stack **stack, int elm);
 //push_swap

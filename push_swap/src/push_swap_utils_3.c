@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap_utils_3.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 13:51:14 by hdorado           #+#    #+#             */
-/*   Updated: 2023/07/15 13:54:37 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/16 15:32:14 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,11 @@ void	ft_r(t_stack **stack, int n, char c)
 //Check if stack_2 has a new max and keeps it as a reference
 void	ft_new_max(t_stack **stack, t_stack **max, int elem_in_b)
 {
-	int	i;
+	int		i;
+	t_stack	*tmp;
 
 	i = 0;
+	tmp = (*stack);
 	while (i < elem_in_b)
 	{
 		if ((*stack)->value > (*max)->value)
@@ -38,6 +40,7 @@ void	ft_new_max(t_stack **stack, t_stack **max, int elem_in_b)
 		(*stack) = (*stack)->next;
 		i++;
 	}
+	(*stack) = tmp;
 }
 
 int	ft_max(int moves, int counter)

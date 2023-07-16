@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap_utils_4.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 13:51:17 by hdorado           #+#    #+#             */
-/*   Updated: 2023/07/15 13:55:48 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/16 14:43:12 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,15 @@ int	ft_get_value(t_stack **stack, int index)
 	return (value);
 }
 
-int	ft_cm_next(t_stack **stack_2, t_stack **stack_1, t_stack **max, int index)
+int	ft_cm_next(t_stack **s_2, t_stack **s_1, t_stack **max, int index)
 {
 	int		value;
 	int		moves;
 	int		elem_in_b;
 
-	value = ft_get_value(stack_1, index);
-	moves = ft_get_min_moves(stack_2, max, value);
-	elem_in_b = ft_elem_in_b(stack_2);
+	value = ft_get_value(s_1, index);
+	moves = ft_get_min_moves(s_2, max, value);
+	elem_in_b = ft_elem_in_b(s_2);
 	if ((moves + index) < ft_max(elem_in_b - moves, index))
 		return (moves + index);
 	else
@@ -52,15 +52,15 @@ int	ft_cm_next(t_stack **stack_2, t_stack **stack_1, t_stack **max, int index)
 }
 
 //Check count_moves_next for explanation
-int	ft_cm_previous(t_stack **stack_2, t_stack **stack_1, t_stack **max, int counter)
+int	ft_cm_pr(t_stack **s_2, t_stack **s_1, t_stack **max, int counter)
 {
 	int		value;
 	int		moves;
 	int		elem_in_b;
 
-	value = ft_get_value(stack_1, -counter);
-	moves = ft_get_min_moves(stack_2, max, value);
-	elem_in_b = ft_elem_in_b(stack_2);
+	value = ft_get_value(s_1, -counter);
+	moves = ft_get_min_moves(s_2, max, value);
+	elem_in_b = ft_elem_in_b(s_2);
 	if ((elem_in_b - moves + counter) < ft_max(moves, counter))
 		return (elem_in_b - moves + counter);
 	else
@@ -77,7 +77,8 @@ int	ft_check_down(t_stack **stack, int value, int index)
 	tmp = (*stack);
 	while (i++ < index)
 		(*stack) = (*stack)->next;
-	if (((*stack)->value > (*stack)->next->value) && ((*stack)->value > (*stack)->previous->value))
+	if (((*stack)->value > (*stack)->next->value)
+		&& ((*stack)->value > (*stack)->previous->value))
 	{
 		if ((value > (*stack)->value) || (value < (*stack)->previous->value))
 		{
@@ -104,7 +105,8 @@ int	ft_check_up(t_stack **stack, int value, int index)
 	tmp = (*stack);
 	while (i++ < index)
 		(*stack) = (*stack)->previous;
-	if (((*stack)->value > (*stack)->next->value) && ((*stack)->value > (*stack)->previous->value))
+	if (((*stack)->value > (*stack)->next->value)
+		&& ((*stack)->value > (*stack)->previous->value))
 	{
 		if ((value > (*stack)->value) || (value < (*stack)->previous->value))
 		{

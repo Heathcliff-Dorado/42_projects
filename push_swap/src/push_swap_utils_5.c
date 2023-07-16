@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap_utils_5.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdorado- <hdorado-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 13:51:20 by hdorado           #+#    #+#             */
-/*   Updated: 2023/07/15 13:57:02 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/16 14:42:49 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,32 +37,32 @@ int	ft_overlap_equal(int index, t_stack **stack_2, int value)
 }
 
 //Checks how many rotations can be saved because they are in the same direction
-int	ft_find_overlap(t_stack **stack_2, int value, int index, int min_moves)
+int	ft_find_overlap(t_stack **stack_2, int value, int index, int min)
 {
-	if (abs(index) == min_moves)
+	if (abs(index) == min)
 		return (ft_overlap_equal(index, stack_2, value));
 	else
 	{
-		if ((index > 0) && (ft_check_down(stack_2, value, min_moves) == 1))
+		if ((index > 0) && (ft_check_down(stack_2, value, min) == 1))
 			return (index);
-		else if ((index < 0) && (ft_check_up(stack_2, value, abs(min_moves)) == 1))
+		else if ((index < 0) && (ft_check_up(stack_2, value, abs(min)) == 1))
 			return (abs(index));
 	}
 	return (0);
 }
 
-void	ft_rotate_no_overlap(int index, t_stack **stack_1, t_stack **stack_2, int min_moves)
+void	ft_rotate_no_overlap(int index, t_stack **s_1, t_stack **s_2, int min)
 {
 	if (index > 0)
-		{
-			ft_r(stack_1, index, 'a');
-			ft_rr(stack_2, min_moves - index, 'b');
-		}
-		else if (index < 0)
-		{
-			ft_rr(stack_1, -index, 'a');
-			ft_r(stack_2, min_moves + index, 'b');
-		}
+	{
+		ft_r(s_1, index, 'a');
+		ft_rr(s_2, min - index, 'b');
+	}
+	else if (index < 0)
+	{
+		ft_rr(s_1, -index, 'a');
+		ft_r(s_2, min + index, 'b');
+	}
 }
 
 void	ft_special_condition(t_stack **stack)
