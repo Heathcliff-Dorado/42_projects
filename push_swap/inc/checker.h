@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 21:42:33 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/16 21:24:18 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/17 13:07:57 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ void	ft_rrotate(t_stack **stack);
 void	ft_rotate_both(t_stack **stack_a, t_stack **stack_b);
 void	ft_rotate(t_stack **stack);
 void	ft_do_push(t_stack **donor, t_stack **receiver);
+//checker_utils_2
+void	ft_last_push(t_stack **donor, t_stack **receiver);
+void	ft_normal_push(t_stack **donor, t_stack **receiver);
 //checker
 int		ft_command(t_stack **stack_a, t_stack **stack_b, char *str);
 int		ft_rotate_checker(t_stack **stack_a, t_stack **stack_b, char *str);
