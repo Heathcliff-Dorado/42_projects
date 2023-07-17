@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 21:47:32 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/16 21:24:16 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/17 13:04:50 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,12 @@
 
 void	ft_do_push(t_stack **donor, t_stack **receiver)
 {
+	if ((*donor) != NULL)
 	{
-		(*donor)->previous->next = (*donor)->next;
-		(*donor)->next->previous = (*donor)->previous;
-		if (!(*receiver))
-		{
-			(*receiver) = (*donor);
-			(*donor) = (*donor)->next;
-			(*receiver)->previous = (*receiver);
-			(*receiver)->next = (*receiver);
-		}
+		if ((*donor)->value == (*donor)->next->value)
+			ft_last_push(donor, receiver);
 		else
-		{
-			(*receiver)->previous->next = (*donor);
-			(*donor)->previous = (*receiver)->previous;
-			(*receiver)->previous = (*donor);
-			(*donor) = (*donor)->next;
-			(*receiver)->previous->next = (*receiver);
-			(*receiver) = (*receiver)->previous;
-		}
+			ft_normal_push(donor, receiver);
 	}
 }
 
