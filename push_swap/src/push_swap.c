@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 14:45:55 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/18 21:13:06 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/18 23:57:49 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	ft_push_swap(t_stack **s_1, t_stack **s_2, int el)
 	if (el > 4)
 	{
 		ft_push(s_1, s_2, 'b');
+		max = (*s_2);
 		if ((*s_2)->value < (*s_2)->next->value)
 		{
 			ft_swap(s_2, 'b');
