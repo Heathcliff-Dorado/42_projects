@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 21:23:23 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/16 21:24:46 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/18 21:07:49 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,22 @@
 
 int	ft_confirmation(t_stack **stack, int elements)
 {
-	int	i;
+	int		i;
+	t_stack	*tmp;
 
-	i = -1;
-	while (++i < elements)
+	i = 0;
+	tmp = (*stack);
+	while (i < elements)
 	{
 		if ((*stack)->value != i)
+		{
+			(*stack) = tmp;
 			return (0);
+		}
 		(*stack) = (*stack)->next;
+		i++;
 	}
+	(*stack) = tmp;
 	return (1);
 }
 

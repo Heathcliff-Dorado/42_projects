@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 14:00:49 by hdorado           #+#    #+#             */
-/*   Updated: 2023/07/16 21:18:44 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/18 20:58:35 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,18 +76,14 @@ int	atoi_check(const char *nptr)
 	int	i;
 
 	i = 0;
-	while (nptr[i])
-	{
-		if (nptr[i] < 9 || nptr[i] > '9')
-			return (0);
-		if (nptr[i] > 13 && nptr[i] < '0')
-		{
-			if (nptr[i] != 32 && nptr[i] != '-' && nptr[i] != '+')
-				return (0);
-		}
+	while ((nptr[i] >= 9 && nptr[i] <= 13) || nptr[i] == 32)
 		i++;
-	}
-	if (ft_atoli(nptr) > 2147483647 || ft_atoli(nptr) < -2147483648)
+	if (nptr[i] == '+' || nptr[i] == '-')
+		i++;
+	while (nptr[i] >= '0' && nptr[i] <= '9')
+		i++;
+	if (nptr[i] || ft_atoli(nptr) > 2147483647
+		|| ft_atoli(nptr) < -2147483648)
 		return (0);
 	return (1);
 }

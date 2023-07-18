@@ -3,14 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 20:39:11 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/10 22:20:07 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/18 22:15:12 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+void	ft_useless_tmp(char **tmp)
+{
+	if (!(*tmp)[0])
+	{
+		free((*tmp));
+		(*tmp) = NULL;
+	}
+}
 
 char	*ft_return_line(char *buffer, char *str, char **tmp)
 {
@@ -31,6 +40,7 @@ char	*ft_return_line(char *buffer, char *str, char **tmp)
 	if (!*tmp)
 		return (ft_error(&final_str, NULL));
 	ft_strlcpy(*tmp, str + i + 1, ft_strlen(str) - i);
+	ft_useless_tmp(tmp);
 	free(str);
 	if (ft_strlen(final_str) == 0)
 		return (ft_error(&final_str, tmp));
@@ -109,7 +119,7 @@ int	main(void)
 {
 	char	*str;
 	int	fd;
-	
+
 	fd = open("read_error.txt", O_RDONLY);
 	str = get_next_line(fd);
 	printf("Result: %s\n", str);

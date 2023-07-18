@@ -6,34 +6,33 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 21:51:50 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/16 21:23:48 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/18 20:32:43 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/common_functions.h"
 
 //Same but if args are passed as a string
-int	populate_stack_str(t_stack **stack, int n_elements, char **elements)
+int	populate_stack_str(t_stack **stack, int n, char **el)
 {
 	int	i;
 
 	i = 0;
-	while (i < n_elements)
+	while (i < n)
 	{
-		if (atoi_check(elements[i]) == 0)
+		if (atoi_check(el[i]) == 0)
 		{
-			ft_free_array(elements);
+			ft_free_array(el);
 			return (0);
 		}
-		if (add_position(stack, ft_atoi(elements[i])) == 0)
+		if (add_position(stack, ft_atoi(el[i])) == 0)
 		{
-			ft_free_array(elements);
+			ft_free_array(el);
 			return (0);
 		}
-		free(elements[i]);
 		i++;
 	}
-	free(elements);
+	ft_free_array(el);
 	return (1);
 }
 

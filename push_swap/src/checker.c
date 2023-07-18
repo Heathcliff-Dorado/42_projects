@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 21:24:22 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/17 12:57:20 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/07/18 22:09:26 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,12 @@ void	ft_do_swap(t_stack **stack)
 {
 	int	tmp;
 
-	tmp = (*stack)->value;
-	(*stack)->value = (*stack)->next->value;
-	(*stack)->next->value = tmp;
+	if ((*stack) != NULL)
+	{
+		tmp = (*stack)->value;
+		(*stack)->value = (*stack)->next->value;
+		(*stack)->next->value = tmp;
+	}
 }
 
 int	ft_rotate_checker(t_stack **stack_a, t_stack **stack_b, char *str)
@@ -82,11 +85,13 @@ int	ft_read_lines(t_stack **stack_a, t_stack **stack_b)
 	{
 		if (ft_strlen(str) > 4 || ft_strlen(str) < 3)
 		{
+			free(str);
 			ft_error_push_swap(stack_a, stack_b);
 			return (0);
 		}
 		if (ft_command(stack_b, stack_a, str) == 0)
 		{
+			free(str);
 			ft_error_push_swap(stack_a, stack_b);
 			return (0);
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hdorado <hdorado@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/20 18:49:15 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/07/10 22:18:39 by hdorado          ###   ########.fr       */
+/*   Updated: 2023/07/18 22:15:04 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ char	*read_next_line(char **buffer, char **str, char **tmp, int fd);
 char	*ft_error(char **str, char **tmp);
 void	ft_bzero(void *s, size_t n);
 int		ft_search_nl(char *str);
+void	ft_useless_tmp(char **tmp);
 //get_next_line_bonus
 char	*get_next_line_bonus(int fd);
 
