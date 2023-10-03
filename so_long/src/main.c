@@ -4,7 +4,35 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-static mlx_image_t* image;
+//static mlx_image_t* image;
+
+void	ft_lstadd_back_s(t_lists **lst, t_lists *new)
+{
+	t_lists	*tmp;
+
+	tmp = (*lst);
+	if (!(*lst))
+		(*lst) = new;
+	else
+	{
+		while ((*lst)->next)
+			(*lst) = (*lst)->next;
+		(*lst)->next = new;
+		(*lst) = tmp;
+	}
+}
+
+t_lists	*ft_lstnew_s(mlx_image_t *content)
+{
+	t_lists	*lst;
+
+	lst = malloc(sizeof(t_lists));
+	if (!lst)
+		return (NULL);
+	lst->next = NULL;
+	lst->content = (mlx_image_t *)content;
+	return (lst);
+}
 
 void	ft_error_handling(int errno)
 {
@@ -27,7 +55,7 @@ void	ft_error_handling(int errno)
 		ft_putstr_fd("No valid path to collectible or exit\n", 2);
 }
 
-
+/*
 
 int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 {
@@ -60,27 +88,225 @@ void ft_randomize(void* param)
 
 void ft_hook(void* param)
 {
-	mlx_t* mlx = param;
-	int	i;
+	t_game	*g;
+	mlx_t	*mlx;
 
-	i = 0;
-	if (param)
-		i = 0;
-	else if (i == 1)
-		i = 1;
+	g = param;
+	mlx = g->id;
 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(mlx);
 	if (mlx_is_key_down(mlx, MLX_KEY_UP))
-		image->instances[0].y -= 5;
+		//mlx_close_window(mlx);
+		g->sprites.link->instances[0].y -= 1;
 	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
-		image->instances[0].y += 5;
+		//mlx_close_window(mlx);
+		g->sprites.link->instances[0].y += 1;
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
-		image->instances[0].x -= 5;
+		//mlx_close_window(mlx);
+		g->sprites.link->instances[0].x -= 1;
 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
-		image->instances[0].x += 5;
+		//mlx_close_window(mlx);
+		g->sprites.link->instances[0].x += 1;
+}
+*/
+/*
+void	ft_start_moving(t_game *g, int direction)
+{
+	if (direction == N)
+	{
+		g->pl->win_pos.y = g->pl->win_pos.y - 3;
+		mlx_image_to_window(g->id, g->sprites.black, (g->pl->pos.x) * SIZE, (g->pl->pos.y) * SIZE);
+		mlx_image_to_window(g->id, g->sprites.black, (g->pl->pos.x) * SIZE, (g->pl->pos.y - 1) * SIZE);
+		mlx_image_to_window(g->id, g->pl->sprites.up->content, g->pl->win_pos.x, g->pl->win_pos.y);
+		g->pl->sprites.up = g->pl->sprites.up->next;
+		g->pl->dir = N;
+	}
+	if (g->pl->dir == S)
+	{
+		g->sprites.link->instances[0].y += 16;
+		g->pl->dir = S;
+	}
+	if (g->pl->dir == W)
+	{
+		g->sprites.link->instances[0].x -= 16;
+		g->pl->dir = W;
+	}
+	if (g->pl->dir == E)
+	{
+		g->sprites.link->instances[0].x += 16;
+		g->pl->dir = E;
+	}
+	g->pl->moving = 1;
+}*/
+
+void	ft_moving(t_game *g)
+{
+	if (g->pl->dir == N)
+	{
+		if (g->pl->sprites.up->next)
+		{
+			g->pl->win_pos.y = g->pl->win_pos.y - 3;
+			g->pl->sprites.up->content->enabled = 0;
+			g->pl->sprites.up = g->pl->sprites.up->next;
+			g->pl->sprites.up->content->instances[0].x = g->pl->win_pos.x;
+			g->pl->sprites.up->content->instances[0].y = g->pl->win_pos.y;
+			g->pl->sprites.up->content->enabled = true;
+		}
+		else
+		{
+			g->pl->win_pos.y = g->pl->win_pos.y - 2;
+			g->pl->sprites.up->content->enabled = 0;
+			g->pl->sprites.up = g->pl->sprites.up_bak;
+			g->pl->sprites.up->content->instances[0].x = g->pl->win_pos.x;
+			g->pl->sprites.up->content->instances[0].y = g->pl->win_pos.y;
+			g->pl->sprites.up->content->enabled = true;
+			g->pl->pos.y--;
+			g->pl->moving = 0;
+		}
+	}
+	if (g->pl->dir == S)
+	{
+		if (g->pl->sprites.down->next)
+		{
+			g->pl->win_pos.y = g->pl->win_pos.y + 3;
+			g->pl->sprites.down->content->enabled = 0;
+			g->pl->sprites.down = g->pl->sprites.down->next;
+			g->pl->sprites.down->content->instances[0].x = g->pl->win_pos.x;
+			g->pl->sprites.down->content->instances[0].y = g->pl->win_pos.y;
+			g->pl->sprites.down->content->enabled = true;
+		}
+		else
+		{
+			g->pl->win_pos.y = g->pl->win_pos.y + 2;
+			g->pl->sprites.down->content->enabled = 0;
+			g->pl->sprites.down = g->pl->sprites.down_bak;
+			g->pl->sprites.down->content->instances[0].x = g->pl->win_pos.x;
+			g->pl->sprites.down->content->instances[0].y = g->pl->win_pos.y;
+			g->pl->sprites.down->content->enabled = true;
+			g->pl->pos.y++;
+			g->pl->moving = 0;
+		}
+	}
+	if (g->pl->dir == W)
+	{
+		if (g->pl->sprites.left->next)
+		{
+			g->pl->win_pos.x = g->pl->win_pos.x - 3;
+			g->pl->sprites.left->content->enabled = 0;
+			g->pl->sprites.left = g->pl->sprites.left->next;
+			g->pl->sprites.left->content->instances[0].x = g->pl->win_pos.x;
+			g->pl->sprites.left->content->instances[0].y = g->pl->win_pos.y;
+			g->pl->sprites.left->content->enabled = true;
+		}
+		else
+		{
+			g->pl->win_pos.x = g->pl->win_pos.x - 2;
+			g->pl->sprites.left->content->enabled = 0;
+			g->pl->sprites.left = g->pl->sprites.left_bak;
+			g->pl->sprites.left->content->instances[0].x = g->pl->win_pos.x;
+			g->pl->sprites.left->content->instances[0].y = g->pl->win_pos.y;
+			g->pl->sprites.left->content->enabled = true;
+			g->pl->pos.x--;
+			g->pl->moving = 0;
+		}
+	}
+	if (g->pl->dir == E)
+	{
+		if (g->pl->sprites.right->next)
+		{
+			g->pl->win_pos.x = g->pl->win_pos.x + 3;
+			g->pl->sprites.right->content->enabled = 0;
+			g->pl->sprites.right = g->pl->sprites.right->next;
+			g->pl->sprites.right->content->instances[0].x = g->pl->win_pos.x;
+			g->pl->sprites.right->content->instances[0].y = g->pl->win_pos.y;
+			g->pl->sprites.right->content->enabled = true;
+		}
+		else
+		{
+			g->pl->win_pos.x = g->pl->win_pos.x + 2;
+			g->pl->sprites.right->content->enabled = 0;
+			g->pl->sprites.right = g->pl->sprites.right_bak;
+			g->pl->sprites.right->content->instances[0].x = g->pl->win_pos.x;
+			g->pl->sprites.right->content->instances[0].y = g->pl->win_pos.y;
+			g->pl->sprites.right->content->enabled = true;
+			g->pl->pos.x++;
+			g->pl->moving = 0;
+		}
+	}
 }
 
+void	ft_changedir(t_game *g, int dir)
+{
+	g->pl->sprites.up->content->enabled = 0;
+	g->pl->sprites.down->content->enabled = 0;
+	g->pl->sprites.left->content->enabled = 0;
+	g->pl->sprites.right->content->enabled = 0;
+	if (dir == N)
+	{
+		g->pl->sprites.up->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sprites.up->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sprites.up->content->enabled = true;
+	}
+	if (dir == S)
+	{
+		g->pl->sprites.down->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sprites.down->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sprites.down->content->enabled = true;
+	}
+	if (dir == W)
+	{
+		g->pl->sprites.left->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sprites.left->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sprites.left->content->enabled = true;
+	}
+	if (dir == E)
+	{
+		g->pl->sprites.right->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sprites.right->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sprites.right->content->enabled = true;
+	}
+	g->pl->dir = dir;
 
+}
+
+int	ft_moveallowed(t_game *g)
+{
+	if (g->pl->dir == N && g->map_bak[g->pl->pos.y - 1][g->pl->pos.x] != '1')
+		return (1);
+	if (g->pl->dir == S && g->map_bak[g->pl->pos.y + 1][g->pl->pos.x] != '1')
+		return (1);
+	if (g->pl->dir == W && g->map_bak[g->pl->pos.y][g->pl->pos.x - 1] != '1')
+		return (1);
+	if (g->pl->dir == E && g->map_bak[g->pl->pos.y][g->pl->pos.x + 1] != '1')
+		return (1);
+	return (0);
+}
+
+void	my_keyhook(mlx_key_data_t keydata, void* param)
+{
+	t_game	**g;
+	mlx_t	*mlx;
+
+	g = param;
+	mlx = (*g)->id;
+	if (keydata.key == MLX_KEY_ESCAPE)
+		mlx_close_window(mlx);
+	if (!((*g)->pl->moving))
+	{
+		if (keydata.key == MLX_KEY_UP && (*g)->pl->dir != N)
+			ft_changedir((*g), N);
+		else if (keydata.key == MLX_KEY_DOWN && (*g)->pl->dir != S)
+			ft_changedir((*g), S);
+		else if (keydata.key == MLX_KEY_LEFT && (*g)->pl->dir != W)
+			ft_changedir((*g), W);
+		else if (keydata.key == MLX_KEY_RIGHT && (*g)->pl->dir != E)
+			ft_changedir((*g), E);
+		else if (ft_moveallowed((*g)))
+			(*g)->pl->moving = 1;
+	}
+}
+
+/*
 int	key_hook(int key, t_game *g)
 {
 	if ((key == KEY_Q || key == KEY_ESC) && !g->pac_dying)
@@ -158,7 +384,7 @@ int	ft_update(t_game *g)
 	ft_check_game(g);
 	if (g->redraw)
 	{
-		ft_put_ghosts(g);
+		//ft_put_ghosts(g);
 		mlx_put_image_to_window(g->id, g->w_id, g->sprites.logo, \
 		(g->width - 131) / 2, g->height - 42);
 		ft_update_score(g);
@@ -175,8 +401,8 @@ int	ft_update(t_game *g)
 		g->redraw = 0;
 	}
 	return (0);
-}
-
+}*/
+/*
 t_list	*ft_load_pacdeath(t_game *g)
 {
 	t_list	*pacdeath;
@@ -234,23 +460,8 @@ t_font	ft_load_score_font(t_game *g)
 		"sprites/Other/Fonts/black.xpm", &size, &size);
 	return (g->sprites.score_font);
 }
+*/
 
-t_sprite	ft_initsprites(t_game *g)
-{
-	int			size;
-
-	size = SIZE;
-	g->sprites.wall = mlx_texture_to_image(g->id, mlx_load_png("sprites/others/wall.png"));
-	g->sprites.rupee = mlx_texture_to_image(g->id, mlx_load_png("sprites/others/rupee.png"));
-	g->sprites.triforce = mlx_texture_to_image(g->id, mlx_load_png("sprites/others/triforce.png"));
-	g->sprites.logo = mlx_texture_to_image(g->id, mlx_load_png("sprites/others/logo.png"));
-	g->sprites.link = mlx_texture_to_image(g->id, mlx_load_png("sprites/Link/link-d1.png"));
-	g->sprites.black = mlx_texture_to_image(g->id, mlx_load_png("sprites/others/back.png"));
-	g->sprites.pac_dying = ft_load_pacdeath(g);
-	g->sprites.score_font = ft_load_score_font(g);
-	g->sprites.pac_dying_bak = g->sprites.pac_dying;
-	return (g->sprites);
-}
 
 t_vector	ft_newvector(int x, int y)
 {
@@ -290,7 +501,7 @@ void	ft_plradd_back(t_player **lst, t_player *newnode)
 	else
 		*lst = newnode;
 }
-
+/*
 void	ft_playerlist(char **map, t_game *g)
 {
 	int			x;
@@ -310,121 +521,81 @@ void	ft_playerlist(char **map, t_game *g)
 		}
 		y++;
 	}
-}
+}*/
 
-t_list	*ft_load_north(t_game *g, char *path, int i)
+t_lists	*ft_load_north(t_game *g, char *path, int i)
 {
-	t_list	*anim;
+	t_lists	*anim;
 	char	*s;
 
 	anim = NULL;
-	if (path)
+	s = ft_strjoin(path, "link-up.png");
+	ft_lstadd_back_s(&anim, ft_lstnew_s(mlx_texture_to_image(g->id, mlx_load_png(s))));
+	s = ft_strjoin(path, "link-u0.png");
+	while (i < 10)
 	{
-		s = ft_strjoin(path, "ghost_up1.xpm");
-		ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-			s, &i, &i)));
-		free(s);
-		s = ft_strjoin(path, "ghost_up2.xpm");
-		ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-			s, &i, &i)));
-		free(s);
-		return (anim);
+		ft_memset(&s[ft_strlen(s) - 5], i + 48, 1);
+		ft_lstadd_back_s(&anim, ft_lstnew_s(mlx_texture_to_image(g->id, mlx_load_png(s))));
+		i++;
 	}
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_semi_up.xpm", &i, &i)));
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_open_up.xpm", &i, &i)));
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_semi_up.xpm", &i, &i)));
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_closed.xpm", &i, &i)));
+	free(s);
 	return (anim);
 }
 
-t_list	*ft_load_south(t_game *g, char *path, int i)
+t_lists	*ft_load_south(t_game *g, char *path, int i)
 {
-	t_list	*anim;
+	t_lists	*anim;
 	char	*s;
 
 	anim = NULL;
-	if (path)
+	s = ft_strjoin(path, "link-d0.png");
+	ft_lstadd_back_s(&anim, ft_lstnew_s(mlx_texture_to_image(g->id, mlx_load_png(s))));
+	s = ft_strjoin(path, "link-md0.png");
+	while (i < 10)
 	{
-		s = ft_strjoin(path, "ghost_down1.xpm");
-		ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-			s, &i, &i)));
-		free(s);
-		s = ft_strjoin(path, "ghost_down2.xpm");
-		ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-			s, &i, &i)));
-		free(s);
-		return (anim);
+		ft_memset(&s[ft_strlen(s) - 5], i + 48, 1);
+		ft_lstadd_back_s(&anim, ft_lstnew_s(mlx_texture_to_image(g->id, mlx_load_png(s))));
+		i++;
 	}
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_semi_down.xpm", &i, &i)));
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_open_down.xpm", &i, &i)));
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_semi_down.xpm", &i, &i)));
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_closed.xpm", &i, &i)));
+	free(s);
 	return (anim);
 }
 
-t_list	*ft_load_east(t_game *g, char *path, int i)
+t_lists	*ft_load_east(t_game *g, char *path, int i)
 {
-	t_list	*anim;
+	t_lists	*anim;
 	char	*s;
 
 	anim = NULL;
-	if (path)
+	s = ft_strjoin(path, "link-r0.png");
+	ft_lstadd_back_s(&anim, ft_lstnew_s(mlx_texture_to_image(g->id, mlx_load_png(s))));
+	s = ft_strjoin(path, "link-mr0.png");
+	while (i < 10)
 	{
-		s = ft_strjoin(path, "ghost_right1.xpm");
-		ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-			s, &i, &i)));
-		free(s);
-		s = ft_strjoin(path, "ghost_right2.xpm");
-		ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-			s, &i, &i)));
-		free(s);
-		return (anim);
+		ft_memset(&s[ft_strlen(s) - 5], i + 48, 1);
+		ft_lstadd_back_s(&anim, ft_lstnew_s(mlx_texture_to_image(g->id, mlx_load_png(s))));
+		i++;
 	}
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_semi_right.xpm", &i, &i)));
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_open_right.xpm", &i, &i)));
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_semi_right.xpm", &i, &i)));
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_closed.xpm", &i, &i)));
+	free(s);
 	return (anim);
 }
 
-t_list	*ft_load_west(t_game *g, char *path, int i)
+t_lists	*ft_load_west(t_game *g, char *path, int i)
 {
-	t_list	*anim;
+	t_lists	*anim;
 	char	*s;
 
 	anim = NULL;
-	if (path)
+	s = ft_strjoin(path, "link-l0.png");
+	ft_lstadd_back_s(&anim, ft_lstnew_s(mlx_texture_to_image(g->id, mlx_load_png(s))));
+	s = ft_strjoin(path, "link-ml0.png");
+	while (i < 10)
 	{
-		s = ft_strjoin(path, "ghost_left1.xpm");
-		ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-			s, &i, &i)));
-		free(s);
-		s = ft_strjoin(path, "ghost_left2.xpm");
-		ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-			s, &i, &i)));
-		free(s);
-		return (anim);
+		ft_memset(&s[ft_strlen(s) - 5], i + 48, 1);
+		ft_lstadd_back_s(&anim, ft_lstnew_s(mlx_texture_to_image(g->id, mlx_load_png(s))));
+		i++;
 	}
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_semi_left.xpm", &i, &i)));
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_open_left.xpm", &i, &i)));
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_semi_left.xpm", &i, &i)));
-	ft_lstadd_back(&anim, ft_lstnew(mlx_xpm_file_to_image(g->id, \
-		"sprites/Pac-Man/pac_closed.xpm", &i, &i)));
+	free(s);
 	return (anim);
 }
 
@@ -492,24 +663,121 @@ t_list	*ft_load_west(t_game *g, char *path, int i)
 	}
 }*/
 
-void	ft_load_pacmans(t_game *g)
+void	ft_render_link(t_lists *sprite, int x, int y, mlx_t *id)
 {
-	t_player	*pacman;
+	t_lists	*tmp;
+
+	tmp = sprite;
+	while(sprite->next)
+	{
+		mlx_image_to_window(id, sprite->content, x * SIZE, y * SIZE);
+		sprite->content->enabled = 0;
+		sprite = sprite->next;
+	}
+	mlx_image_to_window(id, sprite->content, x * SIZE, y * SIZE);
+	sprite->content->enabled = 0;
+	sprite = tmp;
+}
+
+void	ft_load_links(t_game *g)
+{
+	t_player	*link;
 	int			i;
 
 	i = 0;
-	pacman = g->pl;
-	while (pacman)
+	link = g->pl;
+	link->sprites.up = ft_load_north(g, "sprite/link/", i);
+	link->sprites.up_bak = link->sprites.up;
+	ft_render_link(link->sprites.up, link->pos.x, link->pos.y, g->id);
+	link->sprites.down = ft_load_south(g, "sprite/link/", i);
+	link->sprites.down_bak = link->sprites.down;
+	ft_render_link(link->sprites.down, link->pos.x, link->pos.y, g->id);
+	link->sprites.left = ft_load_west(g, "sprite/link/", i);
+	link->sprites.left_bak = link->sprites.left;
+	ft_render_link(link->sprites.left, link->pos.x, link->pos.y, g->id);
+	link->sprites.right = ft_load_east(g, "sprite/link/", i);
+	link->sprites.right_bak = link->sprites.right;
+	ft_render_link(link->sprites.right, link->pos.x, link->pos.y, g->id);
+	link->sprites.down->content->enabled = true;
+	g->pl->dir = S;
+}
+
+int	ft_draw(t_game *g)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (g->map[y])
 	{
-		pacman->sprites.up = ft_load_north(g, NULL, i);
-		pacman->sprites.up_bak = pacman->sprites.up;
-		pacman->sprites.down = ft_load_south(g, NULL, i);
-		pacman->sprites.down_bak = pacman->sprites.down;
-		pacman->sprites.left = ft_load_west(g, NULL, i);
-		pacman->sprites.left_bak = pacman->sprites.left;
-		pacman->sprites.right = ft_load_east(g, NULL, i);
-		pacman->sprites.right_bak = pacman->sprites.right;
-		pacman = pacman->next;
+		x = 0;
+		while (g->map[y][x])
+		{
+			if (g->map[y][x] == '1')
+				mlx_image_to_window(g->id, g->sprites.wall, x * SIZE, y * SIZE);
+			else
+				mlx_image_to_window(g->id, g->sprites.black, x * SIZE, y * SIZE);
+			x++;
+		}
+		y++;
+	}
+	y = 0;
+	while (g->map[y])
+	{
+		x = 0;
+		while (g->map[y][x])
+		{
+			if (g->map[y][x] == 'C')
+				mlx_image_to_window(g->id, g->sprites.rupee, x * SIZE, y * SIZE);
+			else if (g->map[y][x] == 'E')
+				mlx_image_to_window(g->id, g->sprites.triforce, x * SIZE, y * SIZE);
+			x++;
+		}
+		y++;
+	}
+	y = 0;
+	while (g->map[y])
+	{
+		x = 0;
+		while (g->map[y][x])
+		{
+			if (g->map[y][x] == 'P')
+			{
+				//mlx_image_to_window(g->id, g->sprites.link, x * SIZE, y * SIZE);
+				g->pl = ft_plrnew(ft_newvector(x, y));
+				g->pl->pos = ft_newvector(x, y);
+				g->pl->win_pos = ft_newvector(x * SIZE, y * SIZE);
+			}
+			x++;
+		}
+		y++;
+	}
+	return (0);
+}
+
+t_sprite	ft_initsprites(t_game *g)
+{
+	g->sprites.wall = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/wall.png"));
+	g->sprites.rupee = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/rupee.png"));
+	g->sprites.triforce = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/triforce-off.png"));
+	//g->sprites.logo = mlx_texture_to_image(g->id, mlx_load_png("sprites/others/logo.png"));
+	//g->sprites.link = mlx_texture_to_image(g->id, mlx_load_png("sprite/link/link-d0.png"));
+	g->sprites.black = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/path.png"));
+	//g->sprites.pac_dying = ft_load_pacdeath(g);
+	//g->sprites.score_font = ft_load_score_font(g);
+	//g->sprites.pac_dying_bak = g->sprites.pac_dying;
+	return (g->sprites);
+}
+
+void	ft_update_game(void *param)
+{
+	t_game	**g;
+
+	g = param;
+	(*g)->n_frames++;
+	if ((*g)->pl->moving && ((*g)->n_frames % 2))
+	{
+		ft_moving((*g));
 	}
 }
 
@@ -522,19 +790,21 @@ void	ft_setgame(t_game *g, char **m, t_layout *lay)
 	g->layout = lay;
 	g->map = m;
 	g->sprites = ft_initsprites(g);
-	g->pl = NULL;
+	//g->pla = NULL;
 	//g->gh = NULL;
-	ft_playerlist(m, g);
+	//ft_playerlist(m, g);
 	g->next_dir = 0;
 	//ft_load_ghosts(g);
-	ft_load_pacmans(g);
-	g->pac_dying = 0;
+	//g->pac_dying = 0;
 	//g->panic_mode = 0;
 	g->g_rate = GAME_RATE;
 	g->redraw = 1;
-	mlx_loop_hook(g->id, ft_update, (void *)g);
-	mlx_hook(g->w_id, 17, 0, end_game, (void *)g);
-	mlx_key_hook(g->w_id, key_hook, (void *)g);
+	ft_draw(g);
+	ft_load_links(g);
+	//mlx_hook(g->w_id, 17, 0, end_game, (void *)g);
+	//mlx_key_hook(g->w_id, key_hook, (void *)g);
+	mlx_key_hook(g->id, my_keyhook, &g);
+	mlx_loop_hook(g->id, ft_update_game, &g);
 	mlx_loop(g->id);
 }
 
