@@ -64,17 +64,17 @@ enum e_direction
 /* Struct to store the sprites for every digit */
 typedef struct s_font
 {
-	void	*zero;
-	void	*one;
-	void	*two;
-	void	*three;
-	void	*four;
-	void	*five;
-	void	*six;
-	void	*seven;
-	void	*eight;
-	void	*nine;
-	void	*black;
+	mlx_image_t	*zero;
+	mlx_image_t	*one;
+	mlx_image_t	*two;
+	mlx_image_t	*three;
+	mlx_image_t	*four;
+	mlx_image_t	*five;
+	mlx_image_t	*six;
+	mlx_image_t	*seven;
+	mlx_image_t	*eight;
+	mlx_image_t	*nine;
+	mlx_image_t	*black;
 }				t_font;
 
 /* Struct containing list of sprites for a given player */
@@ -99,8 +99,8 @@ typedef struct s_sprite
 	mlx_image_t		*wall; //Originally 2 stars, removed one
 	mlx_image_t		*rupee;
 	mlx_image_t		*triforce;
-	mlx_image_t		*link;
-	mlx_image_t		*pixels;
+	mlx_image_t		*cover;
+	mlx_image_t		*triforceon;
 	mlx_image_t		*black;
 	t_lists		*pac_dying_bak;
 	t_lists		*pac_dying;

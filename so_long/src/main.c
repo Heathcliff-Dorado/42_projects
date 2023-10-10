@@ -161,6 +161,7 @@ void	ft_moving(t_game *g)
 			g->pl->sprites.up->content->instances[0].y = g->pl->win_pos.y;
 			g->pl->sprites.up->content->enabled = true;
 			g->pl->pos.y--;
+			g->n_moves++;
 			g->pl->moving = 0;
 		}
 	}
@@ -184,6 +185,7 @@ void	ft_moving(t_game *g)
 			g->pl->sprites.down->content->instances[0].y = g->pl->win_pos.y;
 			g->pl->sprites.down->content->enabled = true;
 			g->pl->pos.y++;
+			g->n_moves++;
 			g->pl->moving = 0;
 		}
 	}
@@ -207,6 +209,7 @@ void	ft_moving(t_game *g)
 			g->pl->sprites.left->content->instances[0].y = g->pl->win_pos.y;
 			g->pl->sprites.left->content->enabled = true;
 			g->pl->pos.x--;
+			g->n_moves++;
 			g->pl->moving = 0;
 		}
 	}
@@ -230,6 +233,7 @@ void	ft_moving(t_game *g)
 			g->pl->sprites.right->content->instances[0].y = g->pl->win_pos.y;
 			g->pl->sprites.right->content->enabled = true;
 			g->pl->pos.x++;
+			g->n_moves++;
 			g->pl->moving = 0;
 		}
 	}
@@ -482,7 +486,7 @@ t_player	*ft_plrnew(t_vector pos)
 	player->pos = pos;
 	player->win_pos = ft_newvector(pos.x * SIZE, pos.y * SIZE);
 	player->moving = 0;
-	player->dir = ST;
+	player->dir = S;
 	player->next = NULL;
 	return (player);
 }
@@ -663,6 +667,16 @@ t_lists	*ft_load_west(t_game *g, char *path, int i)
 	}
 }*/
 
+void ft_update_moves(t_game *g)
+{
+	int	digit;
+	int	leftover;
+	int	i;
+
+	digit = g->n_moves % 10;
+	leftover = g->n_moves / 10;
+}
+
 void	ft_render_link(t_lists *sprite, int x, int y, mlx_t *id)
 {
 	t_lists	*tmp;
@@ -699,13 +713,56 @@ void	ft_load_links(t_game *g)
 	link->sprites.right_bak = link->sprites.right;
 	ft_render_link(link->sprites.right, link->pos.x, link->pos.y, g->id);
 	link->sprites.down->content->enabled = true;
-	g->pl->dir = S;
+}
+
+void	ft_disable_all(t_font font)
+{
+	int	i;
+
+	i = 0;
+	while (i < 5)
+	{
+		font.one->instances[i].enabled = 0;
+		font.two->instances[i].enabled = 0;
+		font.three->instances[i].enabled = 0;
+		font.four->instances[i].enabled = 0;
+		font.five->instances[i].enabled = 0;
+		font.six->instances[i].enabled = 0;
+		font.seven->instances[i].enabled = 0;
+		font.eight->instances[i].enabled = 0;
+		font.nine->instances[i].enabled = 0;
+		i++;
+	}
+}
+
+void	ft_render_scoreboard(t_game *g)
+{
+	int	i;
+
+	i = 0;
+	while (i < 5)
+	{
+		mlx_image_to_window(g->id, g->sprites.score_font.black, (g->layout->col/2 * SIZE - 40) + i * 16, g->layout->row * SIZE + 60);
+		mlx_image_to_window(g->id, g->sprites.score_font.zero, (g->layout->col/2 * SIZE - 40) + i * 16, g->layout->row * SIZE + 60);
+		mlx_image_to_window(g->id, g->sprites.score_font.one, (g->layout->col/2 * SIZE - 40) + i * 16, g->layout->row * SIZE + 60);
+		mlx_image_to_window(g->id, g->sprites.score_font.two, (g->layout->col/2 * SIZE - 40) + i * 16, g->layout->row * SIZE + 60);
+		mlx_image_to_window(g->id, g->sprites.score_font.three, (g->layout->col/2 * SIZE - 40) + i * 16, g->layout->row * SIZE + 60);
+		mlx_image_to_window(g->id, g->sprites.score_font.four, (g->layout->col/2 * SIZE - 40) + i * 16, g->layout->row * SIZE + 60);
+		mlx_image_to_window(g->id, g->sprites.score_font.five, (g->layout->col/2 * SIZE - 40) + i * 16, g->layout->row * SIZE + 60);
+		mlx_image_to_window(g->id, g->sprites.score_font.six, (g->layout->col/2 * SIZE - 40) + i * 16, g->layout->row * SIZE + 60);
+		mlx_image_to_window(g->id, g->sprites.score_font.seven, (g->layout->col/2 * SIZE - 40) + i * 16, g->layout->row * SIZE + 60);
+		mlx_image_to_window(g->id, g->sprites.score_font.eight, (g->layout->col/2 * SIZE - 40) + i * 16, g->layout->row * SIZE + 60);
+		mlx_image_to_window(g->id, g->sprites.score_font.nine, (g->layout->col/2 * SIZE - 40) + i * 16, g->layout->row * SIZE + 60);
+		i++;
+	}
+	ft_disable_all(g->sprites.score_font);
 }
 
 int	ft_draw(t_game *g)
 {
 	int	x;
 	int	y;
+	int	i;
 
 	y = 0;
 	while (g->map[y])
@@ -730,7 +787,11 @@ int	ft_draw(t_game *g)
 			if (g->map[y][x] == 'C')
 				mlx_image_to_window(g->id, g->sprites.rupee, x * SIZE, y * SIZE);
 			else if (g->map[y][x] == 'E')
+			{
 				mlx_image_to_window(g->id, g->sprites.triforce, x * SIZE, y * SIZE);
+				mlx_image_to_window(g->id, g->sprites.triforceon, x * SIZE, y * SIZE);
+				g->sprites.triforceon->enabled = 0;
+			}
 			x++;
 		}
 		y++;
@@ -743,15 +804,16 @@ int	ft_draw(t_game *g)
 		{
 			if (g->map[y][x] == 'P')
 			{
-				//mlx_image_to_window(g->id, g->sprites.link, x * SIZE, y * SIZE);
 				g->pl = ft_plrnew(ft_newvector(x, y));
-				g->pl->pos = ft_newvector(x, y);
-				g->pl->win_pos = ft_newvector(x * SIZE, y * SIZE);
+				i = 0;
+				 while (i++ < g->n_collect_bak)
+				 	mlx_image_to_window(g->id, g->sprites.cover, g->pl->win_pos.x, g->pl->win_pos.y);
 			}
 			x++;
 		}
 		y++;
 	}
+	ft_render_scoreboard(g);
 	return (0);
 }
 
@@ -760,8 +822,9 @@ t_sprite	ft_initsprites(t_game *g)
 	g->sprites.wall = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/wall.png"));
 	g->sprites.rupee = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/rupee.png"));
 	g->sprites.triforce = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/triforce-off.png"));
+	g->sprites.triforceon = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/triforce-on.png"));
 	//g->sprites.logo = mlx_texture_to_image(g->id, mlx_load_png("sprites/others/logo.png"));
-	//g->sprites.link = mlx_texture_to_image(g->id, mlx_load_png("sprite/link/link-d0.png"));
+	g->sprites.cover = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/path.png"));
 	g->sprites.black = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/path.png"));
 	//g->sprites.pac_dying = ft_load_pacdeath(g);
 	//g->sprites.score_font = ft_load_score_font(g);
@@ -778,31 +841,62 @@ void	ft_update_game(void *param)
 	if ((*g)->pl->moving && ((*g)->n_frames % 2))
 	{
 		ft_moving((*g));
+		ft_update_moves((*g));
 	}
+	// ft_printf("y: %d ", (*g)->pl->pos.y);
+	// ft_printf("x: %d ", (*g)->pl->pos.x);
+	// ft_printf("map: %c\n", (*g)->map[(*g)->pl->pos.y][(*g)->pl->pos.x]);
+	if ((*g)->map[(*g)->pl->pos.y][(*g)->pl->pos.x] == 'C')
+	{
+		(*g)->n_collect_bak--;
+		(*g)->sprites.cover->instances[(*g)->n_collect_bak].x = (*g)->pl->win_pos.x;
+		(*g)->sprites.cover->instances[(*g)->n_collect_bak].y = (*g)->pl->win_pos.y;
+		(*g)->map[(*g)->pl->pos.y][(*g)->pl->pos.x] = '0';
+	}
+	if ((*g)->n_collect_bak == 0 && !((*g)->sprites.triforceon->enabled))
+		(*g)->sprites.triforceon->enabled = true;
+	if ((*g)->map[(*g)->pl->pos.y][(*g)->pl->pos.x] == 'E' && (*g)->sprites.triforceon->enabled)
+	{
+		ft_printf("YOU WON!\n");
+		mlx_close_window((*g)->id);
+	}
+}
+
+t_font	ft_load_font(t_game *g)
+{
+	t_font	score;
+
+	score.zero = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/0.png"));
+	score.one = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/1.png"));
+	score.two = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/2.png"));
+	score.three = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/3.png"));
+	score.four = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/4.png"));
+	score.five = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/5.png"));
+	score.six = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/6.png"));
+	score.seven = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/7.png"));
+	score.eight = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/8.png"));
+	score.nine = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/9.png"));
+	score.black = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/black.png"));
+	g->n_moves = 0;
+	return (score);
 }
 
 void	ft_setgame(t_game *g, char **m, t_layout *lay)
 {
 	g->n_frames = 1;
-	g->n_moves = 0;
 	g->width = lay->col * SIZE;
 	g->height = lay->row * SIZE + 80;
 	g->layout = lay;
 	g->map = m;
 	g->sprites = ft_initsprites(g);
-	//g->pla = NULL;
 	//g->gh = NULL;
-	//ft_playerlist(m, g);
 	g->next_dir = 0;
 	//ft_load_ghosts(g);
-	//g->pac_dying = 0;
-	//g->panic_mode = 0;
 	g->g_rate = GAME_RATE;
 	g->redraw = 1;
+	g->sprites.score_font = ft_load_font(g);
 	ft_draw(g);
 	ft_load_links(g);
-	//mlx_hook(g->w_id, 17, 0, end_game, (void *)g);
-	//mlx_key_hook(g->w_id, key_hook, (void *)g);
 	mlx_key_hook(g->id, my_keyhook, &g);
 	mlx_loop_hook(g->id, ft_update_game, &g);
 	mlx_loop(g->id);
@@ -817,7 +911,7 @@ void	ft_initgame(char **map, t_layout lay)
 	g.lay_bak = lay;
 	g.n_collect_bak = lay.collect;
 	ft_dupmap(map, &(g.map_bak));
-	g.id = mlx_init(lay.col * SIZE, lay.row * SIZE + 80, "Test", true);
+	g.id = mlx_init(lay.col * SIZE, lay.row * SIZE + 80, "TLOZ - A lame 42 story", true);
 	g.w_id = mlx_new_image(g.id, lay.col * SIZE, lay.row * SIZE + 80);
 	ft_setgame(&g, map, &lay);
 }
