@@ -28,6 +28,11 @@
 
 # include "../lib/libft/libft.h"
 # include "../../MLX42/include/MLX42/MLX42_Int.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <stdbool.h>
+
+//Structures
 
 /* Vector with x and y coordinates */
 typedef struct s_vector
@@ -148,16 +153,13 @@ typedef struct s_game
 	//int			panic_mode;
 	int			n_frames;
 	int			n_moves;
-	int			redraw;
+	int			n_moves_bak;
 	int			g_rate;
 }				t_game;
 
-#include "../inc/so_long.h"
-#include "../../MLX42/include/MLX42/MLX42_Int.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
+//Functions in main
 
+//Functions in map_parsing
 int ft_check_surroundings(char **map, int i, int j, t_layout *layout);
 void	ft_freemap(char ***map);
 int	ft_dupmap(char **src, char ***dst);
@@ -169,5 +171,31 @@ int	ft_check_map(int fd, t_layout *layout, char ***map);
 int	ft_open_map(char *directory, t_layout *layout, char ***map);
 int	parse_map(int argc, char **argv, t_layout *layout, char ***map);
 void	ft_newlayout(t_layout *layout);
+//Functions in load_sprites
+t_sprite	ft_initsprites(t_game *g);
+void	ft_load_links(t_game *g);
+void	ft_render_link(t_lists *sprite, int x, int y, mlx_t *id);
+//Functions in load_animations
+t_lists	*ft_load_north(t_game *g, char *path, int i);
+t_lists	*ft_load_south(t_game *g, char *path, int i);
+t_lists	*ft_load_east(t_game *g, char *path, int i);
+t_lists	*ft_load_west(t_game *g, char *path, int i);
+//Functions in load_score
+void	ft_disable_all(t_font font);
+void	ft_enable(t_game *g, int i);
+void	ft_change_score(t_game *g, int digit, int i);
+void	ft_render_scoreboard(t_game *g);
+t_font	ft_load_font(t_game *g);
+//Functions in movement
+void	ft_moving_north(t_game *g);
+void	ft_moving_south(t_game *g);
+void	ft_moving_west(t_game *g);
+void	ft_moving_east(t_game *g);
+void	ft_moving(t_game *g);
+//Functions in utils
+void	ft_lstadd_back_s(t_lists **lst, t_lists *new);
+t_lists	*ft_lstnew_s(mlx_image_t *content);
+t_vector	ft_newvector(int x, int y);
+void	ft_plradd_back(t_player **lst, t_player *newnode);
 
 #endif

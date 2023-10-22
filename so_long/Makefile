@@ -5,7 +5,7 @@ LIBMLX	:= ./lib/MLX42
 SRC_DIR = src/
 
 # List of source files
-SO_LONG_SRC = main.c map_parsing.c
+SO_LONG_SRC = main.c map_parsing.c load_score.c load_sprites.c load_animation.c movement.c utils.c
 
 # List of source files with prefix
 SO_LONG_SRCS = $(addprefix $(SRC_DIR), $(SO_LONG_SRC))

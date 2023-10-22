@@ -1,8 +1,4 @@
 #include "../inc/so_long.h"
-#include "../../MLX42/include/MLX42/MLX42_Int.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
 
 int ft_check_surroundings(char **map, int i, int j, t_layout *layout)
 {
@@ -122,7 +118,6 @@ int	parse_icons(char ***map, t_layout *layout)
 		}
 		i++;
 	}
-	printf("P: %d, C: %d, E: %d\n", layout->player, layout->collect, layout->exit);
 	if (layout->player != 1 || layout->exit != 1 || layout->collect < 1)
 		return (-6);
 	return (1);
