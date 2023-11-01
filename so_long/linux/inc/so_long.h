@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   so_long.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 21:34:59 by hdorado-          #+#    #+#             */
+/*   Updated: 2023/11/01 22:31:08 by hdorado-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SO_LONG_H
 # define SO_LONG_H
 # define SIZE 32
@@ -31,9 +43,6 @@
 # include <stdlib.h>
 # include <stdbool.h>
 
-//Structures
-
-/* Vector with x and y coordinates */
 typedef struct s_vector
 {
 	int	x;
@@ -43,7 +52,7 @@ typedef struct s_vector
 typedef struct s_lists
 {
 	mlx_image_t			*content;
-	struct s_lists	*next;
+	struct s_lists		*next;
 }				t_lists;
 
 typedef struct s_layout
@@ -102,7 +111,7 @@ typedef struct s_sprite
 	mlx_image_t		*triforceon;
 	mlx_image_t		*black;
 	mlx_image_t		*cover;
-	t_font		score_font;
+	t_font			fnt;
 }				t_sprite;
 
 /* Main Player struct with position and direction (linked list) */
@@ -112,23 +121,24 @@ typedef struct s_player
 	t_vector		win_pos;
 	int				dir;
 	int				moving;
-	t_pl_sprite		sprites;
+	t_pl_sprite		sp;
 }				t_player;
 
+/*n_frames in case computer is too fast, not in 42 though*/
 typedef struct s_game
 {
-	int			width;
-	int			height;
+	int			w;
+	int			h;
 	mlx_t		*id;
-	mlx_image_t		*w_id;
-	t_layout		*layout;
-	t_layout		lay_bak;
-	t_sprite	sprites;
+	mlx_image_t	*w_id;
+	t_layout	*layout;
+	t_layout	lay_bak;
+	t_sprite	sp;
 	int			pla;
 	t_player	*pl;
 	char		**map;
 	char		**map_bak;
-	int			n_collect_bak;
+	int			col_bak;
 	int			n_frames;
 	int			n_moves;
 	int			n_moves_bak;
@@ -137,42 +147,46 @@ typedef struct s_game
 //Functions in main
 
 //Functions in map_parsing
-int ft_check_surroundings(char **map, int i, int j, t_layout *layout);
-void	ft_freemap(char ***map);
-int	ft_dupmap(char **src, char ***dst);
-int ft_valid_path(char ***map, t_layout *layout);
-int	parse_icons(char ***map, t_layout *layout);
-int	is_map_right(char ***map, t_layout *layout);
-int	ft_update_map(char ***map, t_layout *layout, char *str);
-int	ft_check_map(int fd, t_layout *layout, char ***map);
-int	ft_open_map(char *directory, t_layout *layout, char ***map);
-int	parse_map(int argc, char **argv, t_layout *layout, char ***map);
-void	ft_newlayout(t_layout *layout);
+int			ft_check_surroundings(char **map, int i, int j, t_layout *layout);
+void		ft_freemap(char ***map);
+int			ft_dupmap(char **src, char ***dst);
+int			ft_valid_path(char ***map, t_layout *layout);
+int			parse_icons(char ***map, t_layout *layout);
+int			is_map_right(char ***map, t_layout *layout);
+int			ft_update_map(char ***map, t_layout *layout, char *str);
+int			ft_check_map(int fd, t_layout *layout, char ***map);
+int			ft_open_map(char *directory, t_layout *layout, char ***map);
+int			parse_map(int argc, char **argv, t_layout *layout, char ***map);
+void		ft_newlayout(t_layout *layout);
 //Functions in load_sprites
-int	ft_initsprites(t_game *g);
-int	ft_load_links(t_game *g);
-void	ft_render_link(t_lists *sprite, int x, int y, mlx_t *id);
+int			ft_initsprites2(t_game *g);
+int			ft_initsprites(t_game *g);
+int			ft_load_links(t_game *g);
+void		ft_render_link(t_lists *sprite, int x, int y, mlx_t *id);
 //Functions in load_animations
-int	ft_load_north(t_game *g, char *path, int i);
-int	ft_load_south(t_game *g, char *path, int i);
-int	ft_load_east(t_game *g, char *path, int i);
-int	ft_load_west(t_game *g, char *path, int i);
+int			ft_load_north(t_game *g, char *path, int i);
+int			ft_load_south(t_game *g, char *path, int i);
+int			ft_load_east(t_game *g, char *path, int i);
+int			ft_load_west(t_game *g, char *path, int i);
 //Functions in load_score
-void	ft_disable_all(t_font font);
-void	ft_enable(t_game *g, int i);
-void	ft_change_score(t_game *g, int digit, int i);
-void	ft_render_scoreboard(t_game *g);
-int		ft_load_font(t_game *g);
+void		ft_disable_all(t_font font);
+void		ft_enable(t_game *g, int i);
+void		ft_change_score(t_game *g, int digit, int i);
+void		ft_load_all_sc(t_game *g, int i);
+void		ft_render_scoreboard(t_game *g);
+int			ft_load3(t_game *g);
+int			ft_load2(t_game *g);
+int			ft_load_font(t_game *g);
 //Functions in movement
-void	ft_moving_north(t_game *g);
-void	ft_moving_south(t_game *g);
-void	ft_moving_west(t_game *g);
-void	ft_moving_east(t_game *g);
-void	ft_moving(t_game *g);
+void		ft_moving_north(t_game *g);
+void		ft_moving_south(t_game *g);
+void		ft_moving_west(t_game *g);
+void		ft_moving_east(t_game *g);
+void		ft_moving(t_game *g);
 //Functions in utils
-void	ft_lstadd_back_s(t_lists **lst, t_lists *new);
-t_lists	*ft_lstnew_s(mlx_image_t *content);
+void		ft_lstadd_back_s(t_lists **lst, t_lists *new);
+t_lists		*ft_lstnew_s(mlx_image_t *content);
 t_vector	ft_newvector(int x, int y);
-void	ft_plradd_back(t_player **lst, t_player *newnode);
+void		ft_plradd_back(t_player **lst, t_player *newnode);
 
 #endif

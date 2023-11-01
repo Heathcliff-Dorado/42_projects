@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_parsing.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 21:40:06 by hdorado-          #+#    #+#             */
+/*   Updated: 2023/11/01 22:33:00 by hdorado-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/so_long.h"
 
-int ft_check_surroundings(char **map, int i, int j, t_layout *layout)
+int	ft_check_surroundings(char **map, int i, int j, t_layout *layout)
 {
 	int	valid;
 
@@ -62,32 +74,32 @@ int	ft_dupmap(char **src, char ***dst)
 	return (1);
 }
 
-int ft_valid_path(char ***map, t_layout *layout)
+int	ft_valid_path(char ***map, t_layout *layout)
 {
-int	i;
-int	j;
-char	**dupmap;
+	int		i;
+	int		j;
+	char	**dupmap;
 
-i = 0;
-while (i < layout->row)
-{
-	j = 0;
-	while (j < layout->col)
+	i = 0;
+	while (i < layout->row)
 	{
-		if ((*map)[i][j] == 'E' || (*map)[i][j] == 'C')
+		j = 0;
+		while (j < layout->col)
 		{
-			dupmap = NULL;
-			if (ft_dupmap((*map), &dupmap) == -4)
-				return (-4);
-			if (!ft_check_surroundings(dupmap, i, j, layout))
-				return (-8);
-			ft_freemap(&dupmap);
+			if ((*map)[i][j] == 'E' || (*map)[i][j] == 'C')
+			{
+				dupmap = NULL;
+				if (ft_dupmap((*map), &dupmap) == -4)
+					return (-4);
+				if (!ft_check_surroundings(dupmap, i, j, layout))
+					return (-8);
+				ft_freemap(&dupmap);
+			}
+			j++;
 		}
-		j++;
+		i++;
 	}
-	i++;
-}
-return (1);
+	return (1);
 }
 
 int	parse_icons(char ***map, t_layout *layout)
@@ -109,8 +121,6 @@ int	parse_icons(char ***map, t_layout *layout)
 					layout->player++;
 				else if ((*map)[i][j] == 'C')
 					layout->collect++;
-				else if ((*map)[i][j] == 'G')
-					layout->enemy++;
 				else
 					return (-7);
 			}
@@ -131,7 +141,8 @@ int	is_map_right(char ***map, t_layout *layout)
 	i = 0;
 	while (i < layout->row)
 	{
-		if ((int) ft_strlen((*map)[i]) != layout->col || (*map)[i][0] != '1' || (*map)[i][layout->col - 1] != '1')
+		if ((int) ft_strlen((*map)[i]) != layout->col ||
+			(*map)[i][0] != '1' || (*map)[i][layout->col - 1] != '1')
 			return (-5);
 		i++;
 	}
@@ -153,8 +164,8 @@ int	is_map_right(char ***map, t_layout *layout)
 
 int	ft_update_map(char ***map, t_layout *layout, char *str)
 {
-	int	i;
-	int	len;
+	int		i;
+	int		len;
 	char	**new_map;
 
 	len = 0;
@@ -200,7 +211,7 @@ int	ft_update_map(char ***map, t_layout *layout, char *str)
 int	ft_check_map(int fd, t_layout *layout, char ***map)
 {
 	char	*str;
-	int	ret;
+	int		ret;
 
 	str = get_next_line(fd);
 	layout->col = ft_strlen(str) - 1;
@@ -256,6 +267,5 @@ void	ft_newlayout(t_layout *layout)
 	layout->col = 0;
 	layout->exit = 0;
 	layout->player = 0;
-	layout->enemy = 0;
 	layout->collect = 0;
 }

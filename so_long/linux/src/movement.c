@@ -1,24 +1,36 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   movement.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 21:40:16 by hdorado-          #+#    #+#             */
+/*   Updated: 2023/11/01 22:23:02 by hdorado-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/so_long.h"
 
 void	ft_moving_north(t_game *g)
 {
-	if (g->pl->sprites.up->next)
+	if (g->pl->sp.up->next)
 	{
 		g->pl->win_pos.y = g->pl->win_pos.y - 3;
-		g->pl->sprites.up->content->enabled = 0;
-		g->pl->sprites.up = g->pl->sprites.up->next;
-		g->pl->sprites.up->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.up->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.up->content->enabled = true;
+		g->pl->sp.up->content->enabled = 0;
+		g->pl->sp.up = g->pl->sp.up->next;
+		g->pl->sp.up->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sp.up->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sp.up->content->enabled = true;
 	}
 	else
 	{
 		g->pl->win_pos.y = g->pl->win_pos.y - 2;
-		g->pl->sprites.up->content->enabled = 0;
-		g->pl->sprites.up = g->pl->sprites.up_bak;
-		g->pl->sprites.up->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.up->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.up->content->enabled = true;
+		g->pl->sp.up->content->enabled = 0;
+		g->pl->sp.up = g->pl->sp.up_bak;
+		g->pl->sp.up->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sp.up->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sp.up->content->enabled = true;
 		g->pl->pos.y--;
 		g->n_moves++;
 		g->pl->moving = 0;
@@ -27,23 +39,23 @@ void	ft_moving_north(t_game *g)
 
 void	ft_moving_south(t_game *g)
 {
-	if (g->pl->sprites.down->next)
+	if (g->pl->sp.down->next)
 	{
 		g->pl->win_pos.y = g->pl->win_pos.y + 3;
-		g->pl->sprites.down->content->enabled = 0;
-		g->pl->sprites.down = g->pl->sprites.down->next;
-		g->pl->sprites.down->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.down->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.down->content->enabled = true;
+		g->pl->sp.down->content->enabled = 0;
+		g->pl->sp.down = g->pl->sp.down->next;
+		g->pl->sp.down->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sp.down->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sp.down->content->enabled = true;
 	}
 	else
 	{
 		g->pl->win_pos.y = g->pl->win_pos.y + 2;
-		g->pl->sprites.down->content->enabled = 0;
-		g->pl->sprites.down = g->pl->sprites.down_bak;
-		g->pl->sprites.down->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.down->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.down->content->enabled = true;
+		g->pl->sp.down->content->enabled = 0;
+		g->pl->sp.down = g->pl->sp.down_bak;
+		g->pl->sp.down->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sp.down->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sp.down->content->enabled = true;
 		g->pl->pos.y++;
 		g->n_moves++;
 		g->pl->moving = 0;
@@ -52,23 +64,23 @@ void	ft_moving_south(t_game *g)
 
 void	ft_moving_west(t_game *g)
 {
-	if (g->pl->sprites.left->next)
+	if (g->pl->sp.left->next)
 	{
 		g->pl->win_pos.x = g->pl->win_pos.x - 3;
-		g->pl->sprites.left->content->enabled = 0;
-		g->pl->sprites.left = g->pl->sprites.left->next;
-		g->pl->sprites.left->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.left->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.left->content->enabled = true;
+		g->pl->sp.left->content->enabled = 0;
+		g->pl->sp.left = g->pl->sp.left->next;
+		g->pl->sp.left->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sp.left->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sp.left->content->enabled = true;
 	}
 	else
 	{
 		g->pl->win_pos.x = g->pl->win_pos.x - 2;
-		g->pl->sprites.left->content->enabled = 0;
-		g->pl->sprites.left = g->pl->sprites.left_bak;
-		g->pl->sprites.left->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.left->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.left->content->enabled = true;
+		g->pl->sp.left->content->enabled = 0;
+		g->pl->sp.left = g->pl->sp.left_bak;
+		g->pl->sp.left->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sp.left->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sp.left->content->enabled = true;
 		g->pl->pos.x--;
 		g->n_moves++;
 		g->pl->moving = 0;
@@ -77,23 +89,23 @@ void	ft_moving_west(t_game *g)
 
 void	ft_moving_east(t_game *g)
 {
-	if (g->pl->sprites.right->next)
+	if (g->pl->sp.right->next)
 	{
 		g->pl->win_pos.x = g->pl->win_pos.x + 3;
-		g->pl->sprites.right->content->enabled = 0;
-		g->pl->sprites.right = g->pl->sprites.right->next;
-		g->pl->sprites.right->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.right->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.right->content->enabled = true;
+		g->pl->sp.right->content->enabled = 0;
+		g->pl->sp.right = g->pl->sp.right->next;
+		g->pl->sp.right->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sp.right->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sp.right->content->enabled = true;
 	}
 	else
 	{
 		g->pl->win_pos.x = g->pl->win_pos.x + 2;
-		g->pl->sprites.right->content->enabled = 0;
-		g->pl->sprites.right = g->pl->sprites.right_bak;
-		g->pl->sprites.right->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.right->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.right->content->enabled = true;
+		g->pl->sp.right->content->enabled = 0;
+		g->pl->sp.right = g->pl->sp.right_bak;
+		g->pl->sp.right->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sp.right->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sp.right->content->enabled = true;
 		g->pl->pos.x++;
 		g->n_moves++;
 		g->pl->moving = 0;

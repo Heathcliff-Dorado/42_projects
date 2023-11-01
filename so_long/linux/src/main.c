@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 21:39:53 by hdorado-          #+#    #+#             */
+/*   Updated: 2023/11/01 22:27:37 by hdorado-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/so_long.h"
 
 void	ft_error_handling(int errno)
@@ -26,7 +38,7 @@ void	ft_freestructure(char **map)
 	int	i;
 
 	i = 0;
-	while(map[i])
+	while (map[i])
 	{
 		free(map[i]);
 		i++;
@@ -38,35 +50,35 @@ void	ft_changedir2(t_game *g, int dir)
 {
 	if (dir == W)
 	{
-		g->pl->sprites.left->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.left->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.left->content->enabled = true;
+		g->pl->sp.left->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sp.left->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sp.left->content->enabled = true;
 	}
 	if (dir == E)
 	{
-		g->pl->sprites.right->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.right->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.right->content->enabled = true;
+		g->pl->sp.right->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sp.right->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sp.right->content->enabled = true;
 	}
 }
 
 void	ft_changedir(t_game *g, int dir)
 {
-	g->pl->sprites.up->content->enabled = 0;
-	g->pl->sprites.down->content->enabled = 0;
-	g->pl->sprites.left->content->enabled = 0;
-	g->pl->sprites.right->content->enabled = 0;
+	g->pl->sp.up->content->enabled = 0;
+	g->pl->sp.down->content->enabled = 0;
+	g->pl->sp.left->content->enabled = 0;
+	g->pl->sp.right->content->enabled = 0;
 	if (dir == N)
 	{
-		g->pl->sprites.up->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.up->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.up->content->enabled = true;
+		g->pl->sp.up->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sp.up->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sp.up->content->enabled = true;
 	}
 	if (dir == S)
 	{
-		g->pl->sprites.down->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.down->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.down->content->enabled = true;
+		g->pl->sp.down->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sp.down->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sp.down->content->enabled = true;
 	}
 	if (dir == E || dir == W)
 		ft_changedir2(g, dir);
@@ -86,7 +98,7 @@ int	ft_moveallowed(t_game *g)
 	return (0);
 }
 
-void	my_keyhook(mlx_key_data_t keydata, void* param)
+void	my_keyhook(mlx_key_data_t keydata, void *param)
 {
 	t_game	**g;
 	mlx_t	*mlx;
@@ -152,7 +164,6 @@ void	ft_fillbackground(t_game *g)
 {
 	int	x;
 	int	y;
-	int	i;
 
 	y = 0;
 	while (g->map[y])
@@ -161,9 +172,10 @@ void	ft_fillbackground(t_game *g)
 		while (g->map[y][x])
 		{
 			if (g->map[y][x] == '1')
-				mlx_image_to_window(g->id, g->sprites.wall, x * SIZE, y * SIZE);
+				mlx_image_to_window(g->id, g->sp.wall, x * SIZE, y * SIZE);
 			else
-				mlx_image_to_window(g->id, g->sprites.black, x * SIZE, y * SIZE);
+				mlx_image_to_window(g->id, g->sp.black,
+					x * SIZE, y * SIZE);
 			x++;
 		}
 		y++;
@@ -174,7 +186,6 @@ void	ft_fillothers(t_game *g)
 {
 	int	x;
 	int	y;
-	int	i;
 
 	y = 0;
 	while (g->map[y])
@@ -183,12 +194,15 @@ void	ft_fillothers(t_game *g)
 		while (g->map[y][x])
 		{
 			if (g->map[y][x] == 'C')
-				mlx_image_to_window(g->id, g->sprites.rupee, x * SIZE, y * SIZE);
+				mlx_image_to_window(g->id, g->sp.rupee,
+					x * SIZE, y * SIZE);
 			else if (g->map[y][x] == 'E')
 			{
-				mlx_image_to_window(g->id, g->sprites.triforce, x * SIZE, y * SIZE);
-				mlx_image_to_window(g->id, g->sprites.triforceon, x * SIZE, y * SIZE);
-				g->sprites.triforceon->enabled = 0;
+				mlx_image_to_window(g->id, g->sp.triforce,
+					x * SIZE, y * SIZE);
+				mlx_image_to_window(g->id, g->sp.triforceon,
+					x * SIZE, y * SIZE);
+				g->sp.triforceon->enabled = 0;
 			}
 			x++;
 		}
@@ -212,8 +226,9 @@ void	ft_fillplayer(t_game *g)
 			{
 				g->pl = ft_plrnew(ft_newvector(x, y));
 				i = 0;
-				 while (i++ < g->n_collect_bak)
-				 	mlx_image_to_window(g->id, g->sprites.cover, g->pl->win_pos.x, g->pl->win_pos.y);
+				while (i++ < g->col_bak)
+					mlx_image_to_window(g->id, g->sp.cover,
+						g->pl->win_pos.x, g->pl->win_pos.y);
 			}
 			x++;
 		}
@@ -236,21 +251,22 @@ void	ft_update_game(void *param)
 
 	g = param;
 	(*g)->n_frames++;
-	if ((*g)->pl->moving && ((*g)->n_frames % 2))
+	if ((*g)->pl->moving)
 	{
 		ft_moving((*g));
-		ft_update_moves((*g)); //move this inside of ft_moving?
+		ft_update_moves((*g));
 	}
 	if ((*g)->map[(*g)->pl->pos.y][(*g)->pl->pos.x] == 'C')
 	{
-		(*g)->n_collect_bak--;
-		(*g)->sprites.cover->instances[(*g)->n_collect_bak].x = (*g)->pl->win_pos.x;
-		(*g)->sprites.cover->instances[(*g)->n_collect_bak].y = (*g)->pl->win_pos.y;
+		(*g)->col_bak--;
+		(*g)->sp.cover->instances[(*g)->col_bak].x = (*g)->pl->win_pos.x;
+		(*g)->sp.cover->instances[(*g)->col_bak].y = (*g)->pl->win_pos.y;
 		(*g)->map[(*g)->pl->pos.y][(*g)->pl->pos.x] = '0';
 	}
-	if ((*g)->n_collect_bak == 0 && !((*g)->sprites.triforceon->enabled))
-		(*g)->sprites.triforceon->enabled = true;
-	if ((*g)->map[(*g)->pl->pos.y][(*g)->pl->pos.x] == 'E' && (*g)->sprites.triforceon->enabled)
+	if ((*g)->col_bak == 0 && !((*g)->sp.triforceon->enabled))
+		(*g)->sp.triforceon->enabled = true;
+	if ((*g)->map[(*g)->pl->pos.y][(*g)->pl->pos.x] == 'E' &&
+		(*g)->sp.triforceon->enabled)
 	{
 		ft_printf("YOU WON! and it only took you %d moves!\n", (*g)->n_moves);
 		sleep(1);
@@ -262,7 +278,7 @@ void	ft_animclean(t_lists *list)
 {
 	t_lists	*tmp;
 
-	while(list->next)
+	while (list->next)
 	{
 		tmp = list->next;
 		free(list);
@@ -275,10 +291,10 @@ void	ft_freegame(t_game *g)
 {
 	ft_freestructure(g->map);
 	ft_freestructure(g->map_bak);
-	ft_animclean(g->pl->sprites.down);
-	ft_animclean(g->pl->sprites.left);
-	ft_animclean(g->pl->sprites.right);
-	ft_animclean(g->pl->sprites.up);
+	ft_animclean(g->pl->sp.down);
+	ft_animclean(g->pl->sp.left);
+	ft_animclean(g->pl->sp.right);
+	ft_animclean(g->pl->sp.up);
 	free(g->pl);
 }
 
@@ -288,8 +304,8 @@ void	ft_setgame(t_game *g, char **m, t_layout *lay)
 
 	ret = 1;
 	g->n_frames = 1;
-	g->width = lay->col * SIZE;
-	g->height = lay->row * SIZE + 80;
+	g->w = lay->col * SIZE;
+	g->h = lay->row * SIZE + 80;
 	g->layout = lay;
 	g->map = m;
 	if (!ft_initsprites(g))
@@ -311,18 +327,19 @@ void	ft_initgame(char **map, t_layout lay)
 	t_game	g;
 
 	g.lay_bak = lay;
-	g.n_collect_bak = lay.collect;
+	g.col_bak = lay.collect;
 	ft_dupmap(map, &(g.map_bak));
-	g.id = mlx_init(lay.col * SIZE, lay.row * SIZE + 80, "TLOZ - A lame 42 story", true);
+	g.id = mlx_init(lay.col * SIZE, lay.row * SIZE + 80,
+			"TLOZ - A lame 42 story", true);
 	g.w_id = mlx_new_image(g.id, lay.col * SIZE, lay.row * SIZE + 80);
 	ft_setgame(&g, map, &lay);
 }
 
 int	main(int argc, char **argv)
 {
-	char	**map;
+	char		**map;
 	t_layout	layout;
-	int	ret;
+	int			ret;
 
 	map = NULL;
 	ft_newlayout(&layout);
