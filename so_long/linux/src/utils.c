@@ -38,17 +38,17 @@ t_vector	ft_newvector(int x, int y)
 }
 
 //Use this one??
-void	ft_plradd_back(t_player **lst, t_player *newnode)
-{
-	t_player	*start;
+// void	ft_plradd_back(t_player **lst, t_player *newnode)
+// {
+// 	t_player	*start;
 
-	start = *lst;
-	if (*lst)
-	{
-		while (start->next)
-			start = start->next;
-		start->next = newnode;
-	}
-	else
-		*lst = newnode;
-}
+// 	start = *lst;
+// 	if (*lst)
+// 	{
+// 		while (start->next)
+// 			start = start->next;
+// 		start->next = newnode;
+// 	}
+// 	else
+// 		*lst = newnode;
+// }

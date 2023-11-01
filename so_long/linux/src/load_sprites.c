@@ -1,36 +1,63 @@
 #include "../inc/so_long.h"
 
-t_sprite	ft_initsprites(t_game *g)
+int	ft_initsprites(t_game *g)
 {
-	g->sprites.wall = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/wall.png"));
-	g->sprites.rupee = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/rupee.png"));
-	g->sprites.triforce = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/triforce-off.png"));
-	g->sprites.triforceon = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/triforce-on.png"));
-	g->sprites.cover = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/path.png"));
-	g->sprites.black = mlx_texture_to_image(g->id, mlx_load_png("sprite/others/path.png"));
-	return (g->sprites);
+	mlx_texture_t	*tmp;
+
+	tmp = mlx_load_png("sprite/others/wall.png");
+	if (!tmp)
+		return (0);
+	g->sprites.wall = mlx_texture_to_image(g->id, tmp);
+	mlx_delete_texture(tmp);
+	tmp = mlx_load_png("sprite/others/rupee.png");
+	if (!tmp)
+		return (0);
+	g->sprites.rupee = mlx_texture_to_image(g->id, tmp);
+	mlx_delete_texture(tmp);
+	tmp = mlx_load_png("sprite/others/triforce-off.png");
+	if (!tmp)
+		return (0);
+	g->sprites.triforce = mlx_texture_to_image(g->id, tmp);
+	mlx_delete_texture(tmp);
+	tmp = mlx_load_png("sprite/others/triforce-on.png");
+	if (!tmp)
+		return (0);
+	g->sprites.triforceon = mlx_texture_to_image(g->id, tmp);
+	mlx_delete_texture(tmp);
+	tmp = mlx_load_png("sprite/others/path.png");
+	if (!tmp)
+		return (0);
+	g->sprites.cover = mlx_texture_to_image(g->id, tmp);
+	mlx_delete_texture(tmp);
+	tmp = mlx_load_png("sprite/others/path.png");
+	if (!tmp)
+		return (0);
+	g->sprites.black = mlx_texture_to_image(g->id, tmp);
+	mlx_delete_texture(tmp);
+	return (1);
 }
 
-void	ft_load_links(t_game *g)
+int	ft_load_links(t_game *g)
 {
-	t_player	*link;
-	int			i;
+	int	ret;
 
-	i = 0;
-	link = g->pl;
-	link->sprites.up = ft_load_north(g, "sprite/link/", i);
-	link->sprites.up_bak = link->sprites.up;
-	ft_render_link(link->sprites.up, link->pos.x, link->pos.y, g->id);
-	link->sprites.down = ft_load_south(g, "sprite/link/", i);
-	link->sprites.down_bak = link->sprites.down;
-	ft_render_link(link->sprites.down, link->pos.x, link->pos.y, g->id);
-	link->sprites.left = ft_load_west(g, "sprite/link/", i);
-	link->sprites.left_bak = link->sprites.left;
-	ft_render_link(link->sprites.left, link->pos.x, link->pos.y, g->id);
-	link->sprites.right = ft_load_east(g, "sprite/link/", i);
-	link->sprites.right_bak = link->sprites.right;
-	ft_render_link(link->sprites.right, link->pos.x, link->pos.y, g->id);
-	link->sprites.down->content->enabled = true;
+	ret = 0;
+	ret += ft_load_north(g, "sprite/link/", 0);
+	g->pl->sprites.up_bak = g->pl->sprites.up;
+	ft_render_link(g->pl->sprites.up, g->pl->pos.x, g->pl->pos.y, g->id);
+	ret += ft_load_south(g, "sprite/link/", 0);
+	g->pl->sprites.down_bak = g->pl->sprites.down;
+	ft_render_link(g->pl->sprites.down, g->pl->pos.x, g->pl->pos.y, g->id);
+	ret += ft_load_west(g, "sprite/link/", 0);
+	g->pl->sprites.left_bak = g->pl->sprites.left;
+	ft_render_link(g->pl->sprites.left, g->pl->pos.x, g->pl->pos.y, g->id);
+	ret += ft_load_east(g, "sprite/link/", 0);
+	g->pl->sprites.right_bak = g->pl->sprites.right;
+	if (ret != 4)
+		return (0);
+	ft_render_link(g->pl->sprites.right, g->pl->pos.x, g->pl->pos.y, g->id);
+	g->pl->sprites.down->content->enabled = true;
+	return (1);
 }
 
 void	ft_render_link(t_lists *sprite, int x, int y, mlx_t *id)

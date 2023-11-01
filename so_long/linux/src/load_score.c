@@ -81,44 +81,65 @@ void	ft_render_scoreboard(t_game *g)
 	ft_disable_all(g->sprites.score_font);
 }
 
-t_font	ft_load_font(t_game *g)
+int	ft_load_font(t_game *g)
 {
-	t_font	score;
 	mlx_texture_t *tmp;
 
 	tmp = mlx_load_png("sprite/others/zero.png");
-	score.zero = mlx_texture_to_image(g->id, tmp);
+	if (!tmp)
+		return (0);
+	g->sprites.score_font.zero = mlx_texture_to_image(g->id, tmp);
 	mlx_delete_texture(tmp);
 	tmp = mlx_load_png("sprite/others/one.png");
-	score.one = mlx_texture_to_image(g->id, tmp);
+	if (!tmp)
+		return (0);
+	g->sprites.score_font.one = mlx_texture_to_image(g->id, tmp);
 	mlx_delete_texture(tmp);
 	tmp = mlx_load_png("sprite/others/two.png");
-	score.two = mlx_texture_to_image(g->id, tmp);
+	if (!tmp)
+		return (0);
+	g->sprites.score_font.two = mlx_texture_to_image(g->id, tmp);
 	mlx_delete_texture(tmp);
 	tmp = mlx_load_png("sprite/others/three.png");
-	score.three = mlx_texture_to_image(g->id, tmp);
+	if (!tmp)
+		return (0);
+	g->sprites.score_font.three = mlx_texture_to_image(g->id, tmp);
 	mlx_delete_texture(tmp);
 	tmp = mlx_load_png("sprite/others/four.png");
-	score.four = mlx_texture_to_image(g->id, tmp);
+	if (!tmp)
+		return (0);
+	g->sprites.score_font.four = mlx_texture_to_image(g->id, tmp);
 	mlx_delete_texture(tmp);
 	tmp = mlx_load_png("sprite/others/five.png");
-	score.five = mlx_texture_to_image(g->id, tmp);
+	if (!tmp)
+		return (0);
+	g->sprites.score_font.five = mlx_texture_to_image(g->id, tmp);
 	mlx_delete_texture(tmp);
 	tmp = mlx_load_png("sprite/others/six.png");
-	score.six = mlx_texture_to_image(g->id, tmp);
+	if (!tmp)
+		return (0);
+	g->sprites.score_font.six = mlx_texture_to_image(g->id, tmp);
 	mlx_delete_texture(tmp);
 	tmp = mlx_load_png("sprite/others/seven.png");
-	score.seven = mlx_texture_to_image(g->id, tmp);
+	if (!tmp)
+		return (0);
+	g->sprites.score_font.seven = mlx_texture_to_image(g->id, tmp);
 	mlx_delete_texture(tmp);
 	tmp = mlx_load_png("sprite/others/eight.png");
-	score.eight = mlx_texture_to_image(g->id, tmp);
+	if (!tmp)
+		return (0);
+	g->sprites.score_font.eight = mlx_texture_to_image(g->id, tmp);
 	mlx_delete_texture(tmp);
 	tmp = mlx_load_png("sprite/others/nine.png");
-	score.nine = mlx_texture_to_image(g->id, tmp);
+	if (!tmp)
+		return (0);
+	g->sprites.score_font.nine = mlx_texture_to_image(g->id, tmp);
 	mlx_delete_texture(tmp);
 	tmp = mlx_load_png("sprite/others/black.png");
-	score.black = mlx_texture_to_image(g->id, tmp);
+	if (!tmp)
+		return (0);
+	g->sprites.score_font.black = mlx_texture_to_image(g->id, tmp);
 	mlx_delete_texture(tmp);
 	g->n_moves = 0;
-	return (score);
+	return (1);
 }

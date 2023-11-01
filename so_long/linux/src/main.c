@@ -34,6 +34,22 @@ void	ft_freestructure(char **map)
 	free(map);
 }
 
+void	ft_changedir2(t_game *g, int dir)
+{
+	if (dir == W)
+	{
+		g->pl->sprites.left->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sprites.left->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sprites.left->content->enabled = true;
+	}
+	if (dir == E)
+	{
+		g->pl->sprites.right->content->instances[0].x = g->pl->win_pos.x;
+		g->pl->sprites.right->content->instances[0].y = g->pl->win_pos.y;
+		g->pl->sprites.right->content->enabled = true;
+	}
+}
+
 void	ft_changedir(t_game *g, int dir)
 {
 	g->pl->sprites.up->content->enabled = 0;
@@ -52,20 +68,9 @@ void	ft_changedir(t_game *g, int dir)
 		g->pl->sprites.down->content->instances[0].y = g->pl->win_pos.y;
 		g->pl->sprites.down->content->enabled = true;
 	}
-	if (dir == W)
-	{
-		g->pl->sprites.left->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.left->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.left->content->enabled = true;
-	}
-	if (dir == E)
-	{
-		g->pl->sprites.right->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sprites.right->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sprites.right->content->enabled = true;
-	}
+	if (dir == E || dir == W)
+		ft_changedir2(g, dir);
 	g->pl->dir = dir;
-
 }
 
 int	ft_moveallowed(t_game *g)
@@ -143,7 +148,7 @@ void	ft_update_moves(t_game *g)
 		g->n_moves = 9999;
 }
 
-int	ft_draw(t_game *g)
+void	ft_fillbackground(t_game *g)
 {
 	int	x;
 	int	y;
@@ -163,6 +168,14 @@ int	ft_draw(t_game *g)
 		}
 		y++;
 	}
+}
+
+void	ft_fillothers(t_game *g)
+{
+	int	x;
+	int	y;
+	int	i;
+
 	y = 0;
 	while (g->map[y])
 	{
@@ -181,6 +194,14 @@ int	ft_draw(t_game *g)
 		}
 		y++;
 	}
+}
+
+void	ft_fillplayer(t_game *g)
+{
+	int	x;
+	int	y;
+	int	i;
+
 	y = 0;
 	while (g->map[y])
 	{
@@ -198,6 +219,13 @@ int	ft_draw(t_game *g)
 		}
 		y++;
 	}
+}
+
+int	ft_draw(t_game *g)
+{
+	ft_fillbackground(g);
+	ft_fillothers(g);
+	ft_fillplayer(g);
 	ft_render_scoreboard(g);
 	return (0);
 }
@@ -211,7 +239,7 @@ void	ft_update_game(void *param)
 	if ((*g)->pl->moving && ((*g)->n_frames % 2))
 	{
 		ft_moving((*g));
-		ft_update_moves((*g));
+		ft_update_moves((*g)); //move this inside of ft_moving?
 	}
 	if ((*g)->map[(*g)->pl->pos.y][(*g)->pl->pos.x] == 'C')
 	{
@@ -256,16 +284,19 @@ void	ft_freegame(t_game *g)
 
 void	ft_setgame(t_game *g, char **m, t_layout *lay)
 {
+	int	ret;
+
+	ret = 1;
 	g->n_frames = 1;
 	g->width = lay->col * SIZE;
 	g->height = lay->row * SIZE + 80;
 	g->layout = lay;
 	g->map = m;
-	g->sprites = ft_initsprites(g);
-	g->next_dir = 0;
-	g->g_rate = GAME_RATE;
+	if (!ft_initsprites(g))
+		ret = 0;
 	g->n_moves_bak = 0;
-	g->sprites.score_font = ft_load_font(g);
+	if (!ft_load_font(g))
+		ret = 0;
 	ft_draw(g);
 	ft_load_links(g);
 	mlx_key_hook(g->id, my_keyhook, &g);

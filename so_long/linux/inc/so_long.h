@@ -24,7 +24,6 @@
 # define KEY_R 15
 # define KEY_Q 12
 # define COLORS "RBKOGYP"
-# define GAME_RATE 17
 
 # include "../lib/libft/libft.h"
 # include "MLX42.h"
@@ -53,7 +52,6 @@ typedef struct s_layout
 	int	col;
 	int	exit;
 	int	player;
-	int	enemy;
 	int	collect;
 }				t_layout;
 
@@ -93,33 +91,19 @@ typedef struct s_pl_sprite
 	t_lists	*left_bak;
 	t_lists	*right;
 	t_lists	*right_bak;
-	//t_list	*panic;
-	//t_list	*panic_bak;
 }				t_pl_sprite;
 
 /* MLX image pointers for the map */
 typedef struct s_sprite
 {
-	mlx_image_t		*logo;
-	mlx_image_t		*wall; //Originally 2 stars, removed one
+	mlx_image_t		*wall;
 	mlx_image_t		*rupee;
 	mlx_image_t		*triforce;
-	mlx_image_t		*cover;
 	mlx_image_t		*triforceon;
 	mlx_image_t		*black;
-	t_lists		*pac_dying_bak;
-	t_lists		*pac_dying;
+	mlx_image_t		*cover;
 	t_font		score_font;
 }				t_sprite;
-
-/* Small list showing if a player can go north, south, east or west */
-typedef struct s_legal_actions
-{
-	int	north;
-	int	south;
-	int	east;
-	int	west;
-}				t_legal_actions;
 
 /* Main Player struct with position and direction (linked list) */
 typedef struct s_player
@@ -142,17 +126,12 @@ typedef struct s_game
 	t_sprite	sprites;
 	int			pla;
 	t_player	*pl;
-	//t_player	*gh;
-	int			next_dir;
 	char		**map;
 	char		**map_bak;
 	int			n_collect_bak;
-	int			pac_dying;
-	//int			panic_mode;
 	int			n_frames;
 	int			n_moves;
 	int			n_moves_bak;
-	int			g_rate;
 }				t_game;
 
 //Functions in main
@@ -170,20 +149,20 @@ int	ft_open_map(char *directory, t_layout *layout, char ***map);
 int	parse_map(int argc, char **argv, t_layout *layout, char ***map);
 void	ft_newlayout(t_layout *layout);
 //Functions in load_sprites
-t_sprite	ft_initsprites(t_game *g);
-void	ft_load_links(t_game *g);
+int	ft_initsprites(t_game *g);
+int	ft_load_links(t_game *g);
 void	ft_render_link(t_lists *sprite, int x, int y, mlx_t *id);
 //Functions in load_animations
-t_lists	*ft_load_north(t_game *g, char *path, int i);
-t_lists	*ft_load_south(t_game *g, char *path, int i);
-t_lists	*ft_load_east(t_game *g, char *path, int i);
-t_lists	*ft_load_west(t_game *g, char *path, int i);
+int	ft_load_north(t_game *g, char *path, int i);
+int	ft_load_south(t_game *g, char *path, int i);
+int	ft_load_east(t_game *g, char *path, int i);
+int	ft_load_west(t_game *g, char *path, int i);
 //Functions in load_score
 void	ft_disable_all(t_font font);
 void	ft_enable(t_game *g, int i);
 void	ft_change_score(t_game *g, int digit, int i);
 void	ft_render_scoreboard(t_game *g);
-t_font	ft_load_font(t_game *g);
+int		ft_load_font(t_game *g);
 //Functions in movement
 void	ft_moving_north(t_game *g);
 void	ft_moving_south(t_game *g);
