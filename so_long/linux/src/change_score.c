@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   change_score.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/03 19:58:44 by hdorado-          #+#    #+#             */
+/*   Updated: 2023/11/03 19:59:03 by hdorado-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/so_long.h"
 
 void	ft_disable_all(t_font font)
@@ -58,4 +70,3 @@ void	ft_change_score(t_game *g, int digit, int i)
 	if (digit != 9)
 		g->sp.fnt.nine->instances[i].enabled = 0;
 }
-

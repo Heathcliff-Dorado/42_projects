@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_checks.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/03 19:59:13 by hdorado-          #+#    #+#             */
+/*   Updated: 2023/11/03 21:27:31 by hdorado-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/so_long.h"
 
 int	ft_check_surroundings(char **map, int i, int j, t_layout *layout)
@@ -30,11 +42,11 @@ int	ft_valid_path(char ***map, t_layout *layout)
 	int		j;
 	char	**dupmap;
 
-	i = 0;
-	while (i < layout->row)
+	i = -1;
+	while (++i < layout->row)
 	{
-		j = 0;
-		while (j < layout->col)
+		j = -1;
+		while (++j < layout->col)
 		{
 			if ((*map)[i][j] == 'E' || (*map)[i][j] == 'C')
 			{
@@ -42,12 +54,13 @@ int	ft_valid_path(char ***map, t_layout *layout)
 				if (ft_dupmap((*map), &dupmap) == -4)
 					return (-4);
 				if (!ft_check_surroundings(dupmap, i, j, layout))
+				{
+					ft_freemap(&dupmap);
 					return (-8);
+				}
 				ft_freemap(&dupmap);
 			}
-			j++;
 		}
-		i++;
 	}
 	return (1);
 }
@@ -92,9 +105,9 @@ int	icons_check(char ***map, t_layout *layout, int i, int j)
 		else if ((*map)[i][j] == 'C')
 			layout->collect++;
 		else
-			return (-7);
+			return (0);
 	}
-	return (0);
+	return (1);
 }
 
 int	parse_icons(char ***map, t_layout *layout)
@@ -108,7 +121,7 @@ int	parse_icons(char ***map, t_layout *layout)
 		j = 0;
 		while (j < layout->col)
 		{
-			if (!icons_check((*map), layout, i, j))
+			if (!icons_check(map, layout, i, j))
 				return (-7);
 			j++;
 		}

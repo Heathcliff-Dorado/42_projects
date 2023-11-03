@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 21:39:53 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/11/03 09:42:44 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/11/03 21:12:42 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ int	main(int argc, char **argv)
 	ret = parse_map(argc, argv, &layout, &map);
 	if (ret < 0)
 	{
+		if (map)
+			ft_freestructure(map);
 		ft_error_handling(ret);
 		return (0);
 	}

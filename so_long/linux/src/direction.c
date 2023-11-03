@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   direction.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/03 19:58:52 by hdorado-          #+#    #+#             */
+/*   Updated: 2023/11/03 21:02:01 by hdorado-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/so_long.h"
 
 void	ft_changedir2(t_game *g, int dir)
@@ -52,6 +64,14 @@ int	ft_moveallowed(t_game *g)
 	return (0);
 }
 
+void	choose_action(t_game *g, int dir)
+{
+	if (g->pl->dir != dir)
+		ft_changedir(g, dir);
+	else if (ft_moveallowed(g))
+		g->pl->moving = 1;
+}
+
 void	my_keyhook(mlx_key_data_t keydata, void *param)
 {
 	t_game	**g;
@@ -63,15 +83,13 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 		mlx_close_window(mlx);
 	if (!((*g)->pl->moving))
 	{
-		if (keydata.key == MLX_KEY_UP && (*g)->pl->dir != N)
-			ft_changedir((*g), N);
-		else if (keydata.key == MLX_KEY_DOWN && (*g)->pl->dir != S)
-			ft_changedir((*g), S);
-		else if (keydata.key == MLX_KEY_LEFT && (*g)->pl->dir != W)
-			ft_changedir((*g), W);
-		else if (keydata.key == MLX_KEY_RIGHT && (*g)->pl->dir != E)
-			ft_changedir((*g), E);
-		else if (ft_moveallowed((*g)))
-			(*g)->pl->moving = 1;
+		if (keydata.key == MLX_KEY_UP)
+			choose_action((*g), N);
+		else if (keydata.key == MLX_KEY_DOWN)
+			choose_action((*g), S);
+		else if (keydata.key == MLX_KEY_LEFT)
+			choose_action((*g), W);
+		else if (keydata.key == MLX_KEY_RIGHT)
+			choose_action((*g), E);
 	}
 }

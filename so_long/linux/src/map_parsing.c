@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 21:40:06 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/11/03 16:41:53 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/11/03 20:43:18 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ int	ft_check_map(int fd, t_layout *layout, char ***map)
 	int		ret;
 
 	str = get_next_line(fd);
+	if (!str)
+		return (-5);
 	layout->col = ft_strlen(str) - 1;
 	while (str)
 	{
@@ -111,4 +113,3 @@ int	parse_map(int argc, char **argv, t_layout *layout, char ***map)
 		return (ret);
 	return (1);
 }
-

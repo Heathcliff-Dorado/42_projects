@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 21:34:59 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/11/03 16:42:00 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/11/03 21:03:01 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ void		ft_update_game(void *param);
 void		ft_setgame(t_game *g, char **m, t_layout *lay);
 void		ft_initgame(char **map, t_layout lay);
 //Functions in map_parsing
-int			ft_um_new(char ***map, char **new_map, char *str, int i)
+int			ft_um_new(char ***map, char **new_map, char *str, int i);
 int			ft_update_map(char ***map, t_layout *layout, char *str);
 int			ft_check_map(int fd, t_layout *layout, char ***map);
 int			ft_open_map(char *directory, t_layout *layout, char ***map);
@@ -201,6 +201,7 @@ void		ft_moving(t_game *g);
 void		ft_changedir2(t_game *g, int dir);
 void		ft_changedir(t_game *g, int dir);
 int			ft_moveallowed(t_game *g);
+void		choose_action(t_game *g, int dir);
 void		my_keyhook(mlx_key_data_t keydata, void *param);
 //Functions in utils
 void		ft_lstadd_back_s(t_lists **lst, t_lists *new);

@@ -5,7 +5,8 @@ MLX42	:= ./lib/MLX42
 SRC_DIR = src/
 
 # List of source files
-SO_LONG_SRC = main.c map_parsing.c load_score.c load_sprites.c load_animation.c movement.c utils.c
+SO_LONG_SRC = change_score.c cleaning.c direction.c load_animation.c load_score.c load_sprites.c main.c map_checks.c \
+	map_filling.c map_parsing.c map_utils.c movement.c utils.c \
 
 # List of source files with prefix
 SO_LONG_SRCS = $(addprefix $(SRC_DIR), $(SO_LONG_SRC))
@@ -16,9 +17,13 @@ SO_LONG_OBJS = $(SO_LONG_SRCS:.c=.o)
 NAME = $(LIBFT_DIR)/libft.a
 
 # Build both push_swap and checker executables
-all: $(NAME) so_long
+all: $(NAME) getmlx42 so_long
 
 ####LINUX##### add "libmlx" to rule in all
+# Build the so_long executable
+so_long: $(SO_LONG_OBJS) $(NAME)
+	$(CC) $(CFLAGS) $(SO_LONG_OBJS) -L$(LIBFT_DIR) -lft $(MLX42)/build/libmlx42.a -ldl -lglfw -pthread -lm -o $@
+
 #Get MLX42
 getmlx42:
 	@if [ ! -d $(MLX42) ]; then \
@@ -28,13 +33,6 @@ getmlx42:
 		cp $(MLX42)/include/MLX42/MLX42.h ./inc; \
 		cp $(MLX42)/build/libmlx42.a ./inc; \
 	fi
-
-mlx: getmlx42
-	@echo "Getting and building mlx42.........."
-
-# Build the so_long executable
-so_long: mlx $(SO_LONG_OBJS) $(NAME)
-	$(CC) $(CFLAGS) $(SO_LONG_OBJS) -L$(LIBFT_DIR) -lft $(MLX42)/build/libmlx42.a -ldl -lglfw -pthread -lm -o $@
 
 # Build the libft library
 $(NAME): $(LIBFT_DIR)/*.c
