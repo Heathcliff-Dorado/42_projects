@@ -6,135 +6,11 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 21:39:53 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/11/01 22:27:37 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/11/03 09:42:44 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/so_long.h"
-
-void	ft_error_handling(int errno)
-{
-	ft_printf("Error\n");
-	if (errno == -1)
-		ft_putstr_fd("Please provide (only) path to map\n", 2);
-	if (errno == -2)
-		ft_putstr_fd("Map extension should be .ber\n", 2);
-	if (errno == -3)
-		ft_putstr_fd("Unable to open map\n", 2);
-	if (errno == -4)
-		ft_putstr_fd("Memory allocation error\n", 2);
-	if (errno == -5)
-		ft_putstr_fd("Invalid map borders or size\n", 2);
-	if (errno == -6)
-		ft_putstr_fd("Invalid number of collectibles, player or exit\n", 2);
-	if (errno == -7)
-		ft_putstr_fd("Unrecognized character in map\n", 2);
-	if (errno == -8)
-		ft_putstr_fd("No valid path to collectible or exit\n", 2);
-}
-
-void	ft_freestructure(char **map)
-{
-	int	i;
-
-	i = 0;
-	while (map[i])
-	{
-		free(map[i]);
-		i++;
-	}
-	free(map);
-}
-
-void	ft_changedir2(t_game *g, int dir)
-{
-	if (dir == W)
-	{
-		g->pl->sp.left->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sp.left->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sp.left->content->enabled = true;
-	}
-	if (dir == E)
-	{
-		g->pl->sp.right->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sp.right->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sp.right->content->enabled = true;
-	}
-}
-
-void	ft_changedir(t_game *g, int dir)
-{
-	g->pl->sp.up->content->enabled = 0;
-	g->pl->sp.down->content->enabled = 0;
-	g->pl->sp.left->content->enabled = 0;
-	g->pl->sp.right->content->enabled = 0;
-	if (dir == N)
-	{
-		g->pl->sp.up->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sp.up->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sp.up->content->enabled = true;
-	}
-	if (dir == S)
-	{
-		g->pl->sp.down->content->instances[0].x = g->pl->win_pos.x;
-		g->pl->sp.down->content->instances[0].y = g->pl->win_pos.y;
-		g->pl->sp.down->content->enabled = true;
-	}
-	if (dir == E || dir == W)
-		ft_changedir2(g, dir);
-	g->pl->dir = dir;
-}
-
-int	ft_moveallowed(t_game *g)
-{
-	if (g->pl->dir == N && g->map_bak[g->pl->pos.y - 1][g->pl->pos.x] != '1')
-		return (1);
-	if (g->pl->dir == S && g->map_bak[g->pl->pos.y + 1][g->pl->pos.x] != '1')
-		return (1);
-	if (g->pl->dir == W && g->map_bak[g->pl->pos.y][g->pl->pos.x - 1] != '1')
-		return (1);
-	if (g->pl->dir == E && g->map_bak[g->pl->pos.y][g->pl->pos.x + 1] != '1')
-		return (1);
-	return (0);
-}
-
-void	my_keyhook(mlx_key_data_t keydata, void *param)
-{
-	t_game	**g;
-	mlx_t	*mlx;
-
-	g = param;
-	mlx = (*g)->id;
-	if (keydata.key == MLX_KEY_ESCAPE)
-		mlx_close_window(mlx);
-	if (!((*g)->pl->moving))
-	{
-		if (keydata.key == MLX_KEY_UP && (*g)->pl->dir != N)
-			ft_changedir((*g), N);
-		else if (keydata.key == MLX_KEY_DOWN && (*g)->pl->dir != S)
-			ft_changedir((*g), S);
-		else if (keydata.key == MLX_KEY_LEFT && (*g)->pl->dir != W)
-			ft_changedir((*g), W);
-		else if (keydata.key == MLX_KEY_RIGHT && (*g)->pl->dir != E)
-			ft_changedir((*g), E);
-		else if (ft_moveallowed((*g)))
-			(*g)->pl->moving = 1;
-	}
-}
-
-t_player	*ft_plrnew(t_vector pos)
-{
-	t_player	*player;
-
-	player = malloc(sizeof(t_player));
-	if (!player)
-		return (NULL);
-	player->pos = pos;
-	player->win_pos = ft_newvector(pos.x * SIZE, pos.y * SIZE);
-	player->moving = 0;
-	player->dir = S;
-	return (player);
-}
 
 void	ft_update_moves(t_game *g)
 {
@@ -158,91 +34,6 @@ void	ft_update_moves(t_game *g)
 	}
 	else if (g->n_moves > 9999)
 		g->n_moves = 9999;
-}
-
-void	ft_fillbackground(t_game *g)
-{
-	int	x;
-	int	y;
-
-	y = 0;
-	while (g->map[y])
-	{
-		x = 0;
-		while (g->map[y][x])
-		{
-			if (g->map[y][x] == '1')
-				mlx_image_to_window(g->id, g->sp.wall, x * SIZE, y * SIZE);
-			else
-				mlx_image_to_window(g->id, g->sp.black,
-					x * SIZE, y * SIZE);
-			x++;
-		}
-		y++;
-	}
-}
-
-void	ft_fillothers(t_game *g)
-{
-	int	x;
-	int	y;
-
-	y = 0;
-	while (g->map[y])
-	{
-		x = 0;
-		while (g->map[y][x])
-		{
-			if (g->map[y][x] == 'C')
-				mlx_image_to_window(g->id, g->sp.rupee,
-					x * SIZE, y * SIZE);
-			else if (g->map[y][x] == 'E')
-			{
-				mlx_image_to_window(g->id, g->sp.triforce,
-					x * SIZE, y * SIZE);
-				mlx_image_to_window(g->id, g->sp.triforceon,
-					x * SIZE, y * SIZE);
-				g->sp.triforceon->enabled = 0;
-			}
-			x++;
-		}
-		y++;
-	}
-}
-
-void	ft_fillplayer(t_game *g)
-{
-	int	x;
-	int	y;
-	int	i;
-
-	y = 0;
-	while (g->map[y])
-	{
-		x = 0;
-		while (g->map[y][x])
-		{
-			if (g->map[y][x] == 'P')
-			{
-				g->pl = ft_plrnew(ft_newvector(x, y));
-				i = 0;
-				while (i++ < g->col_bak)
-					mlx_image_to_window(g->id, g->sp.cover,
-						g->pl->win_pos.x, g->pl->win_pos.y);
-			}
-			x++;
-		}
-		y++;
-	}
-}
-
-int	ft_draw(t_game *g)
-{
-	ft_fillbackground(g);
-	ft_fillothers(g);
-	ft_fillplayer(g);
-	ft_render_scoreboard(g);
-	return (0);
 }
 
 void	ft_update_game(void *param)
@@ -272,30 +63,6 @@ void	ft_update_game(void *param)
 		sleep(1);
 		mlx_close_window((*g)->id);
 	}
-}
-
-void	ft_animclean(t_lists *list)
-{
-	t_lists	*tmp;
-
-	while (list->next)
-	{
-		tmp = list->next;
-		free(list);
-		list = tmp;
-	}
-	free(list);
-}
-
-void	ft_freegame(t_game *g)
-{
-	ft_freestructure(g->map);
-	ft_freestructure(g->map_bak);
-	ft_animclean(g->pl->sp.down);
-	ft_animclean(g->pl->sp.left);
-	ft_animclean(g->pl->sp.right);
-	ft_animclean(g->pl->sp.up);
-	free(g->pl);
 }
 
 void	ft_setgame(t_game *g, char **m, t_layout *lay)

@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 21:34:59 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/11/01 22:31:08 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/11/03 16:42:00 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,19 +145,32 @@ typedef struct s_game
 }				t_game;
 
 //Functions in main
-
+void		ft_update_moves(t_game *g);
+void		ft_update_game(void *param);
+void		ft_setgame(t_game *g, char **m, t_layout *lay);
+void		ft_initgame(char **map, t_layout lay);
 //Functions in map_parsing
-int			ft_check_surroundings(char **map, int i, int j, t_layout *layout);
-void		ft_freemap(char ***map);
-int			ft_dupmap(char **src, char ***dst);
-int			ft_valid_path(char ***map, t_layout *layout);
-int			parse_icons(char ***map, t_layout *layout);
-int			is_map_right(char ***map, t_layout *layout);
+int			ft_um_new(char ***map, char **new_map, char *str, int i)
 int			ft_update_map(char ***map, t_layout *layout, char *str);
 int			ft_check_map(int fd, t_layout *layout, char ***map);
 int			ft_open_map(char *directory, t_layout *layout, char ***map);
 int			parse_map(int argc, char **argv, t_layout *layout, char ***map);
+//Functions in map_checks
+int			ft_check_surroundings(char **map, int i, int j, t_layout *layout);
+int			ft_valid_path(char ***map, t_layout *layout);
+int			is_map_right(char ***map, t_layout *layout);
+int			parse_icons(char ***map, t_layout *layout);
+int			icons_check(char ***map, t_layout *layout, int i, int j);
+//Functions in map_filling
+void		ft_fillbackground(t_game *g);
+void		ft_fillothers(t_game *g);
+void		ft_fillplayer(t_game *g);
+int			ft_draw(t_game *g);
+//Functions in map_utils
+void		ft_freemap(char ***map);
+int			ft_dupmap(char **src, char ***dst);
 void		ft_newlayout(t_layout *layout);
+int			ft_map_length(char ***map);
 //Functions in load_sprites
 int			ft_initsprites2(t_game *g);
 int			ft_initsprites(t_game *g);
@@ -169,24 +182,36 @@ int			ft_load_south(t_game *g, char *path, int i);
 int			ft_load_east(t_game *g, char *path, int i);
 int			ft_load_west(t_game *g, char *path, int i);
 //Functions in load_score
-void		ft_disable_all(t_font font);
-void		ft_enable(t_game *g, int i);
-void		ft_change_score(t_game *g, int digit, int i);
 void		ft_load_all_sc(t_game *g, int i);
 void		ft_render_scoreboard(t_game *g);
 int			ft_load3(t_game *g);
 int			ft_load2(t_game *g);
 int			ft_load_font(t_game *g);
+//Functions in change_score
+void		ft_disable_all(t_font font);
+void		ft_enable(t_game *g, int i);
+void		ft_change_score(t_game *g, int digit, int i);
 //Functions in movement
 void		ft_moving_north(t_game *g);
 void		ft_moving_south(t_game *g);
 void		ft_moving_west(t_game *g);
 void		ft_moving_east(t_game *g);
 void		ft_moving(t_game *g);
+//Functions in direction
+void		ft_changedir2(t_game *g, int dir);
+void		ft_changedir(t_game *g, int dir);
+int			ft_moveallowed(t_game *g);
+void		my_keyhook(mlx_key_data_t keydata, void *param);
 //Functions in utils
 void		ft_lstadd_back_s(t_lists **lst, t_lists *new);
 t_lists		*ft_lstnew_s(mlx_image_t *content);
 t_vector	ft_newvector(int x, int y);
 void		ft_plradd_back(t_player **lst, t_player *newnode);
+//Functions in cleaning
+void		ft_freestructure(char **map);
+void		ft_animclean(t_lists *list);
+void		ft_freegame(t_game *g);
+void		ft_error_handling(int errno);
+t_player	*ft_plrnew(t_vector pos);
 
 #endif
