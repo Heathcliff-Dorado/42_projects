@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 17:13:49 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/12/05 17:00:11 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/12/11 22:16:12 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,15 @@ void	ft_init_phil(t_conditions *rules)
 	while (i < rules->n_phil)
 	{
 		rules->phil[i].id = i + 1;
+		rules->phil[i].dead = 0;
+		rules->phil[i].n_meals = 0;
+		rules->phil[i].teat = rules->teat;
+		rules->phil[i].tdie = rules->tdie;
+		rules->phil[i].tsleep = rules->tsleep;
+		rules->phil[i].rules = rules;
+		pthread_mutex_init(&rules->meal_lock, NULL);
+		pthread_mutex_init(&rules->dead_lock, NULL);
+		rules->phil[i].last_meal = get_time();
 		if (i == 0)
 			rules->phil[0].fork_l = &rules->forks[rules->n_phil - 1];
 		else
@@ -126,16 +135,17 @@ int	ft_alloc(t_conditions *rules)
 	return (1);
 }
 
-void	*ft_monitor(void *parameters)
-{
-	t_conditions	*rules;
-
-	rules = (t_conditions *)parameters;
-}
-
 int	ft_start(t_conditions *rules)
 {
+	int	i;
+
+	i = 0;
 	pthread_create(&rules->tpid, NULL, ft_monitor, (void *)rules);
+	while (i < rules->n_phil)
+	{
+		pthread_create(&rules->phil[i].thread, NULL, ft_routine, (void *)&rules->phil[i]);
+		i++;
+	}
 }
 
 int	main(int argc, char **argv)
@@ -146,7 +156,6 @@ int	main(int argc, char **argv)
 	if (argc != 5 || argc != 6)
 		return (0);
 	i = 1;
-	rules.dead = 0;
 	rules.finished = 0;
 	pthread_mutex_init(&rules.writing, NULL);
 	if (!ft_check_args(argc, argv, &rules))
