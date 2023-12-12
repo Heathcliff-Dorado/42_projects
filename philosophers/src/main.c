@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 17:13:49 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/12/11 22:16:12 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/12/12 16:51:32 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,20 +94,19 @@ void	ft_init_phil(t_conditions *rules)
 	while (i < rules->n_phil)
 	{
 		rules->phil[i].id = i + 1;
-		rules->phil[i].dead = 0;
 		rules->phil[i].n_meals = 0;
+		rules->phil[i].dead = 0;
 		rules->phil[i].teat = rules->teat;
 		rules->phil[i].tdie = rules->tdie;
 		rules->phil[i].tsleep = rules->tsleep;
-		rules->phil[i].rules = rules;
-		pthread_mutex_init(&rules->meal_lock, NULL);
-		pthread_mutex_init(&rules->dead_lock, NULL);
+		rules->phil[i].start = get_time();
 		rules->phil[i].last_meal = get_time();
 		if (i == 0)
 			rules->phil[0].fork_l = &rules->forks[rules->n_phil - 1];
 		else
 			rules->phil[i].fork_l = &rules->forks[i - 1];
 		rules->phil[i].fork_r = &rules->forks[i];
+		rules->phil[i].rules = rules;
 		i++;
 	}
 }
@@ -117,9 +116,9 @@ int	ft_alloc(t_conditions *rules)
 	int	i;
 
 	i = 0;
-	rules->tpid = ft_calloc(sizeof(pthread_t), rules->n_phil);
+	/*rules->tpid = ft_calloc(sizeof(pthread_t), rules->n_phil);
 	if (!rules->tpid)
-		return (0);
+		return (0);*/
 	rules->forks = ft_calloc(sizeof(pthread_mutex_t), rules->n_phil);
 	if (!rules->forks)
 		return (0);
@@ -135,7 +134,7 @@ int	ft_alloc(t_conditions *rules)
 	return (1);
 }
 
-int	ft_start(t_conditions *rules)
+void	ft_start(t_conditions *rules)
 {
 	int	i;
 
@@ -146,6 +145,30 @@ int	ft_start(t_conditions *rules)
 		pthread_create(&rules->phil[i].thread, NULL, ft_routine, (void *)&rules->phil[i]);
 		i++;
 	}
+	i = 0;
+	pthread_join(rules->tpid, NULL);
+	while (i < rules->n_phil)
+	{
+		pthread_join(rules->phil[i].thread, NULL);
+		i++;
+	}
+}
+
+void	ft_clear_mutex(t_conditions *rules)
+{
+	int	i;
+
+	i = 0;
+	pthread_mutex_destroy(&rules->dead_lock);
+	pthread_mutex_destroy(&rules->meal_lock);
+	pthread_mutex_destroy(&rules->writing);
+	while (i < rules->n_phil)
+	{
+		pthread_mutex_destroy(&rules->forks[i]);
+		i++;
+	}
+	free (rules->forks);
+	free (rules->phil);
 }
 
 int	main(int argc, char **argv)
@@ -153,13 +176,17 @@ int	main(int argc, char **argv)
 	int	i;
 	t_conditions	rules;
 
-	if (argc != 5 || argc != 6)
+	if (!(argc == 5 || argc == 6))
 		return (0);
 	i = 1;
-	rules.finished = 0;
+	rules.dead = 0;
 	pthread_mutex_init(&rules.writing, NULL);
+	pthread_mutex_init(&rules.meal_lock, NULL);
+	pthread_mutex_init(&rules.dead_lock, NULL);
 	if (!ft_check_args(argc, argv, &rules))
 		return (0);
 	ft_alloc(&rules);
 	ft_start(&rules);
+	ft_clear_mutex(&rules);
+	return (0);
 }
