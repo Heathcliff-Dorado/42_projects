@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 21:01:28 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/12/12 17:24:58 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/12/18 21:41:04 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,14 @@ int	ft_check_dead(t_conditions *rules)
 	while (i < rules->n_phil)
 	{
 		pthread_mutex_lock(&rules->meal_lock);
-		if (get_time() - rules->phil[i].last_meal >= rules->tdie)
+		if (get_time() - rules->ph[i].last_meal >= rules->tdie
+			&& rules->ph[i].eating == 0)
 		{
-			pthread_mutex_unlock(&rules->meal_lock);
 			ft_write("died", i + 1, rules);
 			pthread_mutex_lock(&rules->dead_lock);
 			rules->dead = 1;
 			pthread_mutex_unlock(&rules->dead_lock);
+			pthread_mutex_unlock(&rules->meal_lock);
 			return (1);
 		}
 		pthread_mutex_unlock(&rules->meal_lock);
@@ -57,12 +58,12 @@ int	ft_check_finished(t_conditions *rules)
 	pthread_mutex_lock(&rules->meal_lock);
 	while (i < rules->n_phil)
 	{
-		if (rules->phil[i].n_meals >= rules->req_eat)
+		if (rules->ph[i].n_meals >= rules->req_eat)
 			j++;
 		i++;
 	}
 	pthread_mutex_unlock(&rules->meal_lock);
-	if (j == rules->n_phil)
+	if (j == rules->n_phil && rules->req_eat != -1)
 	{
 		pthread_mutex_lock(&rules->dead_lock);
 		rules->dead = 1;
@@ -81,7 +82,7 @@ void	*ft_monitor(void *parameters)
 	while (1)
 	{
 		if (ft_check_dead(rules) == 1 || ft_check_finished(rules) == 1)
-			break;
+			break ;
 	}
 	return (parameters);
 }

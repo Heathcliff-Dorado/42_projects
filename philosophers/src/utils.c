@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 20:56:45 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/12/12 17:01:54 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/12/18 21:15:49 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,10 @@ u_int64_t	get_time(void)
 
 void	ft_write(char *str, int i, t_conditions *rules)
 {
-	u_int64_t time;
+	u_int64_t	time;
 
 	pthread_mutex_lock(&rules->writing);
-	time = get_time() - rules->phil[i - 1].start;
-	//time = 200;
+	time = get_time() - rules->ph[i - 1].start;
 	pthread_mutex_lock(&rules->dead_lock);
 	if (rules->dead != 1)
 	{

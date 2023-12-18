@@ -4,7 +4,7 @@ LIBFT_DIR = lib/libft
 SRC_DIR = src/
 
 # List of source files
-PHILO_SRC = main.c monitor.c routine.c utils.c
+PHILO_SRC = main.c monitor.c routine.c utils.c arg_check.c
 PHILO_SRCS = $(addprefix $(SRC_DIR), $(PHILO_SRC))
 
 # List of object files to build
@@ -17,7 +17,7 @@ all: $(NAME) philosophers
 
 # Build the client executable
 philosophers: $(PHILO_OBJS) $(NAME)
-	$(CC) $(CFLAGS) $(PHILO_OBJS) -L$(LIBFT_DIR) -lft -o $@
+	$(CC) -fsanitize=address $(CFLAGS) $(PHILO_OBJS) -L$(LIBFT_DIR) -lft -o $@
 
 # Build the libft library
 $(NAME): $(LIBFT_DIR)/*.c
