@@ -6,22 +6,22 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 17:13:49 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/12/19 14:13:20 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/12/19 15:07:27 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/philosophers.h"
+#include "philosophers.h"
 
 void	ft_init_phil(t_conditions *rules)
 {
 	int	i;
 
 	i = 0;
+	rules->dead = 0;
 	while (i < rules->n_phil)
 	{
 		rules->ph[i].id = i + 1;
 		rules->ph[i].n_meals = 0;
-		rules->ph[i].dead = 0;
 		rules->ph[i].eating = 0;
 		rules->ph[i].teat = rules->teat;
 		rules->ph[i].tdie = rules->tdie;
@@ -110,20 +110,22 @@ int	main(int argc, char **argv)
 	t_conditions	rules;
 
 	if (!(argc == 5 || argc == 6))
+	{
+		write(2, "Invalid number of arguments\n", 28);
 		return (0);
+	}
 	i = 1;
-	rules.dead = 0;
 	pthread_mutex_init(&rules.writing, NULL);
 	pthread_mutex_init(&rules.meal_lock, NULL);
 	pthread_mutex_init(&rules.dead_lock, NULL);
 	if (!ft_check_args(argc, argv, &rules))
 	{
-		ft_printf("Error, incorrect arguments\n");
+		write(2, "Error, incorrect arguments\n", 27);
 		return (0);
 	}
 	if (!ft_alloc(&rules))
 	{
-		ft_printf("Error in memory allocation\n");
+		write(2, "Error in memory allocation\n", 27);
 		return (0);
 	}
 	ft_start(&rules);

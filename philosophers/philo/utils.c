@@ -6,11 +6,11 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 20:56:45 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/12/18 21:15:49 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/12/19 14:59:45 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/philosophers.h"
+#include "philosophers.h"
 
 u_int64_t	get_time(void)
 {
@@ -33,4 +33,55 @@ void	ft_write(char *str, int i, t_conditions *rules)
 	}
 	pthread_mutex_unlock(&rules->dead_lock);
 	pthread_mutex_unlock(&rules->writing);
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+
+	ptr = malloc(nmemb * size);
+	if (!ptr)
+		return (ptr);
+	ft_bzero(ptr, nmemb * size);
+	return (ptr);
+}
+
+void	ft_bzero(void *s, size_t n)
+{
+	size_t	i;
+	char	*str;
+
+	str = s;
+	i = 0;
+	while (i < n)
+	{
+		str[i] = '\0';
+		i++;
+	}
+}
+
+int	ft_atoi(const char *nptr)
+{
+	int	i;
+	int	num;
+	int	sign;
+
+	sign = 1;
+	num = 0;
+	i = 0;
+	while ((nptr[i] >= 9 && nptr[i] <= 13) || nptr[i] == 32)
+		i++;
+	if (nptr[i] == '+')
+		i++;
+	else if (nptr[i] == '-')
+	{
+		sign = -1;
+		i++;
+	}
+	while (nptr[i] >= '0' && nptr[i] <= '9')
+	{
+		num = 10 * num + (nptr[i] - 48);
+		i++;
+	}
+	return (sign * num);
 }

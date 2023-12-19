@@ -10,7 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/philosophers.h"
+#include "philosophers.h"
+
+void	ft_usleep(u_int64_t time)
+{
+	u_int64_t	start;
+
+	start = get_time();
+	while (get_time() - start < time)
+		usleep(500);
+}
 
 int	ft_loop(t_phil *philo)
 {

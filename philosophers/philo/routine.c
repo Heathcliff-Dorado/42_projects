@@ -6,24 +6,16 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 21:55:25 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/12/18 21:50:15 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/12/19 15:22:46 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/philosophers.h"
-
-void	ft_usleep(u_int64_t time)
-{
-	u_int64_t	start;
-
-	start = get_time();
-	while (get_time() - start < time)
-		usleep(500);
-}
+#include "philosophers.h"
 
 void	ft_thinking(t_phil *philo)
 {
 	ft_write("is thinking", philo->id, philo->rules);
+	usleep(500);
 }
 
 void	ft_sleep(t_phil *philo)
@@ -32,16 +24,31 @@ void	ft_sleep(t_phil *philo)
 	ft_usleep(philo->tsleep);
 }
 
-void	ft_eating(t_phil *philo)
+void	ft_start_eating(t_phil *philo)
 {
-	pthread_mutex_lock(philo->fork_r);
-	ft_write("has taken a fork", philo->id, philo->rules);
-	pthread_mutex_lock(philo->fork_l);
-	ft_write("has taken a fork", philo->id, philo->rules);
 	pthread_mutex_lock(&philo->rules->meal_lock);
 	philo->eating = 1;
 	philo->last_meal = get_time();
 	pthread_mutex_unlock(&philo->rules->meal_lock);
+}
+
+void	ft_eating(t_phil *philo)
+{
+	if (philo->id % 2)
+	{
+		pthread_mutex_lock(philo->fork_r);
+		ft_write("has taken a fork", philo->id, philo->rules);
+		pthread_mutex_lock(philo->fork_l);
+		ft_write("has taken a fork", philo->id, philo->rules);
+	}
+	else
+	{
+		pthread_mutex_lock(philo->fork_l);
+		ft_write("has taken a fork", philo->id, philo->rules);
+		pthread_mutex_lock(philo->fork_r);
+		ft_write("has taken a fork", philo->id, philo->rules);
+	}
+	ft_start_eating(philo);
 	ft_write("is eating", philo->id, philo->rules);
 	ft_usleep(philo->teat);
 	pthread_mutex_unlock(philo->fork_l);
@@ -64,8 +71,6 @@ void	*ft_rtn(void *parameters)
 		ft_usleep(philo->tdie);
 		pthread_mutex_unlock(philo->fork_l);
 	}
-	if (philo->id % 2)
-		ft_usleep(1);
 	while (ft_loop(philo))
 	{
 		ft_thinking(philo);
