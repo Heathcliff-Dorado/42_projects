@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 17:13:49 by hdorado-          #+#    #+#             */
-/*   Updated: 2023/12/18 21:52:39 by hdorado-         ###   ########.fr       */
+/*   Updated: 2023/12/19 14:13:20 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,16 @@ int	ft_alloc(t_conditions *rules)
 	}
 	rules->ph = ft_calloc(sizeof(t_phil), rules->n_phil);
 	if (!rules->ph)
+	{
+		i = 0;
+		while (i < rules->n_phil)
+		{
+			pthread_mutex_destroy(&rules->forks[i]);
+			i++;
+		}
+		free(rules->forks);
 		return (0);
+	}
 	ft_init_phil(rules);
 	return (1);
 }
@@ -108,8 +117,15 @@ int	main(int argc, char **argv)
 	pthread_mutex_init(&rules.meal_lock, NULL);
 	pthread_mutex_init(&rules.dead_lock, NULL);
 	if (!ft_check_args(argc, argv, &rules))
+	{
+		ft_printf("Error, incorrect arguments\n");
 		return (0);
-	ft_alloc(&rules);
+	}
+	if (!ft_alloc(&rules))
+	{
+		ft_printf("Error in memory allocation\n");
+		return (0);
+	}
 	ft_start(&rules);
 	ft_clear_mutex(&rules);
 	return (0);

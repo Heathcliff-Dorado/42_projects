@@ -13,10 +13,10 @@ PHILO_OBJS = $(PHILO_SRCS:.c=.o)
 NAME = $(LIBFT_DIR)/libft.a
 
 # Build both the client and server executables
-all: $(NAME) philosophers
+all: $(NAME) philo
 
 # Build the client executable
-philosophers: $(PHILO_OBJS) $(NAME)
+philo: $(PHILO_OBJS) $(NAME)
 	$(CC) -fsanitize=address $(CFLAGS) $(PHILO_OBJS) -L$(LIBFT_DIR) -lft -o $@
 
 # Build the libft library
