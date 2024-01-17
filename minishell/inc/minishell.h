@@ -41,4 +41,9 @@ typedef struct s_cmd
 	t_cmd	*previous;
 }			t_cmd;
 
+//Functions in dictionary
+void	ft_clean_dict(t_minishell *mini);
+int		ft_new_entry(char *varname, t_minishell *mini);
+int		ft_dictionary(char **envp, t_minishell *mini);
+
 #endif

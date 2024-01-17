@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/17 20:04:13 by hdorado-          #+#    #+#             */
+/*   Updated: 2024/01/17 20:06:09 by hdorado-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
 void	ft_recursive_interpret(char *prompt, t_dict *dict);
@@ -104,10 +116,11 @@ char	*ft_expand_char(char *str, char c)
 {
 	char	*dst;
 
-	dst = ft_calloc(ft_strlen(str) + 2, sizeof(char *));
+	dst = malloc((ft_strlen(str) + 2) * sizeof(char *));
 	ft_strlcpy(dst, str, ft_strlen(str));
 	dst[ft_strlen(str)] = c;
 	free(str);
+	str = NULL;
 	return (dst);
 }
 void	ft_expand(char *var, char **str, t_dict *dict)
@@ -119,7 +132,9 @@ void	ft_expand(char *var, char **str, t_dict *dict)
 	ft_recursive_interpret(value, dict);
 	tmp = ft_strjoin(*str, value);
 	free(value);
+	value = NULL;
 	free(*str);
+	str = NULL;
 	*str = tmp;
 	//need to create a dict with all the stored variables. Here I want to know how long the var name is, and then I will compare it to all var names in the dictionary, and store the value associated to that var name
 }
@@ -132,7 +147,7 @@ char	*ft_get_varname(char *str)
 	i = 0;
 	while (str[i] && (str[i] != ' ' || str[i] != '\"'))
 		i++;
-	dst = ft_calloc(i, sizeof(char));
+	dst = malloc(i * sizeof(char));
 	ft_strlcpy(dst, str, i);
 	return(dst);
 }
@@ -153,6 +168,7 @@ void	ft_recursive_interpret(char *prompt, t_dict *dict)
 			ft_expand(varname, &str, dict);
 			i += ft_strlen(varname);
 			free (varname);
+			varname = NULL;
 		}
 		else
 			str = ft_expand_char(str, prompt[i]);
@@ -180,7 +196,7 @@ void	ft_extract_cmd(char *str, int start, int end)
 			i++;
 			while (str[i] != '\'')
 				i++;
-			cmd.str = ft_calloc(i - start, sizeof(char));
+			cmd.str = malloc((i - start) * sizeof(char));
 			ft_strlcpy(cmd.str, &str[start + 1], i - start - 1);
 			i++;
 		}
@@ -189,7 +205,7 @@ void	ft_extract_cmd(char *str, int start, int end)
 			i++;
 			while (str[i] != '\"')
 				i++;
-			cmd.str = ft_calloc(i - start, sizeof(char));
+			cmd.str = malloc((i - start) * sizeof(char));
 			ft_strlcpy(cmd.str, &str[start + 1], i - start - 1);
 			i++;
 		}
@@ -252,6 +268,7 @@ void	ft_interpret(char *prompt, t_dict *dict)
 			ft_expand(varname, &str, dict);
 			i += ft_strlen(varname);
 			free(varname);
+			varname = NULL;
 		}
 		else
 			str = ft_expand_char(str, prompt[i]);
@@ -259,127 +276,71 @@ void	ft_interpret(char *prompt, t_dict *dict)
 	}
 	//ft_parse(parsed, str);
 	free (str);
+	str = NULL;
 }
 
-void	ft_clean_dict(t_dict *dict)
+
+void	ft_find_pwds(t_minishell *mini)
 {
 	t_dict	*tmp;
 
-	if (dict)
+	tmp = mini->dict;
+	if (!ft_strncmp(mini->dict->varname, "PWD=", 4))
+		mini->pwd = ft_strdup(mini->dict->value);
+	if (!ft_strncmp(mini->dict->varname, "OLV_PWD=", 7))
+		mini->old_pwd = ft_strdup(mini->dict->value);
+	mini->dict = mini->dict->next;
+	while(mini->dict != tmp)
 	{
-		tmp = dict;
-		while (tmp)
-		{
-			free(dict->varname);
-			free(dict->value);
-			dict = dict->next;
-			dict->previous = tmp->previous;
-			dict->previous->next = dict;
-			free(tmp);
-			tmp = dict;
-		}
-	}
-}
-
-t_dict	*ft_new_entry(char *varname, t_dict *dict)
-{
-	t_dict	*new_entry;
-
-	new_entry = ft_calloc(1, sizeof(t_dict *));
-	if (!new_entry)
-		return (ft_clean_dict(dict), NULL);
-	new_entry->varname = ft_strdup(varname);
-	new_entry->value = ft_strdup(getenv(varname));
-	if (!new_entry->varname || !new_entry->value)
-	{
-		ft_clean_dict(new_entry);
-		return (ft_clean_dict(dict), NULL);
-	}
-	if (dict != NULL)
-	{
-		new_entry->next = new_entry;
-		new_entry->previous = new_entry;
-		return(new_entry);
-	}
-	new_entry->next = dict;
-	new_entry->previous = dict->previous;
-	dict->previous->next = new_entry;
-	dict->previous = new_entry;
-	return (dict);
-}
-
-//Are we allowed to use environ or envp?
-t_dict	*ft_dictionary(char **envp)
-{
-	int	i;
-	char	**arrdup;
-	t_dict	*dict;
-
-	i = 0;
-	dict = NULL;
-	while (envp[i] != NULL)
-	{
-		dict = ft_new_entry(envp[i], dict);
-		if (!dict)
-			return (NULL);
-	}
-		i++;
-	arrdup = ft_calloc(sizeof(char *), i + 1);
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		arrdup[i] = ft_strdup(envp[i]);
-		i++;
-	}
-	return (dict);
-}
-
-void	ft_find_pwds(t_minishell mini)
-{
-	t_dict	*tmp;
-
-	tmp = mini.dict;
-	if (!ft_strncmp(mini.dict->varname, "PWD=", 4))
-		mini.pwd = mini.dict->value;
-	if (!ft_strncmp(mini.dict->varname, "OLV_PWD=", 7))
-		mini.old_pwd = mini.dict->value;
-	mini.dict = mini.dict->next;
-	while(mini.dict != tmp)
-	{
-		if (!ft_strncmp(mini.dict->varname, "PWD=", 4))
-			mini.pwd = mini.dict->value;
-		if (!ft_strncmp(mini.dict->varname, "OLV_PWD=", 7))
-			mini.old_pwd = mini.dict->value;
-		mini.dict = mini.dict->next;
+		if (!ft_strncmp(mini->dict->varname, "PWD", 3))
+			mini->pwd = ft_strdup(mini->dict->value);
+		if (!ft_strncmp(mini->dict->varname, "OLDPWD", 6))
+			mini->old_pwd = ft_strdup(mini->dict->value);
+		mini->dict = mini->dict->next;
 	}
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_minishell	mini;
-	int	i;
+	t_minishell	*mini;
+	char		*prompt;
+	int			i;
 
 	if (argc != 1 || argv[1])
 	{
 		ft_printf("Error, this program does not accept arguments \n");
 		return (0);
 	}
-	mini.dict = ft_dictionary(envp);
+	mini = ft_calloc(1, sizeof(t_minishell));
+	if (!mini)
+		return(printf("Memory error\n"), 0);
+	mini->dict = NULL;
+	if (!ft_dictionary(envp, mini))
+		return(printf("Error creating dictionary\n"), 0);
 	ft_find_pwds(mini);
 	i = 0;
-	while (i < 50)
+	while (envp[i])
 	{
-		printf("Var name: %s, value: %s\n", mini.dict->varname, mini.dict->value);
+		printf("Var name: %s, value: %s\n", mini->dict->varname, mini->dict->value);
+		mini->dict = mini->dict->next;
 		i++;
 	}
-	/*prompt = readline("Minishell: ");
+	printf("PWD: %s\n", mini->pwd);
+	printf("OLD_PWD: %s\n", mini->old_pwd);
+	prompt = readline("Minishell: ");
 	while (prompt)
 	{
 		//Add the prompt to the history if it's not empty (i.e. only newline, what about spaces and other (\t,\r...)?)
 		if (ft_is_there_prompt(prompt))
 			add_history(prompt);
-		ft_interpret(prompt, dict, &parsed);
-	}*/
+		ft_interpret(prompt, mini);
+		prompt = readline("Minishell: ");
+	}
+	ft_clean_dict(mini);
+	free(mini->dict);
+	free(mini->pwd);
+	free(mini->old_pwd);
+	free(mini);
 /*//First we asign two free fd that will act as out STDIN and STDOUT using dup()
 	mini.stdin = dup(0);
 	mini.stdout = dup(1);*/

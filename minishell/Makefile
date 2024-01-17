@@ -4,7 +4,7 @@ LIBFT_DIR = lib/libft
 SRC_DIR = src/
 
 # List of source files
-MS_SRC = main.c
+MS_SRC = main.c dictionary.c
 
 # List of source files with prefix
 MS_SRCS = $(addprefix $(SRC_DIR), $(MS_SRC))
