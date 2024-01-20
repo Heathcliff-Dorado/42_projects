@@ -6,13 +6,13 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 20:04:13 by hdorado-          #+#    #+#             */
-/*   Updated: 2024/01/17 20:06:09 by hdorado-         ###   ########.fr       */
+/*   Updated: 2024/01/20 20:58:42 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	ft_recursive_interpret(char *prompt, t_dict *dict);
+char	*ft_recursive_interpret(char *prompt, t_minishell *mini);
 
 /*int	ft_next_token(char *prompt, int len)
 {
@@ -97,44 +97,43 @@ int	ft_check_status(int status, char c)
 	return (status);
 }
 
-char	*ft_strncmp_list(char *var, int n, t_dict *dict)
+char	*ft_strncmp_list(char *var, int n, t_minishell *mini)
 {
 	char	*tmp;
 
-	tmp = dict->varname;
-	dict = dict->next;
-	while (ft_strncmp(var, dict->varname, n))
+	tmp = mini->dict->varname;
+	mini->dict = mini->dict->next;
+	while (ft_strncmp(var, mini->dict->varname, n) || ft_strlen(var) != ft_strlen(mini->dict->varname))
 	{
-		if (dict->varname == tmp)
+		if (mini->dict->varname == tmp)
 			return (ft_strdup(""));
-		dict = dict->next;
+		mini->dict = mini->dict->next;
 	}
-	return (ft_strdup(dict->value));
+	return (ft_strdup(mini->dict->value));
 }
 
 char	*ft_expand_char(char *str, char c)
 {
 	char	*dst;
 
-	dst = malloc((ft_strlen(str) + 2) * sizeof(char *));
-	ft_strlcpy(dst, str, ft_strlen(str));
+	dst = ft_calloc((ft_strlen(str) + 2), sizeof(char *));
+	ft_strlcpy(dst, str, ft_strlen(str) + 1);
 	dst[ft_strlen(str)] = c;
 	free(str);
 	str = NULL;
 	return (dst);
 }
-void	ft_expand(char *var, char **str, t_dict *dict)
+void	ft_expand(char *var, char **str, t_minishell *mini)
 {
 	char	*tmp;
 	char	*value;
 
-	value = ft_strncmp_list(var, ft_strlen(var), dict);
-	ft_recursive_interpret(value, dict);
-	tmp = ft_strjoin(*str, value);
+	value = ft_strncmp_list(var, ft_strlen(var), mini);
+	tmp = ft_strjoin(*str, ft_recursive_interpret(value, mini));
 	free(value);
 	value = NULL;
 	free(*str);
-	str = NULL;
+	*str = NULL;
 	*str = tmp;
 	//need to create a dict with all the stored variables. Here I want to know how long the var name is, and then I will compare it to all var names in the dictionary, and store the value associated to that var name
 }
@@ -145,14 +144,14 @@ char	*ft_get_varname(char *str)
 	char	*dst;
 
 	i = 0;
-	while (str[i] && (str[i] != ' ' || str[i] != '\"'))
+	while (str[i] && (str[i] != ' ' && str[i] != '\"'))
 		i++;
-	dst = malloc(i * sizeof(char));
-	ft_strlcpy(dst, str, i);
+	dst = ft_calloc(i + 1, sizeof(char));
+	ft_strlcpy(dst, str, i + 1);
 	return(dst);
 }
 
-void	ft_recursive_interpret(char *prompt, t_dict *dict)
+char	*ft_recursive_interpret(char *prompt, t_minishell *mini)
 {
 	int	i;
 	char	*str;
@@ -165,7 +164,7 @@ void	ft_recursive_interpret(char *prompt, t_dict *dict)
 		if (prompt[i] == '$')
 		{
 			varname = ft_get_varname(&prompt[i + 1]);
-			ft_expand(varname, &str, dict);
+			ft_expand(varname, &str, mini);
 			i += ft_strlen(varname);
 			free (varname);
 			varname = NULL;
@@ -174,6 +173,7 @@ void	ft_recursive_interpret(char *prompt, t_dict *dict)
 			str = ft_expand_char(str, prompt[i]);
 		i++;
 	}
+	return (str);
 }
 
 //This function will read through the prompt and expand all variables if needed
@@ -249,7 +249,7 @@ void	ft_parse(t_prompt *parsed, char *str)
 	}
 }
 */
-void	ft_interpret(char *prompt, t_dict *dict)
+void	ft_interpret(char *prompt, t_minishell *mini)
 {
 	int	status;
 	int	i;
@@ -265,13 +265,14 @@ void	ft_interpret(char *prompt, t_dict *dict)
 		if (status != -1 && prompt[i] == '$')
 		{
 			varname = ft_get_varname(&prompt[i + 1]);
-			ft_expand(varname, &str, dict);
+			ft_expand(varname, &str, mini);
 			i += ft_strlen(varname);
 			free(varname);
 			varname = NULL;
 		}
 		else
 			str = ft_expand_char(str, prompt[i]);
+		printf("Works until %s, prompt char is %c\n", str, prompt[i]);
 		i++;
 	}
 	//ft_parse(parsed, str);

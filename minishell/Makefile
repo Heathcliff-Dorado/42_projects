@@ -19,7 +19,7 @@ all: $(NAME) minishell
 
 # Build the push_swap executable
 minishell: $(MS_OBJS) $(NAME)
-	$(CC) $(CFLAGS) $(MS_OBJS) -L$(LIBFT_DIR) -lft -o $@
+	$(CC) $(CFLAGS) -g3 -lreadline $(MS_OBJS) -L$(LIBFT_DIR) -lft -o $@
 
 # Build the libft library
 $(NAME): $(LIBFT_DIR)/*.c
