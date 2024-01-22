@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 20:04:10 by hdorado-          #+#    #+#             */
-/*   Updated: 2024/01/17 20:04:22 by hdorado-         ###   ########.fr       */
+/*   Updated: 2024/01/22 17:45:49 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int	ft_new_entry(char *varname, t_minishell *mini)
 		new_entry->next = new_entry;
 		new_entry->previous = new_entry;
 		mini->dict = new_entry;
-		printf("%s\n", mini->dict->varname);
+		//printf("%s\n", mini->dict->varname);
 		return(1);
 	}
 	//printf("Turns out no\n");
@@ -100,7 +100,7 @@ int	ft_new_entry(char *varname, t_minishell *mini)
 	new_entry->previous = mini->dict->previous;
 	mini->dict->previous->next = new_entry;
 	mini->dict->previous = new_entry;
-	printf("%s\n", mini->dict->previous->varname);
+	//printf("%s\n", mini->dict->previous->varname);
 	return (1);
 }
 

@@ -15,9 +15,19 @@ typedef struct s_dict
 	t_dict	*previous;
 }			t_dict;
 
+typedef struct s_lexer
+{
+	char			*str;
+	int				token;
+	int				i;
+	struct s_lexer	*next;
+	struct s_lexer	*prev;
+}	t_lexer;
+
 typedef struct s_minishell
 {
 	t_dict	*dict;
+	t_lexer	*lex;
 	char	*pwd;
 	char	*old_pwd;
 
@@ -27,19 +37,6 @@ typedef struct s_prompt
 {
 	/* data */
 }			t_prompt;
-
-typedef struct s_cmd	t_cmd;
-
-typedef struct s_cmd
-{
-	int		index;
-	char	*cmd;
-	char	*arg;
-	char	*str;
-	int		redir;
-	t_cmd	*next;
-	t_cmd	*previous;
-}			t_cmd;
 
 //Functions in dictionary
 void	ft_clean_dict(t_minishell *mini);
