@@ -28,6 +28,7 @@ typedef struct s_minishell
 {
 	t_dict	*dict;
 	t_lexer	*lex;
+	t_simple_cmds	*cmd;
 	char	*pwd;
 	char	*old_pwd;
 
@@ -37,6 +38,17 @@ typedef struct s_prompt
 {
 	/* data */
 }			t_prompt;
+
+typedef struct s_simple_cmds
+{
+	char                    **str;
+	int                     (*builtin)(t_tools *, struct s_simple_cmds *);
+	int                     num_redirections;
+	char                    *hd_file_name;
+	t_lexer                 *redirections;
+	struct s_simple_cmds	*next;
+	struct s_simple_cmds	*prev;
+}	t_simple_cmds;
 
 //Functions in dictionary
 void	ft_clean_dict(t_minishell *mini);

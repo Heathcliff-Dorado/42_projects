@@ -6,7 +6,7 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 20:04:13 by hdorado-          #+#    #+#             */
-/*   Updated: 2024/01/22 18:19:40 by hdorado-         ###   ########.fr       */
+/*   Updated: 2024/01/23 21:00:45 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,16 +100,18 @@ int	ft_check_status(int status, char c)
 char	*ft_strncmp_list(char *var, int n, t_minishell *mini)
 {
 	char	*tmp;
+	t_dict	*tmpd;
 
 	tmp = mini->dict->varname;
-	mini->dict = mini->dict->next;
-	while (ft_strncmp(var, mini->dict->varname, n) || ft_strlen(var) != ft_strlen(mini->dict->varname))
+	tmpd = mini->dict;
+	tmpd = tmpd->next;
+	while (ft_strncmp(var, tmpd->varname, n) || ft_strlen(var) != ft_strlen(tmpd->varname))
 	{
-		if (mini->dict->varname == tmp)
+		if (tmpd->varname == tmp)
 			return (ft_strdup(""));
-		mini->dict = mini->dict->next;
+		tmpd = tmpd->next;
 	}
-	return (ft_strdup(mini->dict->value));
+	return (ft_strdup(tmpd->value));
 }
 
 char	*ft_expand_char(char *str, char c)
@@ -274,8 +276,7 @@ void	ft_add_lexer(t_lexer *new_lexer, t_minishell *mini, int index)
 		new_lexer->prev = new_lexer;
 	}
 	new_lexer->i = index;
-	mini->lex = new_lexer;
-	printf("Added lex with index %d\n", new_lexer->i);
+	mini->lex = new_lexer->next;
 }
 
 int	ft_tokenize(char *str,t_minishell *mini,int index)
@@ -333,13 +334,11 @@ int	ft_translate(char *str, int end, t_minishell *mini, int index)
 	tmp = ft_strdup("");
 	while (i < end)
 	{
-		printf("i is %d\n", i);
 		status = ft_check_status(status, str[i]);
 		if (status)
 		{
 			i++;
 			status = ft_check_status(status, str[i]);
-			printf("Finds quotations\n");
 			while (status)
 			{
 				tmp = ft_expand_char(tmp, str[i]);
@@ -349,13 +348,11 @@ int	ft_translate(char *str, int end, t_minishell *mini, int index)
 		}
 		else if (tmp[0] == '\0' && ft_is_token(str[i]))
 		{
-			printf("Finds token alone\n");
 			i += ft_tokenize(str + i, mini, index);
 			index++;
 		}
 		else if (ft_is_token(str[i]))
 		{
-			printf("Finds token combined with sentence\n");
 			ft_addstring(&tmp, mini, index);
 			free(tmp);
 			tmp = ft_strdup("");
@@ -364,10 +361,7 @@ int	ft_translate(char *str, int end, t_minishell *mini, int index)
 			index++;
 		}
 		else
-		{
 			tmp = ft_expand_char(tmp, str[i]);
-			printf("Tries to expand a char\n");
-		}
 		i++;
 	}
 	if (tmp[0] != '\0')
@@ -404,20 +398,114 @@ void	ft_lexer(char *prompt, t_minishell *mini)
 		}
 		if (prompt[end] == ' ')
 		{
-			printf("Tries to translate prompt %s, %d characters\n", prompt + start, end - start);
 			index = ft_translate(prompt + start, end - start, mini, index);
 			start = end + 1;
 		}
 		end++;
 	}
 	if (start != end)
-	{
-		printf("Tries to translate prompt %s, %d characters\n", prompt + start, end - start);
 		ft_translate(prompt + start, end - start, mini, index);
-	}
 }
 
-void	ft_interpret(char *prompt, t_minishell *mini)
+/*NEXT STEPS:
+-Find how many pipes the prompt has. From index 0 until the pipe index, introduce all that information in the simple cmd struct
+	Note: If the first command of each "group" starts with a | operator, it should return an error. Delete the pipe
+Populate the simple cmd struct:
+-First look for redirections (<< < > >>), and store that token value and the file where it should be redirected to (hd header file). Delete both. Note, if after a token there is a second token or nothing, return an error
+-Count how many nodes are left, and create a string array where to store all of them
+-Finally, search through the array if there is a builtin, and if so, return it*/
+
+void	ft_rmv_lx_node(t_minishell *mini, t_lexer *node)
+{
+	if (node->i == mini->lex->i)
+		mini->lex = mini->lex->next;
+	if (!node->token)
+		free (node->str);
+	node->prev->next = node->next;
+	node->next->prev = node->prev;
+	free (node);
+}
+
+int	ft_find_pipe(t_minishell *mini)
+{
+	t_lexer	*tmp;
+	int	i;
+
+	tmp = mini->lex;
+	if (tmp->token == 3)
+		return (printf("ERROR\n"), -1);
+	while (tmp->next->i > tmp->i)
+	{
+		if(tmp->token == 3)
+			break;
+		tmp = tmp->next;
+	}
+	i = tmp->i;
+	ft_rmv_lx_node(mini, tmp);
+	return (i);
+}
+
+void	ft_find_redir(t_minishell *mini, t_simple_cmds *cmd, int index)
+{
+	t_lexer	*tmp;
+
+	tmp = mini->lex;
+	while (!tmp->token && tmp->i < index)
+		tmp = tmp->next;
+	if (tmp->token && tmp->i < index)
+		ft_add_redirection(mini, cmd, tmp, index);
+}
+
+void	ft_add_redirection(t_minishell *mini, t_simple_cmds *cmd, t_lexer *node, int index)
+{
+	t_lexer	*redir;
+
+	if (node->next->token || (node->i == index - 1))
+		exit(printf("ERROR, two tokens together\n"));
+	redir = ft_calloc(1, sizeof(t_lexer));
+	redir->token = node->token;
+	redir->str = ft_strdup(node->next->str);
+	redir->i = mini->cmd->num_redirections;
+	if (!mini->cmd->num_redirections)
+	{
+		redir->next = redir;
+		redir->prev = redir;
+		mini->cmd->redirections = redir;
+	}
+	else
+	{
+		redir->next = mini->cmd->redirections;
+		redir->prev = mini->cmd->redirections->prev;
+		mini->cmd->redirections->prev->next = redir;
+		mini->cmd->redirections->prev = redir;
+	}
+	mini->cmd->num_redirections++;
+	ft_rmv_lx_node(mini, node->next);
+	ft_rmv_lx_node(mini, node);
+	ft_find_redir(mini, cmd, index);
+}
+
+void	ft_create_cmd(t_minishell *mini, int index)
+{
+	t_simple_cmds *cmd;
+
+	cmd = ft_calloc(1, sizeof(t_simple_cmds));
+	cmd->num_redirections = 0;
+	cmd->hd_file_name = NULL;
+	ft_find_redir(mini, cmd, index);
+
+}
+
+void	ft_parse_cmd(t_minishell *mini)
+{
+	int	index;
+
+	index = ft_find_pipe(mini);
+	ft_create_cmd(mini, index);
+
+}
+
+int	ft_interpret(char *prompt, t_minishell *mini)
 {
 	int	status;
 	int	i;
@@ -443,10 +531,14 @@ void	ft_interpret(char *prompt, t_minishell *mini)
 		//printf("Works until %s, prompt char is %c\n", str, prompt[i]);
 		i++;
 	}
+	if (status)
+		return(printf("Error, no closing quotations!\n"), 0);
 	ft_lexer(str, mini);
+	ft_parse_cmd(mini);
 	//ft_parse(parsed, str);
 	free (str);
 	str = NULL;
+	return (1);
 }
 
 
@@ -473,19 +565,19 @@ void	ft_find_pwds(t_minishell *mini)
 void	ft_test_lexer(t_minishell *mini)
 {
 	int	finish;
+	t_lexer	*tmp;
 
-	printf("Gets to the tester\n");
-	while (mini->lex->i)
-		mini->lex = mini->lex->prev;
-	finish = mini->lex->prev->i;
-	printf("Finds the first position\n");
+	tmp = mini->lex;
+	while (tmp->i)
+		tmp = tmp->prev;
+	finish = tmp->prev->i;
 	while (finish >= 0)
 	{
-		if (mini->lex->token)
-			printf("Found a token! Its value is %d\n", mini->lex->token);
+		if (tmp->token)
+			printf("Found a token! Its value is %d\n", tmp->token);
 		else
-			printf("Found a sentence! It says %s\n", mini->lex->str);
-		mini->lex = mini->lex->next;
+			printf("Found a sentence! It says %s\n", tmp->str);
+		tmp = tmp->next;
 		finish--;
 	}
 }
@@ -504,6 +596,7 @@ int	main(int argc, char **argv, char **envp)
 	if (!mini)
 		return(printf("Memory error\n"), 0);
 	mini->dict = NULL;
+	mini->cmd = NULL;
 	if (!ft_dictionary(envp, mini))
 		return(printf("Error creating dictionary\n"), 0);
 	ft_find_pwds(mini);
@@ -513,9 +606,11 @@ int	main(int argc, char **argv, char **envp)
 		//Add the prompt to the history if it's not empty (i.e. only newline, what about spaces and other (\t,\r...)?)
 		if (ft_is_there_prompt(prompt))
 			add_history(prompt);
-		ft_interpret(prompt, mini);
-		ft_test_lexer(mini);
-		free(prompt);
+		if (ft_interpret(prompt, mini))
+		{
+			ft_test_lexer(mini);
+			free(prompt);
+		}
 		prompt = readline("Minishell: ");
 	}
 	ft_clean_dict(mini);
