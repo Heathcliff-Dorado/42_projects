@@ -6,12 +6,13 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 20:04:10 by hdorado-          #+#    #+#             */
-/*   Updated: 2024/01/22 17:45:49 by hdorado-         ###   ########.fr       */
+/*   Updated: 2024/01/29 15:11:32 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+//If there is an error, or at the end of the program, ft_clean_dict will remove all elements of the dictionary and free all the memory
 void	ft_clean_dict(t_minishell *mini)
 {
 	int	i;
@@ -58,6 +59,10 @@ void	ft_clean_dict(t_minishell *mini)
 	mini->dict = NULL;
 }
 
+
+//First allocates the memory for a new entry. Variables are stored in envp as an array of strings with the structure "variable=value".
+//Therefore, I split each string by the "=" character, everything to the left is the variable name, and to the right is the value
+//Finally, the new entry is linked as the last element of the dictionary (or if it's the first one, it creates the link)
 int	ft_new_entry(char *varname, t_minishell *mini)
 {
 	t_dict	*new_entry;
@@ -104,7 +109,7 @@ int	ft_new_entry(char *varname, t_minishell *mini)
 	return (1);
 }
 
-//Are we allowed to use environ or envp?
+//The dictionary function will take all the environmental variables from envp and store them into a (circular) double linked list of t_dict elements.
 int	ft_dictionary(char **envp, t_minishell *mini)
 {
 	int	i;

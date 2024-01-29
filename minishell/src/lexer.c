@@ -6,25 +6,13 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 19:04:43 by hdorado-          #+#    #+#             */
-/*   Updated: 2024/01/25 22:12:08 by hdorado-         ###   ########.fr       */
+/*   Updated: 2024/01/29 15:37:16 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	ft_rmv_lx_node(t_minishell *mini, t_lexer *node)
-{
-	if (node->i == mini->lex->i)
-		mini->lex = mini->lex->next;
-	if (!node->token)
-		free (node->str);
-	if (node == node->next)
-		mini->lex = NULL;
-	node->prev->next = node->next;
-	node->next->prev = node->prev;
-	free (node);
-}
-
+//Check if the character is a token
 int	ft_is_token(char c)
 {
 	if (c == '|' || c == '<' || c == '>')
@@ -32,6 +20,7 @@ int	ft_is_token(char c)
 	return (0);
 }
 
+//This function adds the lexer to the (circular) double linked list. If there is none, is sets it as the first, else it adds it to the end
 void	ft_add_lexer(t_lexer *new_lexer, t_minishell *mini, int index)
 {
 	if (index)
@@ -52,6 +41,8 @@ void	ft_add_lexer(t_lexer *new_lexer, t_minishell *mini, int index)
 	mini->lex = new_lexer->next;
 }
 
+//Adds a token to the lexer. Sets the str to NULL, and checks if the token is |, < or >, and in the last two cases, if it's also followed by another < or > respectively
+//Then appends the lexer and moves as many characters as needed
 int	ft_tokenize(char *str,t_minishell *mini,int index)
 {
 	t_lexer	*new_lexer;
@@ -86,6 +77,7 @@ int	ft_tokenize(char *str,t_minishell *mini,int index)
 	return (ret);
 }
 
+//Adds a new string-type lexer, simply copying the string, setting token to 0 and appending the lexer to the list
 void	ft_addstring(char **str, t_minishell *mini, int index)
 {
 	t_lexer	*new_lexer;
@@ -96,6 +88,13 @@ void	ft_addstring(char **str, t_minishell *mini, int index)
 	ft_add_lexer(new_lexer, mini, index);
 }
 
+//The translate function will look for different things:
+//-The status of the string, as quotation marks need to be removed, and tokens are not considered
+//While inside a quote, it will add characters one by one until finding the matching quote.
+//-If the element found is a token (<, <<, >, >>, |), and whether it was found alone (make new token lexer)
+//-If the element found is a token preceded by a string (e.g. echo "test">test.txt). In that case, it will store the string into a lexer, and make a new lexer for the token
+//-If there are only characters that are not tokens, keep appending them until the end of the strin/a token appears (e"ch"o is the same as echo or "echo")
+//Finally, frees the tmp string and returns the current index number
 int	ft_translate(char *str, int end, t_minishell *mini, int index)
 {
 	int	status;
@@ -146,6 +145,13 @@ int	ft_translate(char *str, int end, t_minishell *mini, int index)
 	return(index);
 }
 
+//This function takes the start and end position of a string. It will move the end until it finds a space or reaches the end of the string.
+//If before that finds a quotation sign, it will ignore everything else until it finds the matching quotation sign
+//Once it reaches the delimiter, it will translate what it read (as it could have multiple words, such as in >test.txt (1 token, 1 string))
+//Since the words are going to be indexed, the next index needs to be passed along and modified properly
+//Afterwards, start will be one character after end (to skip the space)
+//At the end, if start is not the same character as end, it will translate the rest
+//NOTE: Probably I need to make sure I skip multiple spaces in a row
 void	ft_lexer(char *prompt, t_minishell *mini)
 {
 	int	start;
@@ -180,6 +186,7 @@ void	ft_lexer(char *prompt, t_minishell *mini)
 		ft_translate(prompt + start, end - start, mini, index);
 }
 
+//Just a tester, not a real function for minishell, to make sure that all words are split properly and stored correctly as string or token
 void	ft_test_lexer(t_minishell *mini)
 {
 	int	finish;

@@ -6,12 +6,17 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 19:06:09 by hdorado-          #+#    #+#             */
-/*   Updated: 2024/01/25 22:12:06 by hdorado-         ###   ########.fr       */
+/*   Updated: 2024/01/29 16:44:29 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+//NOTE: Untested, it won't run as there are missing structs, this is still work in progress
+
+//The function will check for pipes. However, if the first element is a pipe, it means that either the prompt started with one, or there were two consecutive pipes
+//Therefore it returns an error
+//If not, it will keep looking until it reaches the end. It will store the index value and remove the pipe (if there was one)
 int	ft_find_pipe(t_minishell *mini)
 {
 	t_lexer	*tmp;
@@ -27,21 +32,17 @@ int	ft_find_pipe(t_minishell *mini)
 		tmp = tmp->next;
 	}
 	i = tmp->i;
-	ft_rmv_lx_node(mini, tmp);
+	if (tmp->token == 3)
+		ft_rmv_lx_node(mini, tmp);
 	return (i);
 }
 
-void	ft_find_redir(t_minishell *mini, t_simple_cmds *cmd, int index)
-{
-	t_lexer	*tmp;
-
-	tmp = mini->lex;
-	while (!tmp->token && tmp->i < index)
-		tmp = tmp->next;
-	if (tmp->token && tmp->i < index)
-		ft_add_redirection(mini, cmd, tmp, index);
-}
-
+//This function first confirms if after the token there is a second token, or nothing at all, in this case it fails and returns an error
+//Otherwise, it creates a lexer struct that will contain the token (as before), and as a string the file where it should be stored. It will also assign an index
+//corresponding to the number of redirections, and add the lexer into the circular linked list containing all redirections.
+//Finally it removes the two old lexer structs and recursively looks for new redirections
+//NOTE: There may be a problem if two of the same token are found, I need to check, as it would not make sense to store the data in two different files,
+//but maybe bash is ok with that? Also, when is it time to check that the input file exists and works?
 void	ft_add_redirection(t_minishell *mini, t_simple_cmds *cmd, t_lexer *node, int index)
 {
 	t_lexer	*redir;
@@ -71,6 +72,19 @@ void	ft_add_redirection(t_minishell *mini, t_simple_cmds *cmd, t_lexer *node, in
 	ft_find_redir(mini, cmd, index);
 }
 
+//Redirections are indicated by tokens, so this function first look for a token and sends it to the add_redirection function
+void	ft_find_redir(t_minishell *mini, t_simple_cmds *cmd, int index)
+{
+	t_lexer	*tmp;
+
+	tmp = mini->lex;
+	while (!tmp->token && tmp->i < index)
+		tmp = tmp->next;
+	if (tmp->token && tmp->i < index)
+		ft_add_redirection(mini, cmd, tmp, index);
+}
+
+//Iterates through the lexer elements that need to be added, counting how many there are, to allocate the correct memory
 int	ft_count_args(t_minishell *mini, int index)
 {
 	t_lexer	*tmp;
@@ -87,6 +101,7 @@ int	ft_count_args(t_minishell *mini, int index)
 	return (i);
 }
 
+//Search if the string is equal to the builtin command (also in length) and return the pointer to that command (not implemented yet, therefore the errors)
 int	(*ft_find_builtin(char *str))(t_tools *, struct s_simple_cmds *)
 {
 	if (ft_strncmp(str, "echo", 4) && ft_strlen(str) == 4)
@@ -106,6 +121,7 @@ int	(*ft_find_builtin(char *str))(t_tools *, struct s_simple_cmds *)
 	return (NULL);
 }
 
+//As before, if there is no other commands, it links the command to mini. Otherwise it appends it to the end
 void	ft_add_cmd(t_minishell *mini, t_simple_cmds *cmd)
 {
 	if (!mini->cmd)
@@ -123,6 +139,11 @@ void	ft_add_cmd(t_minishell *mini, t_simple_cmds *cmd)
 	}
 }
 
+//It first initializes a cmd struct, and search for redirections (i.e. tokens that are not |), storing and deleting the elements involved.
+//The rest is stored as string. There should not be any other redirections left, but just in case, I still copy only those with str into the str array
+//The first element of the string array should be the command name, as redirections have been removed already. Therefore I check if the command is a built in,
+//in which case I return the pointer to the builtin, or NULL if it's not the case
+//FInally it adds the command to the list of commands (same as usual)
 void	ft_create_cmd(t_minishell *mini, int index)
 {
 	t_simple_cmds *cmd;
@@ -149,6 +170,8 @@ void	ft_create_cmd(t_minishell *mini, int index)
 	ft_add_cmd(mini, cmd);
 }
 
+//The logic for this part is that the program will look for a pipe sign, and everything to the left corresponds to the first command. It will remove all the elements
+//from the lexer as soon as they are added to the cmd, then look for the next pipe. If there are no pipes, it takes all the elements as one command
 void	ft_parse_cmd(t_minishell *mini)
 {
 	int	index;

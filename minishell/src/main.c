@@ -6,142 +6,13 @@
 /*   By: hdorado- <hdorado-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 20:04:13 by hdorado-          #+#    #+#             */
-/*   Updated: 2024/01/25 22:12:05 by hdorado-         ###   ########.fr       */
+/*   Updated: 2024/01/29 15:11:47 by hdorado-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 char	*ft_recursive_interpret(char *prompt, t_minishell *mini);
-
-/*int	ft_next_token(char *prompt, int len)
-{
-	int	i;
-
-	i = 0;
-	while (i < len)
-	{
-		if (prompt[i] == "\"")
-		{
-			i++;
-			while (prompt[i] != '\"')
-				i++;
-			return (i);
-		}
-		else if (prompt[i] == "\'")
-		{
-			i++;
-			while (prompt[i] != '\"')
-				i++;
-			return (i);
-		}
-		else if ((prompt[i] == '|' || prompt[i] == '<' || prompt[i] == '>' || prompt[i] == ' ') && i (!= 0));
-			return (i - 1);
-		if ((prompt[i] == '|' || prompt[i] == '<' || prompt[i] == '>' || prompt[i] == ' ') && i (!= 0))
-		{
-			if ((prompt[i] == '>' && prompt[i + 1] == '>') || (prompt[i] == '<' && prompt[i + 1] == '<'))
-				return (i + 1);
-			else
-				return (i);
-		}
-		i++;
-	}
-	return (i);
-}
-
-void	ft_parsing(char *prompt, t_minishell *mini)
-{
-	int	len;
-	int	i;
-	int	token_end;
-
-	len = ft_strlen(prompt);
-	i = 0;
-	while (i < len)
-	{
-		while (prompt[i] == ' ')
-			i++;
-		token_end = ft_next_token(&prompt[i], len - i);
-	}
-}*/
-
-
-
-//This function will read through the prompt and expand all variables if needed
-//To expand the prompt, we need to search through any $ and substitute it for the actual variable value, unless it's single quoted.
-//Then we
-
-/*void	ft_extract_cmd(char *str, int start, int end)
-{
-	t_cmd	cmd;
-	int	i;
-
-	i = start;
-	while (i < end)
-	{
-		while (str[i] == ' ')
-			start++;
-		i = start;
-		if (str[i] == '\'')
-		{
-			i++;
-			while (str[i] != '\'')
-				i++;
-			cmd.str = malloc((i - start) * sizeof(char));
-			ft_strlcpy(cmd.str, &str[start + 1], i - start - 1);
-			i++;
-		}
-		else if (str[i] == '\"')
-		{
-			i++;
-			while (str[i] != '\"')
-				i++;
-			cmd.str = malloc((i - start) * sizeof(char));
-			ft_strlcpy(cmd.str, &str[start + 1], i - start - 1);
-			i++;
-		}
-		else
-		{
-
-		}
-	}
-}
-
-void	ft_parse(t_prompt *parsed, char *str)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	if (str[i] == '|')
-		//Error
-	while (str[i])
-	{
-		if (str[i] == '\'')
-		{
-			i++;
-			while (str[i] != '\'')
-				i++;
-		}
-		else if (str[i] == '\"')
-		{
-			i++;
-			while (str[i] != '\"')
-				i++;
-		}
-		else if (str[i] == '|')
-		{
-			ft_extract_cmd(str, j, i);
-			i++;
-			j = i;
-		}
-		i++;
-	}
-}
-*/
-
-
 
 /*NEXT STEPS:
 -Find how many pipes the prompt has. From index 0 until the pipe index, introduce all that information in the simple cmd struct
@@ -151,62 +22,7 @@ Populate the simple cmd struct:
 -Count how many nodes are left, and create a string array where to store all of them
 -Finally, search through the array if there is a builtin, and if so, return it*/
 
-int	ft_interpret(char *prompt, t_minishell *mini)
-{
-	int	status;
-	int	i;
-	char	*str;
-	char	*varname;
 
-	status = 0;
-	i = 0;
-	str = ft_strdup("");
-	while(str && prompt[i])
-	{
-		status = ft_check_status(status, prompt[i]);
-		if (status != -1 && prompt[i] == '$')
-		{
-			varname = ft_get_varname(&prompt[i + 1]);
-			ft_expand(varname, &str, mini);
-			i += ft_strlen(varname);
-			free(varname);
-			varname = NULL;
-		}
-		else
-			str = ft_expand_char(str, prompt[i]);
-		//printf("Works until %s, prompt char is %c\n", str, prompt[i]);
-		i++;
-	}
-	if (status)
-		return(printf("Error, no closing quotations!\n"), 0);
-	ft_lexer(str, mini);
-	ft_parse_cmd(mini);
-	//ft_parse(parsed, str);
-	free (str);
-	str = NULL;
-	return (1);
-}
-
-
-void	ft_find_pwds(t_minishell *mini)
-{
-	t_dict	*tmp;
-
-	tmp = mini->dict;
-	if (!ft_strncmp(mini->dict->varname, "PWD", 3))
-		mini->pwd = ft_strdup(mini->dict->value);
-	if (!ft_strncmp(mini->dict->varname, "OLDPWD", 6))
-		mini->old_pwd = ft_strdup(mini->dict->value);
-	mini->dict = mini->dict->next;
-	while(mini->dict != tmp)
-	{
-		if (!ft_strncmp(mini->dict->varname, "PWD", 3))
-			mini->pwd = ft_strdup(mini->dict->value);
-		if (!ft_strncmp(mini->dict->varname, "OLDPWD", 6))
-			mini->old_pwd = ft_strdup(mini->dict->value);
-		mini->dict = mini->dict->next;
-	}
-}
 
 // This program is essentially divided in two parts.
 
@@ -221,7 +37,7 @@ void	ft_find_pwds(t_minishell *mini)
 //Then you need to go to expander.c to see how the prompt is read and all the variables are changed into their value
 //The next step is the lexer.c, where the prompt is split in "words" and stored in a linked list
 //Finally, commands.c groups all the lexers that belong to the same command and will return you the info you need to actually execute them
-
+//Note that the main is still only in testing mode, i.e. it doesn't do anything when it stores the variables, and it doesn't return and properly free after errors
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	*mini;
@@ -245,11 +61,13 @@ int	main(int argc, char **argv, char **envp)
 	{
 		//Add the prompt to the history if it's not empty (i.e. only newline, what about spaces and other (\t,\r...)?)
 		if (ft_is_there_prompt(prompt))
-			add_history(prompt);
-		if (ft_interpret(prompt, mini))
 		{
-			ft_test_lexer(mini);
-			free(prompt);
+			add_history(prompt);
+			if (ft_interpret(prompt, mini))
+			{
+				ft_test_lexer(mini);
+				free(prompt);
+			}
 		}
 		prompt = readline("Minishell: ");
 	}
