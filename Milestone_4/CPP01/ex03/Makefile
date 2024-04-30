@@ -1,10 +1,9 @@
-NAME = Account
+NAME = Warrior
 
-CPP = g++
-CPPFLAGS = -Wall -Wextra -Werror
-RM = rm -rf
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98
+CPP = c++
 
-SRC = tests Account
+SRC = HumanA HumanB main Weapon
 OBJ = $(SRC:=.o)
 
 all: $(NAME)
@@ -23,4 +22,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all fclean re

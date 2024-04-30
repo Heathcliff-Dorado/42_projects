@@ -1,10 +1,9 @@
-NAME = Account
+NAME = megaphone
 
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 CPP = g++
-CPPFLAGS = -Wall -Wextra -Werror
-RM = rm -rf
 
-SRC = tests Account
+SRC = megaphone
 OBJ = $(SRC:=.o)
 
 all: $(NAME)
@@ -23,4 +22,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all fclean re
