@@ -11,6 +11,8 @@ Zombie*	zombieHorde(int N, std::string name) {
 		// If we announce it at this point, the zombies will receive the default name BackgroundZ
 		//horde[i].announce();
 		horde[i].setName(name);
+		// then the name changes to their given name:
+		//horde[i].announce();
 	}
 	return horde;
 }

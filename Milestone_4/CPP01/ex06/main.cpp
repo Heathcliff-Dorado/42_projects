@@ -27,7 +27,7 @@ int	main(int argc, char **argv) {
 	case 3:
 		harl.complain(levels[i]);
 		break;
-	case 4:
+	default:
 		harl.complain(argv[1]);
 		break;
 	}

@@ -13,6 +13,11 @@ int	main(int argc, char **argv) {
 	std::string	s1(argv[2]);
 	std::string	s2(argv[3]);
 	std::ifstream	input(filename.c_str());
+	if (s1.length() == 0)
+	{
+		std::cout << "Error, first string cannot be empty!" <<std::endl;
+		return (1);
+	}
 	if (!input)
 	{
 		std::cout << "Error, filename provided could not be opened" <<std::endl;
