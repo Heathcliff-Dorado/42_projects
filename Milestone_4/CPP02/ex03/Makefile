@@ -3,7 +3,7 @@ NAME = Fixed
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 CPP = c++
 
-SRC = main Fixed
+SRC = main Fixed Point bsp
 OBJ = $(SRC:=.o)
 
 all: $(NAME)
