@@ -3,7 +3,10 @@
 int	main(int argc, char **argv) {
 
 	if (argc != 2)
+	{
 		std::cout << "Please let me know what I should complain about (DEBUG, INFO, WARNING or ERROR)" <<std::endl;
+		return (1);
+	}
 	Harl harl;
 	int	i = 0;
 	std::string	levels[4] = {"DEBUG", "INFO", "WARNING", "ERROR"};
