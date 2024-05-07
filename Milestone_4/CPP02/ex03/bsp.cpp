@@ -23,7 +23,7 @@ bool	bsp( Point const a, Point const b, Point const c, Point const point) {
 	return (false);
 } */
 
-bool	IsInside(Point a, Point b, Point other, Point x) {
+bool	isInside(Point a, Point b, Point other, Point x) {
 	//We want to find the equation Ax + By + C = 0 for the points a and b:
 	Fixed A = a.getY() - b.getY();
 	Fixed B = b.getX() - a.getX();
@@ -43,7 +43,7 @@ bool	IsInside(Point a, Point b, Point other, Point x) {
 bool	bsp( Point const a, Point const b, Point const c, Point const point) {
 	//We make a plane using two points, and check if the third and "point" are in the same side. We do this three times, following the lines a->b, b-> and c->a
 	//If the three points, or "point" are in the same line, then return false, as it will not be possible to be inside of the triangle
-	if(IsInside(a, b, c, point) && IsInside(b, c, a, point) && IsInside(c, a, b, point))
+	if(isInside(a, b, c, point) && isInside(b, c, a, point) && isInside(c, a, b, point))
 		return (true);
 	return (false);
 }
