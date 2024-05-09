@@ -17,6 +17,8 @@ class Point
 
 		Fixed	getX( void ) const;
 		Fixed	getY( void ) const;
+		void	setX( const Fixed x);
+		void	setY( const Fixed y);
 };
 
 bool	bsp( Point const a, Point const b, Point const c, Point const point);

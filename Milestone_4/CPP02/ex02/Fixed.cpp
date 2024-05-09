@@ -6,7 +6,7 @@ Fixed::Fixed( void ) : _rawBits(0) {
 
 Fixed::Fixed( const Fixed& copy) {
 	//std::cout << "Copy constructor called" << std::endl;
-	this->setRawBits(copy.getRawBits());
+	*this = copy;
 }
 
 Fixed::Fixed( const int Integer ) : _rawBits(Integer << _fractBits) {
