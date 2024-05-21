@@ -1,12 +1,12 @@
 #include "Cat.hpp"
 
-Cat::Cat( void ) : Animal() {
+Cat::Cat( void ) : AAnimal() {
 	std::cout << "Now you can clearly distinguish a cat!" << std::endl;
 	_brain = new Brain;
 	type = "Cat";
 }
 
-Cat::Cat( const Cat& copy) : Animal(copy) {
+Cat::Cat( const Cat& copy) : AAnimal(copy) {
 	std::cout << "It is now clear that it's the copy of a cat!" << std::endl;
 	*this = copy;
 }

@@ -1,12 +1,12 @@
 #include "Dog.hpp"
 
-Dog::Dog( void ) : Animal() {
+Dog::Dog( void ) : AAnimal() {
 	std::cout << "Now you can clearly distinguish a dog!" << std::endl;
 	_brain = new Brain;
 	type = "Dog";
 }
 
-Dog::Dog( const Dog& copy) : Animal(copy) {
+Dog::Dog( const Dog& copy) : AAnimal(copy) {
 	std::cout << "It is now clear that it's the copy of a dog!" << std::endl;
 	*this = copy;
 }

@@ -14,6 +14,8 @@ public:
 	Dog& operator=( const Dog& copy);
 	virtual ~Dog();
 	virtual void		makeSound( void ) const;
+	virtual void	setIdea( std::string idea, int index);
+	virtual void	printIdea( int index);
 };
 
 

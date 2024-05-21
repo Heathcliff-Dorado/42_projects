@@ -3,8 +3,7 @@
 
 int	main( void ) {
 	{
-		Animal* farm[4];
-
+		AAnimal* farm[4];
 		for (int i = 0; i < 4; i++)
 		{
 			if (i % 2 == 1)

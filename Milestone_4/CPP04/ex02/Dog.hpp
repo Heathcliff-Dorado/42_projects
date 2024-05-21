@@ -1,18 +1,18 @@
-#ifndef CAT_H
-# define CAT_H
+#ifndef DOG_H
+# define DOG_H
 
-# include "Animal.hpp"
+# include "AAnimal.hpp"
 # include "Brain.hpp"
 
-class Cat: public Animal
+class Dog: public AAnimal
 {
 private:
 	Brain*	_brain;
 public:
-	Cat( void );
-	Cat( const Cat& copy);
-	Cat& operator=( const Cat& copy);
-	virtual ~Cat();
+	Dog( void );
+	Dog( const Dog& copy);
+	Dog& operator=( const Dog& copy);
+	virtual ~Dog();
 	virtual void		makeSound( void ) const;
 	virtual void	setIdea( std::string idea, int index);
 	virtual void	printIdea( int index);
