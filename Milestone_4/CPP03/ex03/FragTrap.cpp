@@ -9,7 +9,7 @@ FragTrap::FragTrap( void ) : ClapTrap() {
 }
 
 FragTrap::FragTrap( const FragTrap& copy) : ClapTrap(copy) {
-	std::cout << "FragTrap: Copy constructor called" << std::endl;
+	std::cout << "FragTrap: Copy constructor called with the name " << _name << std::endl;
 	*this = copy;
 }
 
@@ -26,7 +26,7 @@ FragTrap::~FragTrap() {
 }
 
 FragTrap::FragTrap( std::string name) : ClapTrap(name) {
-	std::cout << "FragTrap: String constructor called" << std::endl;
+	std::cout << "FragTrap: String constructor called with the name " << _name << std::endl;
 	this->setHitPoints(100);
 	this->setEnergyPoints(100);
 	this->setAttackDamage(30);

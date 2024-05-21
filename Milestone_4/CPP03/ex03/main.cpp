@@ -1,5 +1,6 @@
 #include "ScavTrap.hpp"
 #include "FragTrap.hpp"
+#include "DiamondTrap.hpp"
 
 int	main( void ) {
 	ClapTrap	Boba("Boba");
@@ -36,16 +37,15 @@ int	main( void ) {
 			<< "HitPoints: " << Bubby.getHitPoints() << std::endl
 			<< "EnergyPoints: " << Bubby.getEnergyPoints() << std::endl
 			<< "AttackDamage: " << Bubby.getAttackDamage() << std::endl << std::endl;
-	std::cout << std::endl;
 
 	DiamondTrap	Boss("Boss");
 
 	std::cout << std::endl;
 	Boss.attack("my procrastination");
 	Boss.takeDamage(5);
+	Boss.whoAmI();
 	std::cout << std::endl<< "Name: " << Boss.getName() << std::endl
 			<< "HitPoints: " << Boss.getHitPoints() << std::endl
 			<< "EnergyPoints: " << Boss.getEnergyPoints() << std::endl
 			<< "AttackDamage: " << Boss.getAttackDamage() << std::endl << std::endl;
-	std::cout << std::endl;
 }

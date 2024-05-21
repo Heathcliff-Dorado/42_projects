@@ -36,5 +36,4 @@ int	main( void ) {
 			<< "HitPoints: " << Bubby.getHitPoints() << std::endl
 			<< "EnergyPoints: " << Bubby.getEnergyPoints() << std::endl
 			<< "AttackDamage: " << Bubby.getAttackDamage() << std::endl << std::endl;
-	std::cout << std::endl;
 }
