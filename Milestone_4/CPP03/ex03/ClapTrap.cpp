@@ -23,7 +23,7 @@ ClapTrap&	ClapTrap::operator=( const ClapTrap& copy) {
 }
 
 ClapTrap::~ClapTrap() {
-	std::cout << _name << " (ClapTrap): Destructor called" << std::endl;
+	std::cout << _name << "(ClapTrap): Destructor called" << std::endl;
 }
 
 ClapTrap::ClapTrap( std::string name) : _name(name), _hitPoints(10), _energyPoints(10), _attackDamage(0) {
