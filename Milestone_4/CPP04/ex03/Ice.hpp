@@ -3,21 +3,19 @@
 
 # include "AMateria.hpp"
 
-class Ice
+class Ice: public AMateria
 {
 private:
 	/* data */
 public:
-	Ice(/* args */);
-	~Ice();
+	Ice( void );
+	Ice( const Ice& copy );
+	Ice& operator=(const Ice& copy );
+	virtual ~Ice ( void );
+	Ice(std::string const & type);
+
+	virtual Ice* clone() const;
+	virtual void use(ICharacter& target);
 };
-
-Ice::Ice(/* args */)
-{
-}
-
-Ice::~Ice()
-{
-}
 
 #endif
