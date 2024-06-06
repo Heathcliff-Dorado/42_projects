@@ -1,11 +1,13 @@
 #include "Character.hpp"
 
 Character::Character( void ) : _name("Noname"), _index(0), _uindex(0)  {
-	std::cout << "Character created" << std::endl;
+	//std::cout << "Character created" << std::endl;
+	for (int i = 0; i < 4; i++)
+		_inventory[i] = 0;
 }
 
 Character::Character( const Character& copy) {
-	std::cout << "Character copy created" << std::endl;
+	//std::cout << "Character copy created" << std::endl;
 	*this = copy;
 }
 
@@ -26,8 +28,8 @@ Character&	Character::operator=( const Character& copy) {
 }
 
 Character::~Character() {
-	std::cout << "Character deleted" << std::endl;
-	for (int i = 0; i < _index; i++)
+	//std::cout << "Character deleted" << std::endl;
+	for (int i = 0; i < 4; i++)
 	{
 		if (_inventory[i])
 			delete _inventory[i];
@@ -40,7 +42,9 @@ Character::~Character() {
 }
 
 Character::Character( std::string name ) :_name(name), _index(0), _uindex(0) {
-	std::cout << "String character created" <<std::endl;
+	//std::cout << "String character created" <<std::endl;
+	for (int i = 0; i < 4; i++)
+		_inventory[i] = 0;
 }
 
 std::string const& Character::getName() const {
@@ -48,21 +52,28 @@ std::string const& Character::getName() const {
 }
 
 void Character::equip(AMateria* m) {
-	if (_index < 4)
+	if (m == 0)
 	{
-		std::cout << "Materia " << m->getType() << " equiped!" <<std::endl;
-		_inventory[_index] = m;
-		_index++;
+		std::cout << "That materia doesn't exist!" << std::endl;
+		return ;
 	}
-	else
+	for (int i = 0; i < 4; i++)
 	{
-		std::cout << "Too many materias already equipped!" << std::endl;
-		delete m;
+		if (_inventory[i] == 0)
+		{
+			std::cout << "Materia " << m->getType() << " equiped!" <<std::endl;
+			_inventory[i] = m;
+			if (_index < 3)
+				_index++;
+			return ;
+		}
 	}
+	std::cout << "Too many materias already equipped!" << std::endl;
+	delete m;
 }
 
 void Character::unequip(int idx) {
-	if (idx < _index)
+	if (idx <= 3 && idx >= 0 && _inventory[idx])
 	{
 		_uinventory[_uindex] = _inventory[idx];
 		_uindex++;
@@ -73,7 +84,7 @@ void Character::unequip(int idx) {
 }
 
 void Character::use(int idx, ICharacter& target) {
-	if (idx < _index && _inventory[idx])
+	if (idx <=3 && idx >= 0 && _inventory[idx])
 		_inventory[idx]->use(target);
 	else
 		std::cout << "Nothing to use since that materia doesn't exist" << std::endl;

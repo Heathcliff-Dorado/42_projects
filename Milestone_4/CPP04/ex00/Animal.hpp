@@ -13,10 +13,11 @@ protected:
 public:
 	Animal( void );
 	Animal( const Animal& copy);
-	Animal& operator=( const Animal& copy);
-	virtual ~Animal();
+	Animal&	operator=( const Animal& copy);
+	virtual	~Animal();
+
 	virtual void		makeSound( void ) const;
-	void		setType( std::string type);
+	void				setType( std::string type);
 	const std::string	getType( void ) const;
 };
 

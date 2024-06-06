@@ -3,6 +3,7 @@
 
 int	main( void ) {
 	{
+		//AAnimal test;
 		AAnimal* farm[4];
 		for (int i = 0; i < 4; i++)
 		{

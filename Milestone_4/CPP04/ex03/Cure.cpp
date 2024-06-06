@@ -1,12 +1,12 @@
 #include "Cure.hpp"
 
 Cure::Cure( void ) : AMateria("cure") {
-	std::cout << "Cure created" << std::endl;
+	//std::cout << "Cure created" << std::endl;
 	setType("cure");
 }
 
 Cure::Cure( const Cure& copy) : AMateria("cure") {
-	std::cout << "Cure copy created" << std::endl;
+	//std::cout << "Cure copy created" << std::endl;
 	setType("cure");
 	*this = copy;
 }
@@ -20,11 +20,11 @@ Cure&	Cure::operator=( const Cure& copy) {
 }
 
 Cure::~Cure() {
-	std::cout << "Cure deleted" << std::endl;
+	//std::cout << "Cure deleted" << std::endl;
 }
 
 Cure::Cure( std::string const & type ) : AMateria("cure") {
-	std::cout << "Cure string created" << std::endl;
+	//std::cout << "Cure string created" << std::endl;
 	setType("cure");
 	(void) type;
 }

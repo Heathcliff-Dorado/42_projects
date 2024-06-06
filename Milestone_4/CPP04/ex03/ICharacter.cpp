@@ -1,11 +1,11 @@
 #include "ICharacter.hpp"
 
 ICharacter::ICharacter( void ) {
-	std::cout << "ICharacter created" << std::endl;
+	//std::cout << "ICharacter created" << std::endl;
 }
 
 ICharacter::ICharacter( const ICharacter& copy) {
-	std::cout << "ICharacter copy created" << std::endl;
+	//std::cout << "ICharacter copy created" << std::endl;
 	*this = copy;
 }
 
@@ -18,5 +18,5 @@ ICharacter&	ICharacter::operator=( const ICharacter& copy) {
 }
 
 ICharacter::~ICharacter() {
-	std::cout << "ICharacter deleted" << std::endl;
+	//std::cout << "ICharacter deleted" << std::endl;
 }

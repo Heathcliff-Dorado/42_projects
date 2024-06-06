@@ -16,7 +16,7 @@ Cat&	Cat::operator=( const Cat& copy) {
 	if (this != &copy)
 	{
 		delete _brain;
-		_brain = copy._brain;
+		_brain = new Brain(*copy._brain);
 		this->setType(copy.type);
 	}
 	return (*this);
