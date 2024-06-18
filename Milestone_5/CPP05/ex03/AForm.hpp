@@ -32,7 +32,7 @@ public:
 	std::string	isSigned( void ) const;
 
 	void			beSigned( Bureaucrat& bureaucrat );
-	virtual void	execute(Bureaucrat const& executor) const = 0;
+	virtual void	execute(Bureaucrat const& executor) const;
 };
 
 std::ostream& operator<<( std::ostream& o, AForm const& i );

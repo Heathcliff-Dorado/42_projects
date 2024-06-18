@@ -1,20 +1,22 @@
 #include "Bureaucrat.hpp"
-#include "ShubberyCreationForm.hpp"
-#include "RobotomyRequestForm.hpp"
-#include "PresidentialPardonForm.hpp"
+#include "Intern.hpp"
 
 int	main( void ) {
 	std::srand(std::time(0));
 	try
 	{
 		Bureaucrat	first("Xi", 1);
-		AForm*		form = new ShubberyCreationForm("home");
+		Intern		rando;
+		AForm*		form = rando.makeForm("shubbery creation", "home");
 
 		std::cout << first << std::endl;
-		std::cout << *form << std::endl;
-		first.signForm(*form);
-		std::cout << *form << std::endl;
-		first.executeForm(*form);
+		if (form)
+		{
+			std::cout << *form << std::endl;
+			first.signForm(*form);
+			std::cout << *form << std::endl;
+			first.executeForm(*form);
+		}
 		delete form;
 	}
 	catch ( std::exception& e)
@@ -24,20 +26,24 @@ int	main( void ) {
 	try
 	{
 		Bureaucrat	first("Xi", 1);
-		AForm*		form = new RobotomyRequestForm("Marvin");
+		Intern		rando;
+		AForm*		form = rando.makeForm("robotomy request", "Marvin");
 
 		std::cout << first << std::endl;
-		std::cout << *form << std::endl;
-		first.signForm(*form);
-		std::cout << *form << std::endl;
-		first.executeForm(*form);
-		first.executeForm(*form);
-		first.executeForm(*form);
-		first.executeForm(*form);
-		first.executeForm(*form);
-		first.executeForm(*form);
-		first.executeForm(*form);
-		first.executeForm(*form);
+		if (form)
+		{
+			std::cout << *form << std::endl;
+			first.signForm(*form);
+			std::cout << *form << std::endl;
+			first.executeForm(*form);
+			first.executeForm(*form);
+			first.executeForm(*form);
+			first.executeForm(*form);
+			first.executeForm(*form);
+			first.executeForm(*form);
+			first.executeForm(*form);
+			first.executeForm(*form);
+		}
 		delete form;
 	}
 	catch ( std::exception& e)
@@ -47,13 +53,37 @@ int	main( void ) {
 	try
 	{
 		Bureaucrat	first("Xi", 1);
-		AForm*		form = new PresidentialPardonForm("Arthur");
+		Intern		rando;
+		AForm*		form = rando.makeForm("presidential pardon", "Arthur");
 
 		std::cout << first << std::endl;
-		std::cout << *form << std::endl;
-		first.signForm(*form);
-		std::cout << *form << std::endl;
-		first.executeForm(*form);
+		if (form)
+		{
+			std::cout << *form << std::endl;
+			first.signForm(*form);
+			std::cout << *form << std::endl;
+			first.executeForm(*form);
+		}
+		delete form;
+	}
+	catch ( std::exception& e)
+	{
+		std::cerr << "Exception found: " << e.what() << std::endl;
+	}
+	try
+	{
+		Bureaucrat	first("Xi", 1);
+		Intern		rando;
+		AForm*		form = rando.makeForm("residential pardon", "Arthur");
+
+		std::cout << first << std::endl;
+		if (form)
+		{
+			std::cout << *form << std::endl;
+			first.signForm(*form);
+			std::cout << *form << std::endl;
+			first.executeForm(*form);
+		}
 		delete form;
 	}
 	catch ( std::exception& e)
