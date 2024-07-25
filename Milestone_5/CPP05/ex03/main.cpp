@@ -2,7 +2,7 @@
 #include "Intern.hpp"
 
 int	main( void ) {
-	std::srand(std::time(0));
+	std::srand(time(0));
 	try
 	{
 		Bureaucrat	first("Xi", 1);

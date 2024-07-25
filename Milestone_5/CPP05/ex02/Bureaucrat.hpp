@@ -4,6 +4,9 @@
 # include <iostream>
 # include <string>
 # include <stdexcept>
+# include <stdlib.h>
+# include <stdio.h>
+# include <time.h>
 
 # include "AForm.hpp"
 
