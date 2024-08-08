@@ -3,7 +3,7 @@ NAME = converter
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 CPP = c++
 
-SRC = main Converter
+SRC = main ScalarConverter
 OBJ = $(SRC:=.o)
 
 all: $(NAME)

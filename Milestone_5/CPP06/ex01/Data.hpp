@@ -6,6 +6,7 @@
 # include <exception>
 # include <limits>
 # include <iomanip>
+# include <stdint.h>
 
 struct Data
 {

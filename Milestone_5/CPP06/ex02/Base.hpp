@@ -1,8 +1,14 @@
 #ifndef BASE_H
 # define BASE_H
 
-#include <iostream>
-#include <string>
+# include <iostream>
+# include <string>
+# include <stdexcept>
+# include <stdlib.h>
+# include <stdio.h>
+# include <time.h>
+# include <fstream>
+# include <typeinfo>
 
 class Base
 {
