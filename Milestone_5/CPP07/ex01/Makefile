@@ -1,9 +1,9 @@
-NAME = serializer
+NAME = iter
 
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 CPP = c++
 
-SRC = main Serializer
+SRC = main
 OBJ = $(SRC:=.o)
 
 all: $(NAME)

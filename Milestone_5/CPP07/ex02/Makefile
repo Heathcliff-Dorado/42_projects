@@ -1,4 +1,4 @@
-NAME = templates
+NAME = array
 
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 CPP = c++
