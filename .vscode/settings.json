@@ -78,6 +78,8 @@
 		"ranges": "cpp",
 		"span": "cpp",
 		"cinttypes": "cpp",
-		"stack": "cpp"
+		"stack": "cpp",
+		"list": "cpp",
+		"set": "cpp"
 	}
 }

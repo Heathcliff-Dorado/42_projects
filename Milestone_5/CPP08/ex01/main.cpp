@@ -1,33 +1,38 @@
-#include "easyfind.hpp"
+#include "Span.hpp"
+#include <list>
 
 int main ( void )
 {
 	try
 	{
-		std::list<int>  lst;
-		lst.push_back(1);
-		lst.push_back(4);
-		lst.push_back(6);
-		std::cout << "List: " << *easyfind(lst, 6) << std::endl;
-		std::cout << "List: " << *easyfind(lst, 3) << std::endl;
+		Span sp = Span(5);
+		sp.addNumber(6);
+		sp.addNumber(3);
+		sp.addNumber(17);
+		sp.addNumber(9);
+		sp.addNumber(11);
+		std::cout << sp.shortestSpan() << std::endl;
+		std::cout << sp.longestSpan() << std::endl;
 	}
-	catch(const std::exception &e)
+	catch(const std::exception& e)
 	{
-		std::cout << e.what() << '\n';
+		std::cerr << e.what() << '\n';
 	}
 	try
 	{
-		std::vector<int> vec;
-		vec.push_back(-1);
-		vec.push_back(6);
-		vec.push_back(3);
-		vec.push_back(-1);
-		std::cout << "Vector: " << *easyfind(vec, -1) << " followed by " << *(easyfind(vec, -1) + 1) << std::endl;
-		std::cout << "Vector: " << *easyfind(vec, 0) << std::endl;
+		std::srand(time(0));
+		Span sp = Span(100000);
+		std::vector<int>	vector;
+		for (int i = 0; i < 80000; i++)
+		{
+			vector.push_back(rand());
+		}
+		sp.massAddNumber(vector.begin(), vector.end());
+		std::cout << sp.shortestSpan() << std::endl;
+		std::cout << sp.longestSpan() << std::endl;
 	}
-	catch(const std::exception &e)
+	catch(const std::exception& e)
 	{
-		std::cout << e.what() << '\n';
+		std::cerr << e.what() << '\n';
 	}
-	return 0;
 }
