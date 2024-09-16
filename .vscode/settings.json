@@ -1,5 +1,6 @@
 {
 	"files.associations": {
+		"*.tpp": "cpp",
 		"stdlib.h": "c",
 		"libft.h": "c",
 		"optional": "c",
@@ -80,6 +81,9 @@
 		"cinttypes": "cpp",
 		"stack": "cpp",
 		"list": "cpp",
-		"set": "cpp"
+		"set": "cpp",
+		"__tree": "cpp",
+		"charconv": "cpp",
+		"execution": "cpp"
 	}
 }
