@@ -18,7 +18,6 @@ Array<T>& Array<T>::operator=( const Array& copy )
 	if (this != &copy)
 	{
 		_n = copy._n;
-		delete[] _elements;
 		_elements = new T[_n];
 		for (unsigned int i = 0; i < _n; i++)
 			_elements[i] = copy._elements[i];
@@ -42,7 +41,7 @@ template <typename T>
 T& Array<T>::operator[](unsigned int index)
 {
 	if (index >= _n)
-		throw std::out_of_range("Index bigger than length of array!");
+		throw std::out_of_range("Index out of scope!");
 	return _elements[index];
 }
 
@@ -50,7 +49,7 @@ template <typename T>
 const T& Array<T>::operator[](unsigned int index) const
 {
 	if (index >= _n)
-		throw std::out_of_range("Index bigger than length of array!");
+		throw std::out_of_range("Index out of scope!");
 	return _elements[index];
 }
 
