@@ -38,7 +38,7 @@ void	identify(Base& p) {
 		std::cout << "A" << std::endl;
 		(void) a;
 	}
-	catch (const std::bad_cast&)
+	catch (std::exception & e)
 	{
 		try
 		{
@@ -46,7 +46,7 @@ void	identify(Base& p) {
 			std::cout << "B" << std::endl;
 			(void) b;
 		}
-		catch (const std::bad_cast &)
+		catch (std::exception & e)
 		{
 			try
 			{
@@ -54,7 +54,7 @@ void	identify(Base& p) {
 				std::cout << "C" << std::endl;
 				(void) c;
 			}
-			catch (const std::bad_cast &)
+			catch (std::exception & e)
 			{
 				std::cout << "Neither A, B, or C" << std::endl;
 			}

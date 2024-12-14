@@ -1,15 +1,16 @@
 #ifndef SCALARCONVERTER_H
 # define SCALARCONVERTER_H
 
-# include <iostream>
 # include <string>
-# include <exception>
+// # include <exception>
 # include <limits>
 # include <iomanip>
-# include <cstdlib>
 # include <cerrno>
 # include <cmath>
-# include <climits>
+# include <iostream>
+# include <cstring>
+# include <cstdlib>
+# include "limits.h"
 
 class ScalarConverter
 {

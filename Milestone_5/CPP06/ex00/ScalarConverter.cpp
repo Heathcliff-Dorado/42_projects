@@ -32,17 +32,15 @@ literals	findType( std::string literal ) {
 		return CHAR;
 	//Integer
 	char* end;
-	long value = std::strtol(literal.c_str(), &end, 10);
-	if (value < INT_MAX && value > INT_MIN && (*end) == '\0')
+	long value2 = std::strtol(literal.c_str(), &end, 10);
+	if (value2 < INT_MAX && value2 > INT_MIN && (*end) == '\0')
 		return INT;
 	//Float
 	try
 	{
 		char* end2;
 		float value = std::strtof(literal.c_str(), &end2);
-		(void) value;
-		//if (literal.length() - 1 && literal[literal.length() - 1]  == 'f')
-		if (*end2 == 'f' && *(end2 + 1) == '\0' && literal[literal.length() - 1] == 'f')
+		if (*end2 == 'f' && *(end2 + 1) == '\0' && literal[literal.length() - 1] == 'f' && !isnan(value))
 			return FLOAT;
 	}
 	catch(const std::exception &)
@@ -52,9 +50,8 @@ literals	findType( std::string literal ) {
 	try
 	{
 		char* end3;
-		double value = std::strtod(literal.c_str(), &end3);
-		(void) value;
-		if (end3 == literal.c_str() + literal.size())
+		double value3 = std::strtod(literal.c_str(), &end3);
+		if ((end3 == literal.c_str() + literal.size()) && !isnan(value3))
 			return DOUBLE;
 	}
 	catch(const std::exception &)
@@ -86,8 +83,7 @@ void	ScalarConverter::converter (std::string literal) {
 		break;
 	case INT:
 		{
-			char*	end;
-			long	value = std::strtol(literal.c_str(), &end, 10);
+			double	value = std::strtod(literal.c_str(), NULL);
 			if (value >= std::numeric_limits<char>::min() && value <= std::numeric_limits<char>::max())
 			{
 				if (isprint(value))
@@ -97,15 +93,24 @@ void	ScalarConverter::converter (std::string literal) {
 			}
 			else
 				std::cout << "char: Impossible" << std::endl;
-			std::cout << "int: " << value << std::endl;
-			std::cout << "float: " << static_cast<float>(value) << ".0f" << std::endl;
-			std::cout << "double: " << static_cast<double>(value) << ".0" << std::endl;
+			std::cout << "int: " << static_cast<int>(value) << std::endl;
+			std::cout << std::fixed << std::setprecision(1) << "float: " << static_cast<float>(value) << "f" << std::endl;
+			std::cout << std::fixed << std::setprecision(1) << "double: " << value << std::endl;
 		}
 		break;
 	case FLOAT:
 		{
 			char*	end2;
 			float	fvalue = std::strtof(literal.c_str(), &end2);
+			int	decimal = 0;
+			for (long unsigned int i = 0; i < literal.size(); i++)
+			{
+				if (literal[i] == '.')
+				{
+					for (;i < literal.size() - 2; i++)
+						decimal++;
+				}
+			}
 			if (fvalue >= std::numeric_limits<char>::min() && fvalue <= std::numeric_limits<char>::max())
 			{
 				if (isprint(fvalue))
@@ -119,14 +124,25 @@ void	ScalarConverter::converter (std::string literal) {
 				std::cout << "int: " << static_cast<int>(fvalue) << std::endl;
 			else
 				std::cout << "int: Overflow" << std::endl;
-			std::cout << std::fixed << std::setprecision(1) << "float: " << fvalue << "f" << std::endl;
-			std::cout << "double: " << static_cast<double>(fvalue) << std::endl;
+			std::cout << std::fixed << std::setprecision(decimal) << "float: " << fvalue << "f" << std::endl;
+			std::cout << std::fixed << std::setprecision(decimal) << "double: " << static_cast<double>(fvalue) << std::endl;
 		}
 		break;
 	case DOUBLE:
 		{
 			char*	end3;
 			double	dvalue = std::strtod(literal.c_str(), &end3);
+			int	decimal = 0;
+			for (long unsigned int i = 0; i < literal.size(); i++)
+			{
+				if (literal[i] == '.')
+				{
+					for (;i < literal.size() - 1; i++)
+						decimal++;
+				}
+			}
+			if (decimal == 0)
+				decimal++;
 			if (dvalue >= std::numeric_limits<char>::min() && dvalue <= std::numeric_limits<char>::max())
 			{
 				if (isprint(dvalue))
@@ -140,8 +156,8 @@ void	ScalarConverter::converter (std::string literal) {
 				std::cout << "int: " << static_cast<int>(dvalue) << std::endl;
 			else
 				std::cout << "int: Overflow" << std::endl;
-			std::cout << std::fixed << std::setprecision(1) << "float: " << static_cast<float>(dvalue) << "f" << std::endl;
-			std::cout << "double: " << dvalue << std::endl;
+			std::cout << std::fixed << std::setprecision(decimal) << "float: " << static_cast<float>(dvalue) << "f" << std::endl;
+			std::cout << std::fixed << std::setprecision(decimal) << "double: " << dvalue << std::endl;
 		}
 		break;
 	case SPECIAL:
@@ -152,7 +168,7 @@ void	ScalarConverter::converter (std::string literal) {
 			std::cout << "float: " << literal << std::endl;
 			std::cout << "double: " << literal.erase(literal.length() - 1) << std::endl;
 		}
-		if (literal == "nan" || literal == "+inf" || literal == "-inf")
+		else if (literal == "nan" || literal == "+inf" || literal == "-inf")
 		{
 			std::cout << "float: " << literal << "f" << std::endl;
 			std::cout << "double: " << literal << std::endl;
