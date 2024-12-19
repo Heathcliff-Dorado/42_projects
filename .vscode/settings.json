@@ -84,6 +84,7 @@
 		"set": "cpp",
 		"__tree": "cpp",
 		"charconv": "cpp",
-		"execution": "cpp"
+		"execution": "cpp",
+		"map": "cpp"
 	}
 }
