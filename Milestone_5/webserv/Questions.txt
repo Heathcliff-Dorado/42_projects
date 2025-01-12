@@ -1,0 +1,5 @@
+From SocketServer.cpp
+Line 139
+struct sockaddr_storage their_addr; // struct to store client's address information
+
+I assume here we are creating their_addr, when does it get a value?
