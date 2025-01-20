@@ -41,7 +41,7 @@ template <typename T>
 T& Array<T>::operator[](unsigned int index)
 {
 	if (index >= _n)
-		throw std::out_of_range("Index out of scope!");
+		throw std::out_of_range("Error: Index out of scope!");
 	return _elements[index];
 }
 
