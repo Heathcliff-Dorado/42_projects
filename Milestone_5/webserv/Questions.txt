@@ -3,3 +3,22 @@ Line 139
 struct sockaddr_storage their_addr; // struct to store client's address information
 
 I assume here we are creating their_addr, when does it get a value?
+
+
+
+Questions on the configuration file
+-Which variables do we need?
+-Which variables can we set a default value for?
+-How strict is the formatting of the config_file (i.e. should we keep NGINX formatting, can we make it more straightforward for parsing)
+
+HTTP
+https://datatracker.ietf.org/doc/html/rfc2616
+
+CGI
+https://datatracker.ietf.org/doc/html/rfc3875
+
+Pitchfork (Structure style)
+https://github.com/vector-of-bool/pitchfork
+
+Google C++ style guide
+https://docs.google.com/file/d/0B5FQoJdw1sdRVHRid21IalRRb3M/edit?resourcekey=0-0OIuS0JpAEz34vYFETmWUQ

@@ -2,6 +2,13 @@
 # define CONFIG_H
 
 # include <iostream>
+# include <map>
+# include <vector>
+# include <fstream>
+# include <sstream>
+# include <map>
+# include <cstdlib>
+# include <string>
 
 class Config {
 	private:
@@ -14,7 +21,7 @@ class Config {
 		int	_port;
 		std::string	_root;
 		std::string	_allowed_methods;
-		std::vector	_methods;
+		std::vector<std::string>	_methods;
 		std::map<std::string, std::string> _error_pages;
 
 	public:

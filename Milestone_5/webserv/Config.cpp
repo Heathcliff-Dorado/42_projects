@@ -30,59 +30,64 @@ Config::Config( const std::string& configFile) {
 }
 
 //Parses the config file and populates all the attributes of the Config class
-void	parseConfigFile(const std::string &configFile)
+void	Config::parseConfigFile(const std::string &configFile)
 {
 	//Checks if the file is accessible
-	std::ifstream(configFile)
-	if (!configFile.is_open())
+	std::ifstream conf(configFile);
+	if (!conf)
 	{
 		std::cerr << "Error: Unable to open file " << configFile << std::endl;
 		return ;
 	}
 
-	//reads line by line, gets the key and value (must follow structure key=value)
+	//reads line by line, extracts all parameters and location blocks
 	std::string	line;
-	while (getLine(configFile, line))
+	while (getline(conf, line))
 	{
+		//Trim lines and get rid of empty ones
 		size_t	start = line.find_first_not_of(" \t");
 		size_t	end = line.find_last_not_of(" \t");
 
-		//Skip empty lines
 		if (start == std::string::npos || end == std::string::npos)
 			continue;
 		line = line.substr(start, end - start + 1);
 		if (line.empty() || line[0] == '#')
 			continue;
 
-		//Extracts the key=value pairs
-		size_t pos = line.find(' ');
-		if (pos != std::string::npos)
+		//Look for info, locations have space separators, while parameters have \t
+		size_t pos = line.find('\t');
+		if (pos != std::string::npos) //if pos == npos, this is a line with a location block or some error, so we skip this loop
 		{
 			std::string key = line.substr(0, pos);
-			std::string value = line.substr(pos + 1);
+			std::string value = line.substr(pos + 1, line.length() - 1); //To avoid the ; in the end
 			key = key.substr(key.find_first_not_of(" \t"), key.find_last_not_of(" \t"));
 			value = value.substr(value.find_first_not_of(" \t"), value.find_last_not_of(" \t"));
-			if (key == "error_page")
+			_settings[key] = value;
+		}
+		size_t pos = line.find(' ');
+		if (pos != std::string::npos) //if pos == npos, this is a line with a parameter (so already done) or error (so skip)
+		{
+			std::string location = line.substr(pos + 1, location.length() - 2);
+			while (getline(conf, line))
 			{
-				size_t pos2 = value.find(' ');
-				std::string pg_errno = value.substr(0, pos2);
-				std::string pg_dir = valie.substr(pos2 + 1);
-				_error_pages[pg_errno] = pg_dir;
+				start = line.find_first_not_of(" \t");
+				end = line.find_last_not_of(" \t");
+				if (line == "}")
+					continue;
+				//Need to parse all the arguments from the location block, store into a struct ?
 			}
-			else
-				_settings[key] = value;
 		}
 	}
-	file.close();
+	conf.close();
 	//Get port number
-	_port = std::stoi(settings["port"]);
+	_port = std::stoi(_settings["port"]);
 
 	// Get the root directory
 	_root = _settings["root_directory"];
 
 	// Get allowed methods and parse into vector methods
 	_allowed_methods = _settings["allowed_methods"];
-	std::stringstream ss(allowed_methods);
+	std::stringstream ss(_allowed_methods);
 	std::string method;
 	while (getline(ss, method, ','))
 		_methods.push_back(method);
