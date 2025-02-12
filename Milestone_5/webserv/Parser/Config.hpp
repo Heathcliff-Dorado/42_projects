@@ -27,6 +27,7 @@ class Config {
 		~Config();
 		bool	parseServer(std::istream &conf, Server &server);
 		bool	parseLocation(std::istream &conf, Server &server, const std::string location);
+		std::set<std::string>	parseMethods(std::string method_list);
 		std::vector<Server> parseConfigFile(const std::string &configFile);
 };
 

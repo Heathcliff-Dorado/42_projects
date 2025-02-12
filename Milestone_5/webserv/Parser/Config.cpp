@@ -30,6 +30,27 @@ Config::Config( const std::string& configFile) {
 
 }
 
+std::set<std::string>	Config::parseMethods(std::string method_list)
+{
+	std::set<std::string>	methods;
+
+	std::string	new_method;
+	std::string	leftover;
+	size_t pos = method_list.find(' ');
+	new_method = method_list.substr(0, pos);
+	leftover = method_list.substr(pos + 1, method_list.length() - new_method.length());
+	methods.insert(new_method);
+	pos = leftover.find(" ");
+	while (pos != std::string::npos)
+	{
+		new_method = leftover.substr(0, pos);
+		leftover = leftover.substr(pos + 1, leftover.length() - new_method.length());
+		methods.insert(new_method);
+		pos = leftover.find(" ");
+	}
+	return methods;
+}
+
 bool	Config::parseLocation(std::istream &conf, Server &server, const std::string location)
 {
 	Route		route;
@@ -55,21 +76,31 @@ bool	Config::parseLocation(std::istream &conf, Server &server, const std::string
 			if (!route.uri.empty() && !route.path.empty()) //Add a uri != path?
 			{
 				server.setRoutes(route.uri, route);
+				std::cout << "exits" << std::endl;
 				return true;
 			}
 			return false;
 		}
-		size_t pos = line.find('\t');
-		key = line.substr(0, pos);
-		value = line.substr(pos + 1, line.length() - key.length()); //To avoid the ; in the end
-		//Trim again
-		key = key.substr(key.find_first_not_of(" \t"), key.find_last_not_of(" \t") + 1);
-		value = value.substr(value.find_first_not_of(" \t"), value.find_last_not_of(" \t") - value.find_first_not_of(" \t"));
-
-		if (key == "root")
+		else
 		{
-			route.path =(value + route.uri);
-			std::cout << "Path is: " << route.path << std::endl;
+			size_t pos = line.find('\t');
+			if ( pos != std::string::npos)
+			{
+				key = line.substr(0, pos);
+				value = line.substr(pos + 1, line.length() - key.length()); //To avoid the ; in the end
+				//Trim again
+				key = key.substr(key.find_first_not_of(" \t"), key.find_last_not_of(" \t") + 1);
+				value = value.substr(value.find_first_not_of(" \t"), value.find_last_not_of(" \t") - value.find_first_not_of(" \t"));
+				if (key == "root")
+				{
+					route.path =(value + route.uri);
+					std::cout << "Path is: " << route.path << std::endl;
+				}
+				else if (key == "allow")
+				{
+					route.methods = parseMethods(value);
+				}
+			}
 		}
 	}
 	return (true);
@@ -98,12 +129,13 @@ bool	Config::parseServer(std::istream &conf, Server &server)
 		//When we get to the end of the block or get to a location block, we return to the previous line and exit
 		if (line.find("server ") != std::string::npos || line == "}")
 		{
+			std::cout << "tries to exit" << std::endl;
 			conf.seekg(-(static_cast<int>(line.length()) + 1), std::ios::cur); //seekg: move the pointer conf length + 1 char back. ios::cur means current position
 			if(!server._port.empty() && !server._ip.empty() && !server._root.empty() && server.isIPValid(server._ip))
 				return true;
 			return false;
 		}
-		if (line.find("location ") != std::string::npos)
+		else if (line.find("location ") != std::string::npos)
 		{
 			line = line.substr(line.find("location ") + 9);
 			size_t n = line.find(" ");
@@ -115,33 +147,36 @@ bool	Config::parseServer(std::istream &conf, Server &server)
 			}
 			location_ok = false;
 		}
-		//We look for the tab(s) that split the key and value
-		size_t pos = line.find('\t');
-		key = line.substr(0, pos);
-		value = line.substr(pos + 1, line.length() - key.length()); //To avoid the ; in the end
-		//Trim again
-		key = key.substr(key.find_first_not_of(" \t"), key.find_last_not_of(" \t") + 1);
-		value = value.substr(value.find_first_not_of(" \t"), value.find_last_not_of(" \t") - value.find_first_not_of(" \t"));
-		//Note: Think on potential problems in syntax, eg symbols? quotations? spaces and tabs? Make a checking function
-		if (key == "port")
+		else
 		{
-			if(atoi(value.c_str()) > 0 && atoi(value.c_str()) < 65535)
-				server.setPort(value); //Saved as string, change to int?
-			else
-				std::cerr << "Incorrect port value: " << value << std::endl;
+			//We look for the tab(s) that split the key and value
+			size_t pos = line.find('\t');
+			key = line.substr(0, pos);
+			value = line.substr(pos + 1, line.length() - key.length()); //To avoid the ; in the end
+			//Trim again
+			key = key.substr(key.find_first_not_of(" \t"), key.find_last_not_of(" \t") + 1);
+			value = value.substr(value.find_first_not_of(" \t"), value.find_last_not_of(" \t") - value.find_first_not_of(" \t"));
+			//Note: Think on potential problems in syntax, eg symbols? quotations? spaces and tabs? Make a checking function
+			if (key == "port")
+			{
+				if(atoi(value.c_str()) > 0 && atoi(value.c_str()) < 65535)
+					server.setPort(value); //Saved as string, change to int?
+				else
+					std::cerr << "Incorrect port value: " << value << std::endl;
+			}
+			if (key == "server_name") //host?
+			{
+				if (server.isIPValid(value))
+					server.setIP(value); //Saved as string
+				else
+					std::cerr << "Incorrect IP: " << value << std::endl;
+			}
+			if (key == "root")
+				server.setRoot(value);
+			if (key == "index")
+				server.setIndex(value);
+			//Expand if we need more variables
 		}
-		if (key == "server_name") //host?
-		{
-			if (server.isIPValid(value))
-				server.setIP(value); //Saved as string
-			else
-				std::cerr << "Incorrect IP: " << value << std::endl;
-		}
-		if (key == "root")
-			server.setRoot(value);
-		if (key == "index")
-			server.setIndex(value);
-		//Expand if we need more variables
 	}
 	std::cout << "This should not have happened (parseServer)" << std::endl;
 	return false; //We should never get here, so if we do, something is messed up somewhere

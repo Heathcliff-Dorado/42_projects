@@ -8,6 +8,6 @@ int	main(int argc, char** argv){
 	}
 	Config	configuration(argv[1]);
 	Server server = *configuration._servlist.begin();
-	std::cout << server._port << std::endl;
+	std::cout << "here" << server._port << std::endl;
 	return 0;
 }
