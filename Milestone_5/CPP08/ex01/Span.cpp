@@ -27,8 +27,10 @@ void	Span::addNumber( int number ) {
 	std::pair<std::set<int>::iterator, bool> insert;
 	if (_numbers.size() < _capacity)
 		insert = _numbers.insert(number);
-	if (insert.second == false || _numbers.size() > _capacity)
-		throw std::out_of_range("The object is at full capacity, or couldn't insert number!");
+	if (insert.second == false)
+		throw std::out_of_range("Couldn't insert the number, is it repeated?!");
+	else if (_numbers.size() > _capacity)
+		throw std::out_of_range("Can't add so many numbers!");
 }
 
 size_t	Span::longestSpan( void ) {
