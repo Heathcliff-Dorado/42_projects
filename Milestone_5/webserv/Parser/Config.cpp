@@ -213,7 +213,7 @@ std::vector<Server>	Config::parseConfigFile(const std::string &configFile)
 		if (line.empty() || line[0] == '#')
 			continue;
 
-		if (line.find("server") != std::string::npos) //"[[server]]" means find server as a single word
+		if (line.find("server ") != std::string::npos) //"[[server]]" means find server as a single word
 		{
 			started_server = parseServer(conf, new_server);
 			if (started_server == false)
