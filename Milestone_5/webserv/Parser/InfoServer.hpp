@@ -13,15 +13,16 @@
 
 struct Route
 {
-	std::string	uri;
-	std::string	path;
-	std::set<std::string> methods;
+	std::string				uri;
+	std::string				path;
+	std::set<std::string>	methods;
+	bool					internal = false;
 };
 
 
-class Server {
+class InfoServer {
 	private:
-		Server( void );
+		InfoServer( void );
 
 	public:
 		std::string	_port;
@@ -29,10 +30,10 @@ class Server {
 		std::string	_root;
 		std::string	_index;
 		std::map<std::string, Route> _routes;
-		Server(std::string port, std::string ip, std::string root, std::string index);
-		Server( const Server& copy);
-		Server& operator=(const Server& copy);
-		~Server();
+		InfoServer(std::string port, std::string ip, std::string root, std::string index);
+		InfoServer( const InfoServer& copy);
+		InfoServer& operator=(const InfoServer& copy);
+		~InfoServer();
 
 		void	setPort( std::string port );
 		void	setIP( std::string ip );

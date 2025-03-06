@@ -1,16 +1,16 @@
-#include "Server.hpp"
+#include "InfoServer.hpp"
 
 //default constructor (only for orthodox form)
-Server::Server( void ) {
+InfoServer::InfoServer( void ) {
 }
 
 //Copy constructor
-Server::Server( const Server& copy) {
+InfoServer::InfoServer( const InfoServer& copy) {
 	*this = copy;
 }
 
 //Equal operator
-Server&	Server::operator=( const Server& copy) {
+InfoServer&	InfoServer::operator=( const InfoServer& copy) {
 	if (this != &copy)
 	{
 		return (*this);
@@ -20,33 +20,33 @@ Server&	Server::operator=( const Server& copy) {
 }
 
 //Deconstructor
-Server::~Server() {
+InfoServer::~InfoServer() {
 }
 
-Server::Server(std::string port, std::string ip, std::string root, std::string index) : _port(port), _ip(ip), _root(root), _index(index) {}
+InfoServer::InfoServer(std::string port, std::string ip, std::string root, std::string index) : _port(port), _ip(ip), _root(root), _index(index) {}
 
-void	Server::setPort( std::string port ) {
+void	InfoServer::setPort( std::string port ) {
 	this->_port = port;
 }
 
-void	Server::setIP( std::string ip ) {
+void	InfoServer::setIP( std::string ip ) {
 	if (ip == "localhost")
 		this->_ip = "127.0.0.1";
 	else
 		this->_ip = ip;
 }
-void	Server::setRoot( std::string root ) {
+void	InfoServer::setRoot( std::string root ) {
 	this->_root = root;
 }
-void	Server::setIndex( std::string index ) {
+void	InfoServer::setIndex( std::string index ) {
 	this->_index = index;
 }
 
-void	Server::setRoutes( const std::string &uri, const Route &route){
+void	InfoServer::setRoutes( const std::string &uri, const Route &route){
 	this->_routes[uri] = route;
 }
 
-bool	Server::isIPValid( std::string ip ) {
+bool	InfoServer::isIPValid( std::string ip ) {
 	int	ndots = 0;
 	if (ip == "localhost")
 		return true;
