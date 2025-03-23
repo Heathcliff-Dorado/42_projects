@@ -108,6 +108,8 @@ void PmergeMe::generateInsertionSequence(void)
 
 		}
 	}
+	//for (int i = 0; insertion[i]; i++)
+	//	std::cout << insertion[i] <<std::endl;
 	_insertionSequence = insertion;
 }
 
@@ -118,11 +120,12 @@ std::vector<int> PmergeMe::generateJacobsthalSequence(void)
 	if (_size > 0) jacobsthal[0] = 0;
 	if (_size > 1) jacobsthal[1] = 1;
 
-	for (int i = 2; i < _size; ++i)//first 2 nums are not needed ('0', '1') so we generate 2 nums extra on their place. needed?
+	for (int i = 2; i < _size; ++i)//first 2 nums are not needed ('0', '1') so we generate 2 nums extra on their place.
 	{
 		jacobsthal[i] = jacobsthal[i-1] + 2 * jacobsthal[i-2];
 	}
-
+	//for (int i = 0; i < _size; i++)
+	//	std::cout << jacobsthal[i] << std::endl;
 	return jacobsthal;
 }
 
@@ -132,7 +135,7 @@ void PmergeMe::sortPairs()
 }
 
 
-void PmergeMe::divideChains()
+void PmergeMe::divideChains() //Main chain: Second element of first pair, first element of all pairs. Pend: All second elements from pairs except the first
 {
 	std::vector<int> mainChain(_pairs.size() + 1);
 	std::vector<int> pend((_pairs.size() > 1) ? _pairs.size() - 1 : 0);
@@ -182,7 +185,7 @@ void PmergeMe::insertSort()
 	}
 
 	// Ensure all elements in _pend are inserted into _mainChain
-	for (size_t i = 0; i < _pend.size(); ++i)
+	for (int i = (int)_pend.size() - 1; i >= 0; i--)
 	{
 		if (std::find(_insertionSequence.begin(), _insertionSequence.end(), i + 2) == _insertionSequence.end())
 		{
@@ -210,7 +213,7 @@ void PmergeMe::mergeInsertSort()
 	else
 	{
 		std::vector<int> mainChain(1, _oddNum);
-	_mainChain = mainChain;
+		_mainChain = mainChain;
 	}
 	_endTime = clock();
 }

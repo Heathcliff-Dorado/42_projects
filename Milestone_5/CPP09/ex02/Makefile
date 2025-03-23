@@ -1,4 +1,4 @@
-NAME = merge
+NAME = PmergeMe
 
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 CPP = c++

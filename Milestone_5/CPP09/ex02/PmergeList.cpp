@@ -68,7 +68,7 @@ void PmergeList::print(void) const
 	std::cout << "Sorted list: ";
 	for (std::list<int>::const_iterator it = _mainChain.begin(); it != _mainChain.end(); ++it)
 	{
-		std::cout << *it << "-";
+		std::cout << *it << " ";
 	}
 
 	std::cout << std::endl;
@@ -211,8 +211,8 @@ void PmergeList::insertSort()
 		}
 	}
 	// Elements in _pend are inserted into _mainChain
-	int i = 0;
-	for (std::list<int>::iterator pendIt = _pend.begin(); pendIt != _pend.end(); ++pendIt, ++i)
+	int i = (int)_pend.size();
+	for (std::list<int>::iterator pendIt = _pend.end(); pendIt != _pend.begin(); pendIt--, i--)
 	{
 		if (std::find(_insertionSequence.begin(), _insertionSequence.end(), i + 2) == _insertionSequence.end())
 		{

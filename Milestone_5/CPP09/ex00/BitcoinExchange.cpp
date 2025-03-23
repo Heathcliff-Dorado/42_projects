@@ -22,17 +22,17 @@ BitcoinExchange::~BitcoinExchange() {}
 void BitcoinExchange::loadDatabase(std::ifstream &db)
 {
 	std::string line;
-	std::getline(db, line);
+	std::getline(db, line); //Skip header
 	while (std::getline(db, line))
 	{
 		bool validLine = false;
 		std::istringstream preprocessed(line);
 		std::string date, rateStr;
 		float rate;
-		if (std::getline(preprocessed, date, ',') && std::getline(preprocessed, rateStr))
+		if (std::getline(preprocessed, date, ',') && std::getline(preprocessed, rateStr)) //Separates the string into date and rateStr based on the comma
 		{
 			std::istringstream ss(rateStr);
-			if (ss >> rate && preprocessed.eof() && isValidDateFormat(date))
+			if (ss >> rate && preprocessed.eof() && ss.eof() && isValidDateFormat(date)) //date needs to be a valid date, rateStr should reach the eof and is stored in rate as a float
 				validLine = true;
 		}
 		if (validLine && date != "date")
@@ -50,7 +50,7 @@ void BitcoinExchange::processQuery(std::string &date, std::string &value)
 {
 	float floatValue = std::atof(value.c_str());
 
-	std::map<std::string, float>::const_iterator iter = exchangeRateMap.lower_bound(date);
+	std::map<std::string, float>::const_iterator iter = exchangeRateMap.lower_bound(date); //lower_bound finds the exact value or the next higher to the one given (so the next date)
 
 	if (iter != exchangeRateMap.end() && iter->first == date)
 	{
@@ -81,8 +81,8 @@ void BitcoinExchange::processInputFile(std::ifstream &inputFile)
 		std::string date, separator, value;
 		if (!(iss >> date) || (date != "date" && !(isValidDateFormat(date) && isValidDate(date))))
 		{
-			if (!(iss >> date))
-				std::cout << "Error: empty line" << date << std::endl;
+			if (date.empty())
+				std::cout << "Error: empty line " << date << std::endl;
 			else
 				std::cout << "Error: bad input => " << date << std::endl;
 			continue;

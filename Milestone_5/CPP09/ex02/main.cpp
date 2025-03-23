@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 		std::cout << std::endl;
 		std::cout << "After: ";
 		vecSequence.print();
-		listSequence.print();
+		//listSequence.print();
 		vecSequence.getTime();
 		listSequence.getTime();
 

@@ -19,8 +19,6 @@ RPN &RPN::operator=(const RPN &source)
 
 RPN::~RPN() {}
 
-//////////////////////////////////////////////////////////////////////////////////////
-
 void RPN::processInput(const std::string &input)
 {
 	if (!isValidExpression(input))
@@ -79,12 +77,12 @@ void RPN::calculateExpression(void)
 	std::string operatorToken;
 	for (size_t i = 0; i < _expression.size(); i++)
 	{
-		while (_expression[i] && _expression[i] == ' ')
+		while (_expression[i] && _expression[i] == ' ') //Skip all spaces
 			i++;
 		if (isdigit(_expression[i]))
 		{
 			int number = 0;
-			while (_expression[i] && isdigit(_expression[i])) //_expression[i] != ' ')
+			while (_expression[i] && isdigit(_expression[i])) //Should not be needed, but works for numbers >9
 			{
 				number =  number * 10 + _expression[i] - '0';
 				i++;
@@ -92,12 +90,12 @@ void RPN::calculateExpression(void)
 
 			_op.push(number);
 		}
-		else if (!_op.empty() && _expression[i])
+		else if (!_op.empty() && _expression[i]) //If there is something in the stack and the expression is not a digit or space, it must be an operator token
 		{
 			operatorToken = _expression[i];
 			int a = _op.top();
 			_op.pop();
-			if (!_op.empty())
+			if (!_op.empty()) //Needs to take the second number
 			{
 				int b = _op.top();
 				_op.pop();
