@@ -3,7 +3,7 @@
 
 
 
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out $CERTS_ -subj "/C=MO/L=KH/O=1337/OU=student/CN=sahafid.42.ma"
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt -subj "/C=DE/ST=Berlin/L=Berlin/O=42/OU=Inception/CN=hdorado-.42.fr"
 
 
 echo "
@@ -13,7 +13,7 @@ server {
 
     #server_name www.$DOMAIN_NAME $DOMAIN_NAME;
 
-    ssl_certificate $CERTS_;
+    ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
     ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;" > /etc/nginx/sites-available/default
 
 

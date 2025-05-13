@@ -1,5 +1,6 @@
 COMPOSE	= ./docker-compose.yml
-DATA	= /home/hdorado-/data
+DATA	= /home/vboxuser/data
+
 
 all:	up
 
