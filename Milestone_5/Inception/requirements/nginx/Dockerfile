@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y nginx openssl && apt-get clean && \
     -out /etc/ssl/certs/self-signed.crt \
     -subj "/C=DE/ST=Berlin/L=Berlin/O=42/OU=Inception/CN=hdorado-.42.fr"
 
-COPY ./conf/default.conf /etc/nginx/default.conf
+COPY ./conf/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 443
 
