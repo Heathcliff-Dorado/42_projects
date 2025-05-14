@@ -5,11 +5,10 @@ RUN apt-get update && apt-get install -y nginx openssl && apt-get clean && \
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /etc/ssl/private/self-signed.key \
     -out /etc/ssl/certs/self-signed.crt \
-    -subj "/C=DE/ST=Berlin/L=Berlin/O=42/OU=Inception/CN=hdorado-42.fr"
+    -subj "/C=DE/ST=Berlin/L=Berlin/O=42/OU=Inception/CN=hdorado-.42.fr"
 
-COPY ./tools/default.conf /etc/nginx/sites-available/
+COPY ./conf/default.conf /etc/nginx/default.conf
 
-COPY ./tools/script.sh /
+EXPOSE 443
 
-
-CMD [ "/script.sh" ]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
