@@ -35,6 +35,7 @@ backup:
 
 clean:	down prune
 
+# This deletes the volumes, do not do unless the evaluation is over
 fclean:	clean
 		sudo rm -rf $(DATA)/wordpress_db/* $(DATA)/wordpress_files/*
 
