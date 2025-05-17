@@ -60,13 +60,13 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/vboxuser/data/wordpress_db'
+      device: '/home/hdorado-/data/wordpress_db'
   wordpress_files:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/vboxuser/data/wordpress_files'
+      device: '/home/hdorado-/data/wordpress_files'
 
 networks:
   netception:
