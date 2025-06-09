@@ -1,0 +1,33 @@
+-Single-page application, able to use back and forward buttons on browser
+-Latest stable up-to-date version of firefox
+-Must be ran on a Docker
+
+Frontend TypeScript
+Backend PHP
+
+-Passwords should be hashed
+-Protection against SQL injections/XSS attacks
+-Backend should be through HTTPS connection
+
+Modules:
+-Framework to build the Backend
+-User management, authentication (Heath)
+-Introduce an AI opponent
+-Backend as microservices
+
+-Remote players (Ralfs)
+-2FA JWT
+
+(-Multiplayer (maybe if we add the remote players too? Otherwise too messy))
+-Infrastructure for log management
+
+Minor:
+-Framework for Frontend
+-Database for Backend
+
+
+-User and game stats
+-GDPR compliance
+
+javascript.info
+eloquentjavascript
